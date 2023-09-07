@@ -1,33 +1,95 @@
+/* Includes ------------------------------------------------------------------*/
 #include "can.h"
 #include "led.h"
 #include "delay.h"
 #include "usart.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F407开发板
-//CAN驱动 代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2014/5/7
-//版本：V1.0 
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 	 
+/**
+  ******************************************************************************
+  * @file    can.c
+  * @author  TC
+  * @version V1.0.0
+  * @date    07-September-2023
+  * @brief   This file provides firmware functions to manage the following 
+  *          functionalities of the Controller area network (CAN) peripheral:
+  *           + Initialization and Configuration 
+  *           + CAN Frames Transmission
+  *           + CAN Frames Reception
+  *           + Operation modes switch
+  *           + Error management
+  *           + Interrupts and flags
+  *
+@verbatim
+ ===============================================================================
+                        ##### How to use #####
+ ===============================================================================
+    [..]
+      (#) Enable the CAN controller interface clock using 
+          RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE); for CAN1 
+          and RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2, ENABLE); for CAN2
+      -@- 如果您只使用CAN2，则必须启用CAN1时钟
+       
+      (#) CAN pins configuration
+        (++) 启用CAN gpio时钟，使用如下功能:
+							RCC_AHB1PeriphClockCmd (RCC_AHB1Periph_GPIOx,ENABLE); 
+        (++) 使用以下功能将涉及的CAN引脚连接到AF9
+							GPIO_PinAFConfig(GPIOx, GPIO_PinSourcex, GPIO_AF_CANx);
+        (++) 通过调用将这些CAN引脚配置为备用功能模式
+							函数GPIO_Init();
+							使用CAN_Init()和初始化和配置CAN
+							CAN_FilterInit()函数。
+			(#)使用CAN_Transmit()函数发送所需的CAN帧。
 
-//CAN初始化
-//tsjw:重新同步跳跃时间单元.范围:CAN_SJW_1tq~ CAN_SJW_4tq
-//tbs2:时间段2的时间单元.   范围:CAN_BS2_1tq~CAN_BS2_8tq;
-//tbs1:时间段1的时间单元.   范围:CAN_BS1_1tq ~CAN_BS1_16tq
-//brp :波特率分频器.范围:1~1024; tq=(brp)*tpclk1
-//波特率=Fpclk1/((tbs1+1+tbs2+1+1)*brp);
-//mode:CAN_Mode_Normal,普通模式;CAN_Mode_LoopBack,回环模式;
-//Fpclk1的时钟在初始化的时候设置为42M,如果设置CAN1_Mode_Init(CAN_SJW_1tq,CAN_BS2_6tq,CAN_BS1_7tq,6,CAN_Mode_LoopBack);
-//则波特率为:42M/((6+7+1)*6)=500Kbps
-//返回值:0,初始化OK;
-//    其他,初始化失败; 
+			(#)使用CAN_TransmitStatus()检查CAN帧的传输函数。
 
+			(#)使用CAN_CancelTransmit()取消CAN帧的传输函数。
+				 使用can_receive()函数接收一个CAN帧。
 
+		  (#)使用CAN_FIFORelease()函数释放接收fifo。
+
+			(#)返回等待接收帧的个数
+					CAN_MessagePending()函数。
+											 
+      (#) 要控制CAN事件，可以使用以下两种方法之一:
+        (++) 使用CAN_GetFlagStatus()函数检查CAN标志。 
+        (++) 通过初始化阶段的CAN_ITConfig()函数和中断例程中的CAN_GetITStatus()函数使用CAN中断来检查事件是否发生。
+             检查一个标志后，你应该使用CAN_ClearFlag()函数清除它。在检查中断事件后，您应该使用CAN_ClearITPendingBit()函数清除它。  
+
+@endverbatim
+           
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
+  *
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
+  ******************************************************************************  
+  */
+
+/**
+************************************************************************************************************************
+* @Name     : CAN1_Mode_Init
+* @brief    : This function initializes the CAN1 struct, the struct of CAN_Filter, and the NVIC configuration
+* @param    : tbs2    tbs2:时间段2的时间单元.  Range from:CAN_BS2_1tq to CAN_BS2_8tq;
+*	@param		:	tbs1		tbs1:时间段1的时间单元.  Range from:CAN_BS1_1tq to CAN_BS1_16tq;
+*	@param		:	brp			brp :波特率分频器.       Range from:1 to 1024;                   tq=(brp)*tpclk1
+* @param		: mode 		mode:CAN_Mode_Normal,普通模式;CAN_Mode_LoopBack,回环模式;
+* @retval   : 0,初始化OK;其他,初始化失败; 
+* @Note     : 波特率=Fpclk1/((tbs1+1+tbs2+1+1)*brp);
+*							Fpclk1的时钟在初始化的时候设置为42M,如果设置CAN1_Mode_Init(CAN_BS2_6tq,CAN_BS1_7tq,6,CAN_Mode_LoopBack);
+*							则波特率为:42M/((6+7+1)*6)=500Kbps
+************************************************************************************************************************
+**/
 u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 {
 
@@ -105,11 +167,17 @@ void CAN1_RX0_IRQHandler(void)
 }
 #endif
 
-//can发送一组数据(固定格式:ID为0X12,标准帧,数据帧)	
-//len:数据长度(最大为8)				     
-//msg:数据指针,最大为8个字节.
-//返回值:0,成功;
-//		 其他,失败;
+
+
+/**
+************************************************************************************************************************
+* @Name     : CAN1_Send_Msg
+* @brief    : can发送一组数据(固定格式:ID为0X12,标准帧,数据帧)	
+* @param    : len     len:数据长度(最大为8)				  
+* @retval   : 0,成功; 其他,失败;
+* @Note     : none
+************************************************************************************************************************
+**/
 u8 CAN1_Send_Msg(u8* msg,u8 len)
 {	
   u8 mbox;
@@ -127,12 +195,18 @@ u8 CAN1_Send_Msg(u8* msg,u8 len)
   while((CAN_TransmitStatus(CAN1, mbox)==CAN_TxStatus_Failed)&&(i<0XFFF))i++;	//等待发送结束
   if(i>=0XFFF)return 1;
   return 0;		
-
 }
-//can口接收数据查询
-//buf:数据缓存区;	 
-//返回值:0,无数据被收到;
-//		 其他,接收的数据长度;
+
+
+/**
+************************************************************************************************************************
+* @Name     : Can1_Receive_Msg
+* @brief    : This function process the can message representing the encoder data received from the CAN2 bus.
+* @param    : buf 数据缓存区;	 
+* @retval   : 0,无数据被收到;其他,接收的数据长度;
+* @Note     : can口接收数据查询
+************************************************************************************************************************
+**/
 u8 CAN1_Receive_Msg(u8 *buf)
 {		   		   
  	u32 i;
@@ -145,6 +219,34 @@ u8 CAN1_Receive_Msg(u8 *buf)
 }
 
 
+/**
+************************************************************************************************************************
+* @Name     : set_M3508_info
+* @brief    : This function sends encoder information for the M3508 via CAN1  
+*							can发送一组数据(固定格式:ID为0X200,标准帧,数据帧)	
+* @param    : velocity     the velocity of the M3508 motor.
+* @param    : temperature  the temperature of the M3508 motor.
+* @retval   : void
+* @Note     : none
+************************************************************************************************************************
+**/
+void set_M3508_info(int16_t velocity,int16_t temperature)
+{
+		CanTxMsg tm;						 //CAN的发送报文结构体
+	  tm.StdId=0x200;				 
+		tm.IDE=0;					
+		tm.RTR=0;
+		tm.DLC=8;
+		tm.Data[0]=(uint8_t)(velocity>>8);//高八位转移低八位
+		tm.Data[1]=(uint8_t)(velocity);	  //十六位数据赋值给八位数据，保留低八位
+		tm.Data[2]=(uint8_t)(temperature>>8);
+	  tm.Data[3]=(uint8_t)(temperature);
+		tm.Data[4]=0;
+		tm.Data[5]=0;
+		tm.Data[6]=0;
+		tm.Data[7]=0;
+		CAN_Transmit(CAN1 ,&tm);
+}
 
 
 
