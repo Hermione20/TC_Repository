@@ -24,3 +24,9 @@ JLinkLog.txt
 *.map
 *.Administrator
 *.uvopt
+*.ini
+*.uvprojx
+*.uvoptx
+*.uvguix
+*.scvd
+*.dbgconf

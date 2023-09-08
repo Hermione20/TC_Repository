@@ -1,3 +1,5 @@
+#define DELAY_ON 0
+#if DELAY_ON
 #include "delay.h"
 #include "sys.h"
 ////////////////////////////////////////////////////////////////////////////////// 	 
@@ -224,7 +226,7 @@ void delay_ms(u16 nms)
 } 
 #endif
 			 
-
+#endif
 
 
 
