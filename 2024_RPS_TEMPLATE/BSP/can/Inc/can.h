@@ -12,14 +12,17 @@
 #define CAN2_TX0_INT_ENABLE 0
 
 
-u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化
- 
+#define CAN1_Data_Receive_Process  do{CAN1_Receive_Msg(rx_message.Data);}while(0);
+#define CAN2_Data_Receive_Process  do{CAN2_Receive_Msg(rx_message.Data);}while(0);	
+
+
+
+
+
+u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化 
 u8 CAN2_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化 
- 
 u8 CAN1_Send_Msg(u8* msg,u8 len);						//发送数据
-
 u8 CAN1_Receive_Msg(u8 *buf);							//接收数据
-
 u8 CAN2_Receive_Msg(u8 *buf);
 
 void CAN1_Configuration(void);

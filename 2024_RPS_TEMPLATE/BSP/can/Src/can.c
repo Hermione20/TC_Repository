@@ -103,7 +103,7 @@ u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode)
    	NVIC_InitTypeDef       NVIC_InitStructure;
 #endif
     //使能相关时钟
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//使能PORTA时钟	            
+		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);//使能PORTA时钟	            
 
   	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE);//使能CAN1时钟	
 	
@@ -169,7 +169,7 @@ u8 CAN2_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode)
 {
 
   	GPIO_InitTypeDef       GPIO_InitStructure; 
-	CAN_InitTypeDef        CAN_InitStructure;
+		CAN_InitTypeDef        CAN_InitStructure;
   	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
 #if CAN2_RX0_INT_ENABLE|CAN2_TX0_INT_ENABLE
    	NVIC_InitTypeDef       NVIC_InitStructure;
@@ -268,7 +268,7 @@ void CAN2_RX0_IRQHandler(void)
        CAN_ClearITPendingBit(CAN2, CAN_IT_FMP0);//|CAN_IT_FF0|CAN_IT_FOV0
        CAN_Receive(CAN2, CAN_FIFO0, &rx_message);  
        //电机编码器数据处理
-       CAN2_Receive_Msg(rx_message.Data);
+       CAN2_Data_Receive_Process
 			 for(i=0;i<8;i++)
 				CAN2_receive_buf[i]=rx_message.Data[i];	
     }
@@ -285,28 +285,13 @@ void CAN1_RX0_IRQHandler(void)
        CAN_ClearITPendingBit(CAN1, CAN_IT_FMP0);//|CAN_IT_FF0|CAN_IT_FOV0
        CAN_Receive(CAN1, CAN_FIFO0, &rx_message);  
        //电机编码器数据处理
-			if(rx_message.StdId==0x251)
-			{	
-       CAN1_Receive_Msg(rx_message.Data);
-			 for(i=0;i<8;i++)
-				CAN1_receive_buf[i]=rx_message.Data[i];	
+			 CAN1_Data_Receive_Process
+				for(i=0;i<8;i++)
+				CAN1_receive_buf[i]=rx_message.Data[i];
 			}
-    }
-
-	if(CAN1_receive_buf[0]=='G')
-	{
-	 printf("Normal reception\r\n");
-	}
-	else if(CAN1_receive_buf[0]=='w')
-	{
-	 printf("Receive exception\r\n");
-	}
-	else
-	{ 
-		printf("Stopped reception\r\n");
-	}
-
 }
+
+
 #endif
 
 
