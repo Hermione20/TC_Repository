@@ -429,10 +429,7 @@ void uart2_init(u32 bound)
 				NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 			#endif
 
-		
-			USART_Cmd(USART2, ENABLE);  //使能串口1 
-			
-			
+			USART_Cmd(USART2, ENABLE);  //使能串口1 		
 }
 
 
