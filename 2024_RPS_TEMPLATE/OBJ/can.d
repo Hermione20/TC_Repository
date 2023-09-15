@@ -69,3 +69,5 @@
 ..\obj\can.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\can.o: ..\APP\BAL\Inc\oldpid.h
 ..\obj\can.o: ..\USER\bsp.h
+..\obj\can.o: ..\BSP\can\Inc\can.h
+..\obj\can.o: ..\BSP\usart\Inc\usart.h

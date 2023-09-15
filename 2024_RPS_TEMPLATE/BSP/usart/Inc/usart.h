@@ -22,22 +22,22 @@
 #define EN_UART2_DMA_SECOND_FIFO  0
 #define EN_UART2_DMA_TX_IRQ			  0
 
-#define EN_USART3									0
-#define EN_USART3_RX							0
-#define EN_USART3_DMA							0
-#define EN_USART3_DMA_RX					0
-#define EN_USART3_DMA_TX					0
-#define EN_USART3_DMA_SECOND_FIFO 0
+#define EN_USART3									1
+#define EN_USART3_RX							1
+#define EN_USART3_DMA							1
+#define EN_USART3_DMA_RX					1
+#define EN_USART3_DMA_TX					1
+#define EN_USART3_DMA_SECOND_FIFO 1
 
 
-#define EN_UART4									0
-#define EN_UART4_RX       				0
-#define EN_UART4_TX								0
-#define EN_UART4_DMA							0
-#define EN_UART4_DMA_TX      		  0
-#define EN_UART4_DMA_RX      			0
-#define EN_UART4_DMA_SECOND_FIFO  0
-#define EN_UART4_DMA_TX_IRQ				0
+#define EN_UART4									1
+#define EN_UART4_RX       				1
+#define EN_UART4_TX								1
+#define EN_UART4_DMA							1
+#define EN_UART4_DMA_TX      		  1
+#define EN_UART4_DMA_RX      			1
+#define EN_UART4_DMA_SECOND_FIFO  1
+#define EN_UART4_DMA_TX_IRQ				1
 
 
 #define EN_UART5									0
@@ -49,14 +49,14 @@
 #define EN_UART5_DMA_SECOND_FIFO  0
 #define EN_UART5_RX_IQR       		0
 
-#define EN_UART6									0
-#define EN_UART6_RX								0
-#define EN_UART6_TX								0
-#define EN_UART6_DMA          		0
-#define EN_UART6_DMA_TX						0
-#define EN_UART6_DMA_RX       		0
-#define EN_UART6_DMA_SECOND_FIFO  0
-#define EN_UART6_RX_IQR       		0   
+#define EN_UART6									1
+#define EN_UART6_RX								1
+#define EN_UART6_TX								1
+#define EN_UART6_DMA          		1
+#define EN_UART6_DMA_TX						1
+#define EN_UART6_DMA_RX       		1
+#define EN_UART6_DMA_SECOND_FIFO  1
+#define EN_UART6_RX_IQR       		1   
 
  /* Definition for USART_CH100 resources ******************************************/
   #define USART_CH100                           USART3
@@ -100,7 +100,7 @@
   #define USART_CH100_RX_DMA_FLAG_TCIF          DMA_FLAG_TCIF1
 
 
-#define USART1_Data_Receive_Process					do{}while(0)   		
+#define USART1_Data_Receive_Process					do{RemoteDataPrcess(_UART1_DMA_RX_BUF);}while(0)   		
 #define USART2_Data_Receive_Process					do{}while(0) 
 #define USART3_Data_Receive_Process					do{}while(0) 
 #define USART4_Data_Receive_Process					do{}while(0) 
@@ -123,6 +123,12 @@ void UART3_MYDMA_Enable(u16 ndtr);
 void UART4_MYDMA_Enable(u16 ndtr);
 void UART5_MYDMA_Enable(u16 ndtr);
 void UART6_MYDMA_Enable(u16 ndtr);
+
+	
+void Uart3SendByteInfoProc(u8 nSendInfo);	
+void Uart3SendBytesInfoProc(u8* pSendInfo, u16 nSendCount);	
+void Uart4SendByteInfoProc(u8 nSendInfo);
+void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount);
 #endif
 
 

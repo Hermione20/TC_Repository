@@ -69,3 +69,5 @@
 ..\obj\delay.o: ..\APP\BAL\Inc\oldpid.h
 ..\obj\delay.o: ..\USER\bsp.h
 ..\obj\delay.o: ..\HEADFILE\public.h
+..\obj\delay.o: ..\BSP\can\Inc\can.h
+..\obj\delay.o: ..\BSP\usart\Inc\usart.h

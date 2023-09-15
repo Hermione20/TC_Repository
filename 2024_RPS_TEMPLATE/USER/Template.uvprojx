@@ -333,9 +333,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1, __FPU_USED =1, __CC_ARM</Define>
+              <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER,ARM_MATH_CM4, __FPU_PRESENT=1,__FPU_USED=1, __CC_ARM</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\BSP;..\APP\RTOS;..\APP\TASK;..\EMBEDDED;..\STLIB\inc;..\STLIB\src;..\APP\BAL;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\APP\BAL\Inc;..\APP\RTOS\Inc;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Inc;..\APP\TASK\SHOOT_TASK\Inc</IncludePath>
+              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\BSP;..\APP\RTOS;..\APP\TASK;..\EMBEDDED;..\STLIB\inc;..\STLIB\src;..\APP\BAL;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\APP\BAL\Inc;..\APP\RTOS\Inc;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Inc;..\APP\TASK\SHOOT_TASK\Inc;..\APP\TASK\CANBUS_TASK\Inc;..\APP\TASK\CHASSIS_TASK\Inc;..\EMBEDDED\Protocol;..\EMBEDDED\Inc;..\EMBEDDED\proto</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -406,6 +406,18 @@
         </Group>
         <Group>
           <GroupName>TASK</GroupName>
+          <Files>
+            <File>
+              <FileName>CANBUS_TASK.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\CANBUS_TASK\Src\CANBUS_TASK.c</FilePath>
+            </File>
+            <File>
+              <FileName>CHASSIS_TASK.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>BAL</GroupName>
@@ -419,6 +431,33 @@
         </Group>
         <Group>
           <GroupName>EMBEDDED</GroupName>
+          <Files>
+            <File>
+              <FileName>CanBus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\Src\CanBus.c</FilePath>
+            </File>
+            <File>
+              <FileName>senior.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\Src\senior.c</FilePath>
+            </File>
+            <File>
+              <FileName>protobuf-c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\proto\protobuf-c.c</FilePath>
+            </File>
+            <File>
+              <FileName>Recieve.pb-c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\proto\Recieve.pb-c.c</FilePath>
+            </File>
+            <File>
+              <FileName>Send.pb-c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\proto\Send.pb-c.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>BSP</GroupName>

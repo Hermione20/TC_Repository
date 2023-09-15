@@ -2,6 +2,7 @@
 #define __PUBLIC_H
 
 
+
 /**************ST HEAD*********************/
 
 
@@ -39,12 +40,14 @@
 
 /****************BSP**********************/
 #include "bsp.h"
+#include "can.h"
+#include "usart.h"
 
 
 
 
 
-
+#define pi 3.14159 26535 89793
 
 
 
