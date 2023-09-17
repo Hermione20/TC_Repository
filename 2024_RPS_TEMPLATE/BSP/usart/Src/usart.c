@@ -1,6 +1,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "usart.h"
 /*----------------------------------------------------------------------------*/
+#if SYSTEM_SUPPORT_OS
+#include "includes.h"					//ucos 使用	  
+#endif	
 /**
   ******************************************************************************
   * @file    usart.c
@@ -81,7 +84,7 @@
 串口1/3是5V
 */
 
-#if 0
+#if 1
 #pragma import(__use_no_semihosting)  
 /**
 ************************************************************************************************************************
@@ -676,31 +679,31 @@ void uart3_init(u32 bound)//921600
 		 
 			DMA_Cmd(DMA1_Stream3, ENABLE);                      //开启DMA传输 		
 		}	 
-				//发送单字节
-		void Uart3SendByteInfoProc(u8 nSendInfo)
-		{
-			u8 *pBuf = NULL;
-			//指向发送缓冲区
-			pBuf = _UART3_DMA_TX_BUF;
-			*pBuf++ = nSendInfo;
+//				//发送单字节
+//		void Uart3SendByteInfoProc(u8 nSendInfo)
+//		{
+//			u8 *pBuf = NULL;
+//			//指向发送缓冲区
+//			pBuf = _UART3_DMA_TX_BUF;
+//			*pBuf++ = nSendInfo;
 
-			UART3_MYDMA_Enable(1); //开始一次DMA传输！
-		}
-		
-		//发送多字节
-		void Uart3SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
-		{
-			u16 i = 0;
-			u8 *pBuf = NULL;
-			//指向发送缓冲区
-			pBuf = _UART3_DMA_TX_BUF;
-			for (i=0; i<nSendCount; i++)
-				{
-					*(pBuf+i) = pSendInfo[i];
-				}
-			//DMA发送方式
-			UART3_MYDMA_Enable(nSendCount); //开始一次DMA传输！
-		}
+//			UART3_MYDMA_Enable(1); //开始一次DMA传输！
+//		}
+//		
+//		//发送多字节
+//		void Uart3SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
+//		{
+//			u16 i = 0;
+//			u8 *pBuf = NULL;
+//			//指向发送缓冲区
+//			pBuf = _UART3_DMA_TX_BUF;
+//			for (i=0; i<nSendCount; i++)
+//				{
+//					*(pBuf+i) = pSendInfo[i];
+//				}
+//			//DMA发送方式
+//			UART3_MYDMA_Enable(nSendCount); //开始一次DMA传输！
+//		}
 
 
 
@@ -1266,7 +1269,6 @@ void uart4_init(u32 bound)
 			NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 			NVIC_Init(&NVIC_InitStructure);
-
 		#endif
 #endif
 			#if EN_UART6_RX

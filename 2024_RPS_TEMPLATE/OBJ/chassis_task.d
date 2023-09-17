@@ -1,5 +1,6 @@
 ..\obj\chassis_task.o: ..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c
 ..\obj\chassis_task.o: ..\APP\TASK\CHASSIS_TASK\Inc\CHASSIS_TASK.h
+..\obj\chassis_task.o: ..\HEADFILE\main.h
 ..\obj\chassis_task.o: ..\HEADFILE\public.h
 ..\obj\chassis_task.o: ..\USER\stm32f4xx.h
 ..\obj\chassis_task.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm4.h
@@ -68,6 +69,14 @@
 ..\obj\chassis_task.o: ..\HEADFILE\public.h
 ..\obj\chassis_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\chassis_task.o: ..\APP\BAL\Inc\oldpid.h
+..\obj\chassis_task.o: ..\EMBEDDED\Inc\senior.h
+..\obj\chassis_task.o: ..\HEADFILE\main.h
+..\obj\chassis_task.o: ..\EMBEDDED\proto\send.pb-c.h
+..\obj\chassis_task.o: ..\EMBEDDED\proto\protobuf-c.h
+..\obj\chassis_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+..\obj\chassis_task.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\chassis_task.o: ..\EMBEDDED\proto\Recieve.pb-c.h
+..\obj\chassis_task.o: ..\EMBEDDED\Inc\CanBus.h
 ..\obj\chassis_task.o: ..\USER\bsp.h
 ..\obj\chassis_task.o: ..\BSP\can\Inc\can.h
 ..\obj\chassis_task.o: ..\BSP\usart\Inc\usart.h

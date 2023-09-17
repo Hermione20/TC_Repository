@@ -12,8 +12,8 @@
 #define CAN2_TX0_INT_ENABLE 0
 
 
-#define CAN1_Data_Receive_Process  do{CAN1_Receive_Msg(rx_message.Data);}while(0);
-#define CAN2_Data_Receive_Process  do{CAN2_Receive_Msg(rx_message.Data);}while(0);	
+//#define CAN1_Data_Receive_Process  do{CAN1_Receive_Msg(rx_message.Data);}while(0);
+//#define CAN2_Data_Receive_Process  do{CAN2_Receive_Msg(rx_message.Data);}while(0);	
 
 
 

@@ -69,6 +69,9 @@
 ..\obj\senior.o: ..\HEADFILE\public.h
 ..\obj\senior.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\senior.o: ..\APP\BAL\Inc\oldpid.h
+..\obj\senior.o: ..\EMBEDDED\Inc\senior.h
+..\obj\senior.o: ..\EMBEDDED\Inc\CanBus.h
+..\obj\senior.o: ..\HEADFILE\main.h
 ..\obj\senior.o: ..\USER\bsp.h
 ..\obj\senior.o: ..\BSP\can\Inc\can.h
 ..\obj\senior.o: ..\BSP\usart\Inc\usart.h

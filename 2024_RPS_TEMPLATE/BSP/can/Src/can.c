@@ -266,10 +266,10 @@ void CAN2_RX0_IRQHandler(void)
     {
        CAN_ClearITPendingBit(CAN2, CAN_IT_FMP0);//|CAN_IT_FF0|CAN_IT_FOV0
        CAN_Receive(CAN2, CAN_FIFO0, &rx_message);  
-       //电机编码器数据处理
-       CAN2_Data_Receive_Process
-			 for(i=0;i<8;i++)
-				CAN2_receive_buf[i]=rx_message.Data[i];	
+//       //电机编码器数据处理
+//       CAN2_Data_Receive_Process
+//			 for(i=0;i<8;i++)
+//				CAN2_receive_buf[i]=rx_message.Data[i];	
     }
 }
 #endif
@@ -283,10 +283,10 @@ void CAN1_RX0_IRQHandler(void)
     {
        CAN_ClearITPendingBit(CAN1, CAN_IT_FMP0);//|CAN_IT_FF0|CAN_IT_FOV0
        CAN_Receive(CAN1, CAN_FIFO0, &rx_message);  
-       //电机编码器数据处理
-			 CAN1_Data_Receive_Process
-				for(i=0;i<8;i++)
-				CAN1_receive_buf[i]=rx_message.Data[i];
+//       //电机编码器数据处理
+//			 CAN1_Data_Receive_Process
+//				for(i=0;i<8;i++)
+//				CAN1_receive_buf[i]=rx_message.Data[i];
 			}
 }
 

@@ -68,6 +68,14 @@
 ..\obj\usart.o: ..\HEADFILE\public.h
 ..\obj\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\usart.o: ..\APP\BAL\Inc\oldpid.h
+..\obj\usart.o: ..\EMBEDDED\Inc\senior.h
+..\obj\usart.o: ..\HEADFILE\main.h
+..\obj\usart.o: ..\EMBEDDED\proto\send.pb-c.h
+..\obj\usart.o: ..\EMBEDDED\proto\protobuf-c.h
+..\obj\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+..\obj\usart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\usart.o: ..\EMBEDDED\proto\Recieve.pb-c.h
+..\obj\usart.o: ..\EMBEDDED\Inc\CanBus.h
 ..\obj\usart.o: ..\USER\bsp.h
 ..\obj\usart.o: ..\BSP\can\Inc\can.h
 ..\obj\usart.o: ..\BSP\usart\Inc\usart.h

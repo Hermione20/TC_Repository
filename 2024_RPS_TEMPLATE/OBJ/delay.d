@@ -67,7 +67,15 @@
 ..\obj\delay.o: ..\BSP\delay\Inc\delay.h
 ..\obj\delay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ..\obj\delay.o: ..\APP\BAL\Inc\oldpid.h
-..\obj\delay.o: ..\USER\bsp.h
+..\obj\delay.o: ..\EMBEDDED\Inc\senior.h
+..\obj\delay.o: ..\HEADFILE\main.h
 ..\obj\delay.o: ..\HEADFILE\public.h
+..\obj\delay.o: ..\EMBEDDED\proto\send.pb-c.h
+..\obj\delay.o: ..\EMBEDDED\proto\protobuf-c.h
+..\obj\delay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
+..\obj\delay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+..\obj\delay.o: ..\EMBEDDED\proto\Recieve.pb-c.h
+..\obj\delay.o: ..\EMBEDDED\Inc\CanBus.h
+..\obj\delay.o: ..\USER\bsp.h
 ..\obj\delay.o: ..\BSP\can\Inc\can.h
 ..\obj\delay.o: ..\BSP\usart\Inc\usart.h
