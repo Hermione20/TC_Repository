@@ -1,6 +1,5 @@
 ..\obj\can.o: ..\HARDWARE\CAN\can.c
 ..\obj\can.o: ..\HARDWARE\CAN\can.h
-..\obj\can.o: ..\SYSTEM\sys\sys.h
 ..\obj\can.o: ..\USER\stm32f4xx.h
 ..\obj\can.o: ..\CORE\core_cm4.h
 ..\obj\can.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
@@ -38,5 +37,6 @@
 ..\obj\can.o: ..\STLibraries\Inc\stm32f4xx_fsmc.h
 ..\obj\can.o: ..\HARDWARE\LED\led.h
 ..\obj\can.o: ..\SYSTEM\delay\delay.h
-..\obj\can.o: ..\SYSTEM\usart\Inc\usart.h
+..\obj\can.o: ..\SYSTEM\sys\sys.h
+..\obj\can.o: ..\HARDWARE\usart\Inc\usart.h
 ..\obj\can.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h

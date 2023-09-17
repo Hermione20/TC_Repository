@@ -1,9 +1,12 @@
 /* Includes ------------------------------------------------------------------*/
-#include "usart.h"
-/*----------------------------------------------------------------------------*/
+
+#include "usart.h"	
+#include "stm32f4xx_dma.h"
+////////////////////////////////////////////////////////////////////////////////// 	 
+//如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
 #include "includes.h"					//ucos 使用	  
-#endif	
+#endif	  
 /**
   ******************************************************************************
   * @file    usart.c
@@ -53,8 +56,6 @@
       (#) 使用USART_Cmd()函数启用USART。
    
       (#) 当使用DMA模式时，使用DMA_Cmd()函数启用DMA。
-			
-			(#)	记得开启宏定义，否则不编译。
     
       -@- 请参阅多处理器，LIN，半双工，智能卡，IrDA子部分
 					欲知详情
@@ -62,6 +63,9 @@
     [..]        
 				为了达到更高的通信波特率，可以使用USART_OverSampling8Cmd()函数启用8模式的过采样。
 				这个函数应该在启用USART时钟(RCC_APBxPeriphClockCmd())之后，在调用USART_Init()函数之前调用。
+
+
+            
     @endverbatim        
   ******************************************************************************
   * @attention
@@ -72,12 +76,8 @@
   *  4.接上，如效果好，可以考虑其他串口同样写法；
   *  5.使用说明：在头文件处选择串口功能的开启，已同步主函数的初始化，无需去补；
   * 						在头文件宏定义处提供回调函数统一接口，加入回调函数名自行调用中断处理；
-  *							
-  *  
   *
-  * 
   *  @更多详情，请右键移步usart.h更改配置开启。
-  *
   ******************************************************************************  
   */ 
 /*
@@ -430,7 +430,10 @@ void uart2_init(u32 bound)
 				NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 			#endif
 
-			USART_Cmd(USART2, ENABLE);  //使能串口1 		
+		
+			USART_Cmd(USART2, ENABLE);  //使能串口1 
+			
+			
 }
 
 
@@ -677,37 +680,9 @@ void uart3_init(u32 bound)//921600
 				
 			DMA_SetCurrDataCounter(DMA1_Stream3,ndtr);          //数据传输量  
 		 
-			DMA_Cmd(DMA1_Stream3, ENABLE);                      //开启DMA传输 		
-		}	 
-//				//发送单字节
-//		void Uart3SendByteInfoProc(u8 nSendInfo)
-//		{
-//			u8 *pBuf = NULL;
-//			//指向发送缓冲区
-//			pBuf = _UART3_DMA_TX_BUF;
-//			*pBuf++ = nSendInfo;
-
-//			UART3_MYDMA_Enable(1); //开始一次DMA传输！
-//		}
-//		
-//		//发送多字节
-//		void Uart3SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
-//		{
-//			u16 i = 0;
-//			u8 *pBuf = NULL;
-//			//指向发送缓冲区
-//			pBuf = _UART3_DMA_TX_BUF;
-//			for (i=0; i<nSendCount; i++)
-//				{
-//					*(pBuf+i) = pSendInfo[i];
-//				}
-//			//DMA发送方式
-//			UART3_MYDMA_Enable(nSendCount); //开始一次DMA传输！
-//		}
-
-
-
-		
+			DMA_Cmd(DMA1_Stream3, ENABLE);                      //开启DMA传输 
+				
+		}	  
 			#endif
 
 #endif
@@ -886,7 +861,7 @@ void uart4_init(u32 bound)
 		* @Note     : 发送内容是_UART5_DMA_TX_BUF[100]数组,利用DMA1_Stream4_IRQHandler去清除标志位
 		************************************************************************************************************************
 		**/	
-		void UART4_MYDMA_Enable(u16 ndtr) //Uart4DmaSendDataProc
+		void UART4_MYDMA_Enable(u16 ndtr)
 		{	
 			while (DMA_GetCmdStatus(DMA1_Stream4) != DISABLE){}	//确保DMA可以被设置  
 				
@@ -895,34 +870,6 @@ void uart4_init(u32 bound)
 			DMA_Cmd(DMA1_Stream4, ENABLE);                      //开启DMA传输 	
 		}	 
 
-		//发送单字节
-		void Uart4SendByteInfoProc(u8 nSendInfo)
-		{
-			u8 *pBuf = NULL;
-			//指向发送缓冲区
-			pBuf = _UART4_DMA_TX_BUF;
-			*pBuf++ = nSendInfo;
-
-			UART4_MYDMA_Enable(1); //开始一次DMA传输！
-		}
-		
-		//发送多字节
-		void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
-		{
-			u16 i = 0;
-			u8 *pBuf = NULL;
-			//指向发送缓冲区
-			pBuf = _UART4_DMA_TX_BUF;
-			for (i=0; i<nSendCount; i++)
-				{
-					*(pBuf+i) = pSendInfo[i];
-				}
-			//DMA发送方式
-			UART4_MYDMA_Enable(nSendCount); //开始一次DMA传输！
-		}
-				
-		
-		
 		void DMA1_Stream4_IRQHandler(void)
 		{
 			//清除标志
@@ -1269,6 +1216,7 @@ void uart4_init(u32 bound)
 			NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 			NVIC_Init(&NVIC_InitStructure);
+
 		#endif
 #endif
 			#if EN_UART6_RX
@@ -1328,7 +1276,7 @@ void uart4_init(u32 bound)
 								DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
 								this_time_rx_len = UART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
-								DMA_SetCurrDataCounter(DMA1_Stream0, UART6_DMA_RX_BUF_LEN);
+								DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);
 								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART6_DMA_RX_BUF[1][0],DMA_Memory_1);
 								DMA_Cmd(DMA1_Stream0, ENABLE);
 

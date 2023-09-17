@@ -69,21 +69,15 @@
     @endverbatim        
   ******************************************************************************
   * @attention
+	*
+  *  1.请注意printf函数重定向的开启，若无明确使用意向，请置零勿启用，否则容易进入死循环判断；
+  *  2.每个串口发送接收的buf地址在其定义上方，提供数组长度的更改；
+  *  3.USART3移植于成熟的CH100接收串口的配置，提供了接口移植功能；
+  *  4.接上，如效果好，可以考虑其他串口同样写法；
+  *  5.使用说明：在头文件处选择串口功能的开启，已同步主函数的初始化，无需去补；
+  * 						在头文件宏定义处提供回调函数统一接口，加入回调函数名自行调用中断处理；
   *
-  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  *
+  *  @更多详情，请右键移步usart.h更改配置开启。
   ******************************************************************************  
   */ 
 /*
@@ -1280,10 +1274,10 @@ void uart4_init(u32 bound)
 							{
 								DMA_Cmd(DMA1_Stream0, DISABLE);
 								DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
-								this_time_rx_len = UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
+								this_time_rx_len = UART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
 								DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);
-								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[1][0],DMA_Memory_1);
+								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART6_DMA_RX_BUF[1][0],DMA_Memory_1);
 								DMA_Cmd(DMA1_Stream0, ENABLE);
 
 								if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
@@ -1297,8 +1291,8 @@ void uart4_init(u32 bound)
 
 								this_time_rx_len =UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
-								DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);
-								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[0][0],DMA_Memory_0);
+								DMA_SetCurrDataCounter(DMA1_Stream0, UART6_DMA_RX_BUF_LEN);
+								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART6_DMA_RX_BUF[0][0],DMA_Memory_0);
 								DMA_Cmd(DMA1_Stream0, ENABLE);
 								
 								if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
@@ -1307,9 +1301,9 @@ void uart4_init(u32 bound)
 				#else
 						DMA_Cmd(DMA1_Stream0, DISABLE);                          //关闭串口5的DMA接收通道
 						DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
-						this_time_rx_len = UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0); //获取DMA_GetCurrDataCounter剩余数据量
+						this_time_rx_len = UART6_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0); //获取DMA_GetCurrDataCounter剩余数据量
 
-						DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);      //设置当前DMA剩余数据量
+						DMA_SetCurrDataCounter(DMA1_Stream0, UART6_DMA_RX_BUF_LEN);      //设置当前DMA剩余数据量
 						DMA_Cmd(DMA1_Stream0, ENABLE);                                       //开启串口5的DMA接收通道
 
 						if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))

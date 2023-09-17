@@ -1,6 +1,7 @@
 #ifndef __CAN_H
 #define __CAN_H	 
-#include "sys.h"	    
+//#include "sys.h"	 
+#include "stm32f4xx.h"
 //////////////////////////////////////////////////////////////////////////////////	 
 //本程序只供学习使用，未经作者许可，不得用于其它任何用途
 //ALIENTEK STM32F407开发板
@@ -16,11 +17,7 @@
 
 	
 //接收RX0中断使能
-#define CAN1_RX0_INT_ENABLE	1		//0,不使能;1,使能.								    
-#define CAN2_RX0_INT_ENABLE 1
 
-#define CAN1_TX0_INT_ENABLE 0
-#define CAN2_TX0_INT_ENABLE 0
 
 
 u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化
@@ -37,11 +34,11 @@ void CAN1_Configuration(void);
 void set_M3508_info(void);
 void CAN2_Configuration(void);
 void Set_Gimbal_Current1(CAN_TypeDef *CANx, int16_t ch_1_iq, int16_t ch_2_iq, int16_t ch_3_iq, int16_t ch_4_iq);
+
+
+
+
 #endif
-
-
-
-
 
 
 
