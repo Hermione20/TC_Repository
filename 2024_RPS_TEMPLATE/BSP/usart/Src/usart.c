@@ -3,10 +3,7 @@
 #include "usart.h"	
 #include "stm32f4xx_dma.h"
 ////////////////////////////////////////////////////////////////////////////////// 	 
-//如果使用ucos,则包括下面的头文件即可.
-#if SYSTEM_SUPPORT_OS
-#include "includes.h"					//ucos 使用	  
-#endif	  
+ 
 /**
   ******************************************************************************
   * @file    usart.c
@@ -111,8 +108,8 @@ void _sys_exit(int x)
 //重定义fputc函数 
 int fputc(int ch, FILE *f)
 { 	
-	while((USART6->SR&0X40)==0);//循环发送,直到发送完毕   
-	USART6 ->DR = (u8) ch;      
+	while((USART3->SR&0X40)==0);//循环发送,直到发送完毕   
+	USART3 ->DR = (u8) ch;      
 	return ch;
 }
 #endif
@@ -143,10 +140,8 @@ void uart1_init(u32 bound)
    //GPIO端口设置
   GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
+	NVIC_InitTypeDef NVIC_InitStructure;
 
-	#if EN_USART1_RX|EN_USART1_TX	
-		NVIC_InitTypeDef NVIC_InitStructure;
-	#endif
 	
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB,ENABLE); //使能GPIOA时钟
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1,ENABLE);//使能USART1时钟
@@ -175,7 +170,6 @@ void uart1_init(u32 bound)
 	
 	//USART_ClearFlag(USART1, USART_FLAG_TC);
 	
-#if EN_USART1_RX	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启相关中断
 //		USART_ITConfig(USART1, USART_IT_IDLE, ENABLE);        //usart rx idle interrupt  enabled
 	//Usart1 NVIC 配置
@@ -184,12 +178,9 @@ void uart1_init(u32 bound)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority =0;		//子优先级3
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 	NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
-#endif
 
-#if EN_USART1_DMA
 		DMA_InitTypeDef dma;
 		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
-	#if EN_USART1_DMA_RX
 		USART_DMACmd(USART1, USART_DMAReq_Rx, ENABLE);
 
     DMA_DeInit(DMA2_Stream2);
@@ -198,10 +189,10 @@ void uart1_init(u32 bound)
 		#if EN_USART1_DMA_SECOND_FIFO
 						dma.DMA_Memory0BaseAddr   =   (uint32_t)&_UART1_DMA_RX_BUF[0][0];
 						dma.DMA_BufferSize        =   sizeof(_UART1_DMA_RX_BUF)/2;
-				#else
+		#else
 						dma.DMA_Memory0BaseAddr   =   (uint32_t)&_UART1_DMA_RX_BUF;    //DMA接收基地址
 						dma.DMA_BufferSize        =   sizeof(_UART1_DMA_RX_BUF);       //传输数据数量
-				#endif
+		#endif
 				
     dma.DMA_Channel = DMA_Channel_4;
     dma.DMA_PeripheralBaseAddr = (uint32_t)(&USART1->DR);
@@ -226,17 +217,14 @@ void uart1_init(u32 bound)
 					DMA_DoubleBufferModeCmd(DMA2_Stream2, ENABLE);
 				#endif
 		DMA_Cmd(DMA2_Stream2, ENABLE);
-	#endif
+
 		
 			USART_Cmd(USART1, ENABLE);
-#endif
-
-
 }
 
 
 
-#if EN_USART1_RX_IRQ
+
 /**
 ************************************************************************************************************************
 * @Name     : USART1_IRQHandler
@@ -249,9 +237,6 @@ void uart1_init(u32 bound)
 void USART1_IRQHandler(void)                	//串口1中断服务程序
 {
 
-#if SYSTEM_SUPPORT_OS 		//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
-	OSIntEnter();    
-#endif
 	static uint32_t this_time_rx_len = 0;
 	if(USART_GetITStatus(USART1, USART_IT_IDLE) != RESET)
 	{
@@ -285,12 +270,11 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 			}
 		}
 	}       
-#if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
-	OSIntExit();  											 
-#endif
+
 } 
-#endif	
+
 #endif
+
 
 #if EN_USART2
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
@@ -310,12 +294,13 @@ void uart2_init(u32 bound)
 	//GPIO端口设置
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-		#if EN_UART2_RX
-			NVIC_InitTypeDef NVIC_InitStructure;
-		#endif
+	NVIC_InitTypeDef NVIC_InitStructure;
+	DMA_InitTypeDef dma;
+	
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA,ENABLE); //使能GPIOA时钟
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2,ENABLE);//使能USART1时钟
-
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);//使能DMA1时钟
+	
 	//串口4对应引脚复用映射
 	GPIO_PinAFConfig(GPIOA,GPIO_PinSource2,GPIO_AF_USART2); //GPIOA9复用为USART1
 	GPIO_PinAFConfig(GPIOA,GPIO_PinSource3,GPIO_AF_USART2); //GPIOA10复用为USART1
@@ -336,19 +321,13 @@ void uart2_init(u32 bound)
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
 	USART_Init(USART2, &USART_InitStructure); //初始化串口1
-	
 
 		
-	#if EN_UART2_DMA	
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);//使能DMA1时钟
-		DMA_InitTypeDef dma;
-			#if EN_UART2_DMA_RX
-
 				USART_DMACmd(USART2,USART_DMAReq_Rx,ENABLE);
 				DMA_DeInit(DMA1_Stream5);
 				DMA_StructInit(&dma);
 				
-					#if EN_UART2_DMA_SECOND_FIFO
+#if EN_UART2_DMA_SECOND_FIFO
 						dma.DMA_Memory0BaseAddr   =   (uint32_t)&_UART2_DMA_RX_BUF[0][0];
 						dma.DMA_BufferSize        =   sizeof(_UART2_DMA_RX_BUF)/2;
 					#else
@@ -375,52 +354,42 @@ void uart2_init(u32 bound)
 				DMA_Cmd(DMA1_Stream5, ENABLE);
 				
 //配置Memory1,Memory0是第一个使用的Memory
-				#if EN_UART2_DMA_SECOND_FIFO
+#if EN_UART2_DMA_SECOND_FIFO
 					DMA_DoubleBufferModeConfig(DMA1_Stream5,  (uint32_t)&_UART2_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
 					DMA_DoubleBufferModeCmd(DMA1_Stream5, ENABLE);
 				#endif
-				
-			#endif	
-			#if EN_UART2_DMA_TX
 					
-					USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
-					DMA_Cmd(DMA1_Stream6, DISABLE);                           // 关DMA通道
-					DMA_DeInit(DMA1_Stream6);
-					while(DMA_GetCmdStatus(DMA1_Stream6) != DISABLE) {}
-					dma.DMA_Channel = DMA_Channel_4;
-					dma.DMA_PeripheralBaseAddr	= (uint32_t)(&USART2->DR);
-					dma.DMA_Memory0BaseAddr   	= (uint32_t)&_UART2_DMA_TX_BUF[0];
-					dma.DMA_DIR 			    = DMA_DIR_MemoryToPeripheral;
-					dma.DMA_BufferSize			= 0;//sizeof(_USART1_DMA_TX_BUF);
-					dma.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
-					dma.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
-					dma.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
-					dma.DMA_MemoryDataSize 		= DMA_MemoryDataSize_Byte;
-					dma.DMA_Mode 				= DMA_Mode_Normal;
-					dma.DMA_Priority 			= DMA_Priority_Medium;
-					dma.DMA_FIFOMode 			= DMA_FIFOMode_Disable;
-					dma.DMA_FIFOThreshold 		= DMA_FIFOThreshold_Full;
-					dma.DMA_MemoryBurst 		= DMA_MemoryBurst_Single;
-					dma.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single;
-					DMA_Init(DMA1_Stream6,&dma);				
-					DMA_Cmd(DMA1_Stream6, ENABLE); 
+				USART_DMACmd(USART2, USART_DMAReq_Tx, ENABLE);
+				DMA_Cmd(DMA1_Stream6, DISABLE);                           // 关DMA通道
+				DMA_DeInit(DMA1_Stream6);
+				while(DMA_GetCmdStatus(DMA1_Stream6) != DISABLE) {}
+				dma.DMA_Channel = DMA_Channel_4;
+				dma.DMA_PeripheralBaseAddr	= (uint32_t)(&USART2->DR);
+				dma.DMA_Memory0BaseAddr   	= (uint32_t)&_UART2_DMA_TX_BUF[0];
+				dma.DMA_DIR 			    = DMA_DIR_MemoryToPeripheral;
+				dma.DMA_BufferSize			= 0;//sizeof(_USART1_DMA_TX_BUF);
+				dma.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
+				dma.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
+				dma.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
+				dma.DMA_MemoryDataSize 		= DMA_MemoryDataSize_Byte;
+				dma.DMA_Mode 				= DMA_Mode_Normal;
+				dma.DMA_Priority 			= DMA_Priority_Medium;
+				dma.DMA_FIFOMode 			= DMA_FIFOMode_Disable;
+				dma.DMA_FIFOThreshold 		= DMA_FIFOThreshold_Full;
+				dma.DMA_MemoryBurst 		= DMA_MemoryBurst_Single;
+				dma.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single;
+				DMA_Init(DMA1_Stream6,&dma);				
+				DMA_Cmd(DMA1_Stream6, ENABLE); 
+					
+				DMA_ITConfig(DMA1_Stream6,DMA_IT_TC,ENABLE);
+					
+				NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream6_IRQn;   // 发送DMA通道的中断配置
+				NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;     // 优先级设置
+				NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
+				NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+				NVIC_Init(&NVIC_InitStructure);
 						
-					DMA_ITConfig(DMA1_Stream6,DMA_IT_TC,ENABLE);
-						
-					NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream6_IRQn;   // 发送DMA通道的中断配置
-					NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;     // 优先级设置
-					NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
-					NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-					NVIC_Init(&NVIC_InitStructure);
-						
-			#endif
-	#endif
-
-
-	
-
-			#if EN_UART2_RX	
-			//USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//开启发送非空中断
+			  //USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);//开启发送非空中断
 				USART_ITConfig(USART2,USART_IT_IDLE,ENABLE);  //开启空闲帧中断
 
 				NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;//串口4中断通道
@@ -428,17 +397,12 @@ void uart2_init(u32 bound)
 				NVIC_InitStructure.NVIC_IRQChannelSubPriority =3;		//子优先级3
 				NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 				NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
-			#endif
 
 		
-			USART_Cmd(USART2, ENABLE);  //使能串口1 
+				USART_Cmd(USART2, ENABLE);  //使能串口1 
 			
 			
 }
-
-
-   
-		#if EN_UART2_RX
 			uint8_t leng=0;
 			void USART2_IRQHandler(void)
 			{
@@ -456,9 +420,7 @@ void uart2_init(u32 bound)
 				DMA_Cmd(DMA1_Stream5, ENABLE);
 			}
 		}
-		#endif
-		
-		#if EN_UART2_DMA_TX_IRQ
+
 		/**
 		************************************************************************************************************************
 		* @Name     : UART2_MYDMA_Enable
@@ -486,7 +448,7 @@ void uart2_init(u32 bound)
 				DMA_ClearFlag(DMA1_Stream6,DMA_FLAG_TCIF6);//清除DMA1_Steam3传输完成标志
 			}
 		}
-		#endif
+
 #endif
 
 #if EN_USART3
@@ -504,11 +466,8 @@ void uart2_init(u32 bound)
 void uart3_init(u32 bound)//921600
 	{
 	USART_InitTypeDef USART_InitStructure;
-  GPIO_InitTypeDef GPIO_InitStructure;
-
-	 #if EN_USART3_RX|EN_USART3_TX
-			NVIC_InitTypeDef NVIC_InitStructure;
-	 #endif
+  GPIO_InitTypeDef  GPIO_InitStructure;
+	NVIC_InitTypeDef  NVIC_InitStructure;
 	/* Peripheral Clock Enable -------------------------------------------------*/
   /* Enable GPIO clock */
   RCC_AHB1PeriphClockCmd(USART_CH100_TX_GPIO_CLK | USART_CH100_RX_GPIO_CLK, ENABLE);
@@ -542,8 +501,6 @@ void uart3_init(u32 bound)//921600
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
   USART_Init(USART_CH100, &USART_InitStructure);
-	
-		#if EN_USART3_RX	
 
 		NVIC_InitStructure.NVIC_IRQChannel = USART_CH100_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=2;//
@@ -555,16 +512,13 @@ void uart3_init(u32 bound)//921600
    USART_ITConfig(USART_CH100,USART_IT_IDLE,ENABLE);
 // USART_ITConfig(USART_CH100,USART_IT_RXNE,ENABLE);
 	 USART_ClearFlag(USART_CH100,USART_FLAG_TC|USART_FLAG_IDLE);
-		#endif
 		
   /* Configure DMA controller to manage USART TX and RX DMA request ----------*/ 
-	#if EN_UART3_DMA
 		
 				/* Enable the DMA clock */
 			RCC_AHB1PeriphClockCmd(USART_CH100_DMAx_CLK, ENABLE);
 			DMA_InitTypeDef  DMA_InitStructure;
 			
-			#if EN_UART3_DMA_RX
 
 						#if EN_USART3_DMA_SECOND_FIFO
 							DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)&_USART3_DMA_RX_BUF[0][0];
@@ -599,10 +553,7 @@ void uart3_init(u32 bound)//921600
 							DMA_DoubleBufferModeConfig(USART_CH100_RX_DMA_STREAM,  (uint32_t)&_USART3_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
 							DMA_DoubleBufferModeCmd(USART_CH100_RX_DMA_STREAM, ENABLE);
 						#endif
-			#endif
-			
-			#if EN_USART3_DMA_TX
-			
+
 				//串口3配置发送DMA
 				USART_DMACmd(USART_CH100, USART_DMAReq_Tx, ENABLE);   //启用USART的DMA接口，DMA1、数据流7、通道4
 				DMA_Cmd(USART_CH100_TX_DMA_STREAM, DISABLE);                 // 关DMA通道
@@ -632,18 +583,15 @@ void uart3_init(u32 bound)//921600
 				NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 				NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 				NVIC_Init(&NVIC_InitStructure);
-			#endif
 
-	#endif
 
   /* Enable USART */
 	
   USART_Cmd(USART_CH100, ENABLE);
 }
 	
-			#if EN_UART3_RX
-			uint8_t lengt=0;
-			void USART3_IRQHandler(void)
+uint8_t lengt=0;
+void USART3_IRQHandler(void)
 			{
 			
 			if(USART_GetITStatus(USART_CH100, USART_IT_IDLE) != RESET)    //接收中断
@@ -652,15 +600,14 @@ void uart3_init(u32 bound)//921600
 				(void)USART_CH100->DR;
 				DMA_Cmd(USART_CH100_TX_DMA_STREAM, DISABLE);
 				DMA_ClearFlag(USART_CH100_TX_DMA_STREAM, DMA_FLAG_TCIF5 | DMA_FLAG_HTIF5);
-				lengt = UART3_RX_BUF_LENGTH - DMA_GetCurrDataCounter(USART_CH100_TX_DMA_STREAM);
+				lengt = USART3_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(USART_CH100_TX_DMA_STREAM);
 
 				USART3_Data_Receive_Process;
-				DMA_SetCurrDataCounter(USART_CH100_TX_DMA_STREAM,UART2_RX_BUF_LENGTH);
+				DMA_SetCurrDataCounter(USART_CH100_TX_DMA_STREAM,USART3_DMA_RX_BUF_LEN);
 				DMA_Cmd(USART_CH100_TX_DMA_STREAM, ENABLE);
 			}
 		}
-		#endif
-		#if EN_UART3_DMA_TX
+
 			/**
 			************************************************************************************************************************
 			* @Name     : UART3_MYDMA_Enable
@@ -683,9 +630,9 @@ void uart3_init(u32 bound)//921600
 			DMA_Cmd(DMA1_Stream3, ENABLE);                      //开启DMA传输 
 				
 		}	  
-			#endif
-
 #endif
+		
+		
 #if EN_UART4
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
 	#define  UART4_RX_BUF_LENGTH 100
@@ -704,115 +651,99 @@ void uart4_init(u32 bound)
 	//GPIO端口设置
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
-		#if EN_UART4_RX
-			NVIC_InitTypeDef NVIC_InitStructure;
-		#endif
+	NVIC_InitTypeDef NVIC_InitStructure;
+	DMA_InitTypeDef dma;
+
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE); //使能GPIOA时钟
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4,ENABLE);//使能USART1时钟
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);//使能DMA1时钟
 
+
+	
 	//串口4对应引脚复用映射
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource10,GPIO_AF_UART4); //GPIOA9复用为USART1
 	GPIO_PinAFConfig(GPIOC,GPIO_PinSource11,GPIO_AF_UART4); //GPIOA10复用为USART1
 
 	//UART4端口配置
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11; //GPIOA9与GPIOA10
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;//复用功能
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;	//速度50MHz
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP; //推挽复用输出
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP; //上拉
+	GPIO_InitStructure.GPIO_Pin 									= GPIO_Pin_10 | GPIO_Pin_11; //GPIOA9与GPIOA10
+	GPIO_InitStructure.GPIO_Mode 									= GPIO_Mode_AF;//复用功能
+	GPIO_InitStructure.GPIO_Speed 								= GPIO_Speed_100MHz;	//速度50MHz
+	GPIO_InitStructure.GPIO_OType 								= GPIO_OType_PP; //推挽复用输出
+	GPIO_InitStructure.GPIO_PuPd									= GPIO_PuPd_UP; //上拉
 	GPIO_Init(GPIOC,&GPIO_InitStructure); //初始化PA9，PA10
 
 	//UART4 初始化设置
-	USART_InitStructure.USART_BaudRate = bound;//波特率设置
-	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//字长为8位数据格式
-	USART_InitStructure.USART_StopBits = USART_StopBits_1;//一个停止位
-	USART_InitStructure.USART_Parity = USART_Parity_No;//无奇偶校验位
+	USART_InitStructure.USART_BaudRate 						= bound;//波特率设置
+	USART_InitStructure.USART_WordLength 					= USART_WordLength_8b;//字长为8位数据格式
+	USART_InitStructure.USART_StopBits	 					= USART_StopBits_1;//一个停止位
+	USART_InitStructure.USART_Parity 							= USART_Parity_No;//无奇偶校验位
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;//无硬件数据流控制
-	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;	//收发模式
+	USART_InitStructure.USART_Mode 								= USART_Mode_Rx | USART_Mode_Tx;	//收发模式
 	USART_Init(UART4, &USART_InitStructure); //初始化串口1
 	
-
-		
-	#if EN_UART4_DMA	
-		RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);//使能DMA1时钟
-		DMA_InitTypeDef dma;
-			#if EN_UART4_DMA_RX
-
-				USART_DMACmd(UART4,USART_DMAReq_Rx,ENABLE);
-				DMA_DeInit(DMA1_Stream2);
-				DMA_StructInit(&dma);
+	USART_DMACmd(UART4,USART_DMAReq_Rx,ENABLE);
+	DMA_DeInit(DMA1_Stream2);
+	DMA_StructInit(&dma);
 				
-					#if EN_UART4_DMA_SECOND_FIFO
+#if EN_UART4_DMA_SECOND_FIFO
 						dma.DMA_Memory0BaseAddr   =   (uint32_t)&_UART4_DMA_RX_BUF[0][0];
 						dma.DMA_BufferSize        =   sizeof(_UART4_DMA_RX_BUF)/2;
-					#else
+#else
 						dma.DMA_Memory0BaseAddr   =   (uint32_t)&_UART4_DMA_RX_BUF;    //DMA接收基地址
 						dma.DMA_BufferSize        =   sizeof(_UART4_DMA_RX_BUF);       //传输数据数量
-					#endif
+#endif
 
-				dma.DMA_Channel = DMA_Channel_4;
-				dma.DMA_PeripheralBaseAddr		= (uint32_t)(&UART4->DR);
-
-				dma.DMA_DIR 									= DMA_DIR_PeripheralToMemory;
-
-				dma.DMA_PeripheralInc 				= DMA_PeripheralInc_Disable;
-				dma.DMA_MemoryInc 						= DMA_MemoryInc_Enable;
-				dma.DMA_PeripheralDataSize 		= DMA_PeripheralDataSize_Byte;
-				dma.DMA_MemoryDataSize 				= DMA_MemoryDataSize_Byte;
-				dma.DMA_Mode 									= DMA_Mode_Normal;
-				dma.DMA_Priority 							= DMA_Priority_Medium;
-				dma.DMA_FIFOMode 							= DMA_FIFOMode_Disable;
-				dma.DMA_FIFOThreshold 				= DMA_FIFOThreshold_1QuarterFull;
-				dma.DMA_MemoryBurst 					= DMA_MemoryBurst_Single;
-				dma.DMA_PeripheralBurst 			= DMA_PeripheralBurst_Single;
-				DMA_Init(DMA1_Stream2, &dma);
-				DMA_Cmd(DMA1_Stream2, ENABLE);
+	dma.DMA_Channel = DMA_Channel_4;
+	dma.DMA_PeripheralBaseAddr		= (uint32_t)(&UART4->DR);
+	dma.DMA_DIR 									= DMA_DIR_PeripheralToMemory;
+	dma.DMA_PeripheralInc 				= DMA_PeripheralInc_Disable;
+	dma.DMA_MemoryInc 						= DMA_MemoryInc_Enable;
+	dma.DMA_PeripheralDataSize 		= DMA_PeripheralDataSize_Byte;
+	dma.DMA_MemoryDataSize 				= DMA_MemoryDataSize_Byte;
+	dma.DMA_Mode 									= DMA_Mode_Normal;
+	dma.DMA_Priority 							= DMA_Priority_Medium;
+	dma.DMA_FIFOMode 							= DMA_FIFOMode_Disable;
+	dma.DMA_FIFOThreshold 				= DMA_FIFOThreshold_1QuarterFull;
+	dma.DMA_MemoryBurst 					= DMA_MemoryBurst_Single;
+	dma.DMA_PeripheralBurst 			= DMA_PeripheralBurst_Single;
+	DMA_Init(DMA1_Stream2, &dma);
+	DMA_Cmd(DMA1_Stream2, ENABLE);
 				
 //配置Memory1,Memory0是第一个使用的Memory
-				#if EN_UART4_DMA_SECOND_FIFO
-					DMA_DoubleBufferModeConfig(DMA1_Stream2,  (uint32_t)&_UART4_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
-					DMA_DoubleBufferModeCmd(DMA1_Stream2, ENABLE);
-				#endif
-				
-			#endif	
-			#if EN_UART4_DMA_TX
+#if EN_UART4_DMA_SECOND_FIFO
+				DMA_DoubleBufferModeConfig(DMA1_Stream2,  (uint32_t)&_UART4_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
+				DMA_DoubleBufferModeCmd(DMA1_Stream2, ENABLE);
+#endif
+						
+				USART_DMACmd(UART4, USART_DMAReq_Tx, ENABLE);
+				DMA_Cmd(DMA1_Stream4, DISABLE);                           // 关DMA通道
+				DMA_DeInit(DMA1_Stream4);
+				while(DMA_GetCmdStatus(DMA1_Stream4) != DISABLE) {}
+				dma.DMA_Channel = DMA_Channel_4;
+				dma.DMA_PeripheralBaseAddr	= (uint32_t)(&UART4->DR);
+				dma.DMA_Memory0BaseAddr   	= (uint32_t)&_UART4_DMA_TX_BUF[0];
+				dma.DMA_DIR 			    			= DMA_DIR_MemoryToPeripheral;
+				dma.DMA_BufferSize					= 0;//sizeof(_USART1_DMA_TX_BUF);
+				dma.DMA_PeripheralInc 			= DMA_PeripheralInc_Disable;
+				dma.DMA_MemoryInc 					= DMA_MemoryInc_Enable;
+				dma.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
+				dma.DMA_MemoryDataSize 			= DMA_MemoryDataSize_Byte;
+				dma.DMA_Mode 								= DMA_Mode_Normal;
+				dma.DMA_Priority 						= DMA_Priority_Medium;
+				dma.DMA_FIFOMode 						= DMA_FIFOMode_Disable;
+				dma.DMA_FIFOThreshold 			= DMA_FIFOThreshold_Full;
+				dma.DMA_MemoryBurst 				= DMA_MemoryBurst_Single;
+				dma.DMA_PeripheralBurst 		= DMA_PeripheralBurst_Single;
+				DMA_Init(DMA1_Stream4,&dma);				
 					
-					USART_DMACmd(UART4, USART_DMAReq_Tx, ENABLE);
-					DMA_Cmd(DMA1_Stream4, DISABLE);                           // 关DMA通道
-					DMA_DeInit(DMA1_Stream4);
-					while(DMA_GetCmdStatus(DMA1_Stream4) != DISABLE) {}
-					dma.DMA_Channel = DMA_Channel_4;
-					dma.DMA_PeripheralBaseAddr	= (uint32_t)(&UART4->DR);
-					dma.DMA_Memory0BaseAddr   	= (uint32_t)&_UART4_DMA_TX_BUF[0];
-					dma.DMA_DIR 			    = DMA_DIR_MemoryToPeripheral;
-					dma.DMA_BufferSize			= 0;//sizeof(_USART1_DMA_TX_BUF);
-					dma.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
-					dma.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
-					dma.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
-					dma.DMA_MemoryDataSize 		= DMA_MemoryDataSize_Byte;
-					dma.DMA_Mode 				= DMA_Mode_Normal;
-					dma.DMA_Priority 			= DMA_Priority_Medium;
-					dma.DMA_FIFOMode 			= DMA_FIFOMode_Disable;
-					dma.DMA_FIFOThreshold 		= DMA_FIFOThreshold_Full;
-					dma.DMA_MemoryBurst 		= DMA_MemoryBurst_Single;
-					dma.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single;
-					DMA_Init(DMA1_Stream4,&dma);				
-						
-					DMA_ITConfig(DMA1_Stream4,DMA_IT_TC,ENABLE);
-						
-					NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream4_IRQn;   // 发送DMA通道的中断配置
-					NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;     // 优先级设置
-					NVIC_InitStructure.NVIC_IRQChannelSubPriority = 3;
-					NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-					NVIC_Init(&NVIC_InitStructure);
-						
-			#endif
-	#endif
+				DMA_ITConfig(DMA1_Stream4,DMA_IT_TC,ENABLE);
+					
+				NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream4_IRQn;   // 发送DMA通道的中断配置
+				NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 3;     // 优先级设置
+				NVIC_InitStructure.NVIC_IRQChannelSubPriority 			 = 3;
+				NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+				NVIC_Init(&NVIC_InitStructure);
 
-
-	
-
-			#if EN_UART4_RX	
 			//USART_ITConfig(UART4, USART_IT_RXNE, ENABLE);//开启发送非空中断
 				USART_ITConfig(UART4,USART_IT_IDLE,ENABLE);  //开启空闲帧中断
 
@@ -821,21 +752,13 @@ void uart4_init(u32 bound)
 				NVIC_InitStructure.NVIC_IRQChannelSubPriority =3;		//子优先级3
 				NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
 				NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
-			#endif
-
-		
-			USART_Cmd(UART4, ENABLE);  //使能串口1 
-			
-			
+				USART_Cmd(UART4, ENABLE);  //使能串口1 		
 }
+	
 
-
-   
-		#if EN_UART4_RX
-			uint8_t length=0;
-			void UART4_IRQHandler(void)
-			{
-			
+uint8_t length=0;
+void UART4_IRQHandler(void)
+		{
 			if(USART_GetITStatus(UART4, USART_IT_IDLE) != RESET)    //接收中断
 			{	
 				(void)UART4->SR;
@@ -844,14 +767,13 @@ void uart4_init(u32 bound)
 				DMA_ClearFlag(DMA1_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);
 				length = UART4_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA1_Stream2);
 				
-				USART4_Data_Receive_Process;
+				USART4_Data_Receive_Process
+				
 				DMA_SetCurrDataCounter(DMA1_Stream2,UART4_RX_BUF_LENGTH);
 				DMA_Cmd(DMA1_Stream2, ENABLE);
 			}
 		}
-		#endif
-		
-		#if EN_UART4_DMA_TX_IRQ
+	
 		/**
 		************************************************************************************************************************
 		* @Name     : UART5_MYDMA_Enable
@@ -879,7 +801,6 @@ void uart4_init(u32 bound)
 				DMA_ClearFlag(DMA1_Stream4,DMA_FLAG_TCIF4);//清除DMA1_Steam3传输完成标志
 			}
 		}
-		#endif
 #endif
 	
 #if EN_UART5
@@ -895,19 +816,18 @@ void uart4_init(u32 bound)
    #endif
 /*----------------------------------------------------------------------------------------------------------------------*/	
 
-   void uart5_init(u32 bound)
-	 {
-			GPIO_InitTypeDef GPIO_InitStructure;
+void uart5_init(u32 bound) //C12  D2
+	{
+		  //结构体初始化
+			GPIO_InitTypeDef  GPIO_InitStructure;
 			USART_InitTypeDef USART_InitStructure;
-			#if EN_UART5_RX|EN_UART5_TX
-				NVIC_InitTypeDef NVIC_InitStructure;
-			#endif
-
-
+			NVIC_InitTypeDef  NVIC_InitStructure;
+			DMA_InitTypeDef   DMA_InitStructure;
+			//各时钟使能
 			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);
 			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD,ENABLE);
 			RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART5,ENABLE);
-
+			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
 			//IO初始化
 			GPIO_InitStructure.GPIO_Mode   =   GPIO_Mode_AF;
 			GPIO_InitStructure.GPIO_OType  =   GPIO_OType_PP;
@@ -921,8 +841,9 @@ void uart4_init(u32 bound)
 			GPIO_InitStructure.GPIO_PuPd   =   GPIO_PuPd_UP;
 			GPIO_InitStructure.GPIO_Speed  =   GPIO_Speed_100MHz;
 			GPIO_Init(GPIOD, &GPIO_InitStructure);
+
 			GPIO_PinAFConfig(GPIOC,GPIO_PinSource12, GPIO_AF_UART5);
-			GPIO_PinAFConfig(GPIOD,GPIO_PinSource2, GPIO_AF_UART5);
+			GPIO_PinAFConfig(GPIOD,GPIO_PinSource2,  GPIO_AF_UART5);
 			//串口5初始化
 			USART_InitStructure.USART_BaudRate              =   bound;
 			USART_InitStructure.USART_HardwareFlowControl   =   USART_HardwareFlowControl_None;
@@ -930,97 +851,82 @@ void uart4_init(u32 bound)
 			USART_InitStructure.USART_Parity                =   USART_Parity_No;
 			USART_InitStructure.USART_StopBits              =   USART_StopBits_1;
 			USART_InitStructure.USART_WordLength            =   USART_WordLength_8b;
-			USART_Init(UART5, &USART_InitStructure);
-
-	#if EN_UART5_DMA
-					DMA_InitTypeDef DMA_uart5;
-					RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA1, ENABLE);
-			
-			#if EN_UART5_DMA_RX
+			USART_Init(UART5, &USART_InitStructure);	
 			//串口5配置接收DMA
-				USART_DMACmd(UART5, USART_DMAReq_Rx, ENABLE);    //启用USART的DMA接口，DMA1、数据流0、通道4
-				DMA_StructInit(&DMA_uart5);              //DMA各个参数赋初值
+			USART_DMACmd(UART5, USART_DMAReq_Rx, ENABLE);     //启用USART的DMA接口，DMA1、数据流0、通道4
+		
+//			DMA_DeInit(DMA1_Stream0);
+			DMA_StructInit(&DMA_InitStructure);              	//DMA各个参数赋初值
+#if EN_UART5_DMA_SECOND_FIFO 
 
-					#if EN_UART5_DMA_SECOND_FIFO 
-						DMA_uart5.DMA_Memory0BaseAddr   =   (uint32_t)&_UART5_DMA_RX_BUF[0][0];
-						DMA_uart5.DMA_BufferSize        =   sizeof(_UART5_DMA_RX_BUF)/2;
-					#else
-						DMA_uart5.DMA_Memory0BaseAddr   =   (uint32_t)&_UART5_DMA_RX_BUF;    //DMA接收基地址
-						DMA_uart5.DMA_BufferSize        =   sizeof(_UART5_DMA_RX_BUF);       //传输数据数量
-					#endif
-				DMA_uart5.DMA_Channel           =   DMA_Channel_4;
-				DMA_uart5.DMA_PeripheralBaseAddr=   (uint32_t)(&UART5->DR);       //外设基地址
-				DMA_uart5.DMA_DIR               =   DMA_DIR_PeripheralToMemory;   //外设到存储器
-				DMA_uart5.DMA_PeripheralInc     =   DMA_PeripheralInc_Disable;    //外设地址不递增
-				DMA_uart5.DMA_MemoryInc         =   DMA_MemoryInc_Enable;         //存储器地址递增
-				DMA_uart5.DMA_MemoryDataSize    =   DMA_MemoryDataSize_Byte;      //存储器数据宽度
-				DMA_uart5.DMA_PeripheralDataSize=   DMA_PeripheralDataSize_Byte;  //外设数据宽度
-				DMA_uart5.DMA_Mode              =   DMA_Mode_Normal;              //是否开循环模式
-				DMA_uart5.DMA_Priority          =   DMA_Priority_Medium  ;        //优先级中等
-				DMA_uart5.DMA_FIFOMode          =   DMA_FIFOMode_Disable;
-				DMA_uart5.DMA_FIFOThreshold     =   DMA_FIFOThreshold_1QuarterFull;
-				DMA_uart5.DMA_MemoryBurst       =   DMA_MemoryBurst_Single;       //存储器突发，单次传输
-				DMA_uart5.DMA_PeripheralBurst   =   DMA_PeripheralBurst_Single;   //外设突发，单次传输
-				DMA_Init(DMA1_Stream0, &DMA_uart5);
+				DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)&_UART5_DMA_RX_BUF[0][0];
+				DMA_InitStructure.DMA_BufferSize        =   sizeof(_UART5_DMA_RX_BUF)/2;
+#else
+				DMA_InitStructure.DMA_Memory0BaseAddr   =   (uint32_t)&_UART5_DMA_RX_BUF;    //DMA接收基地址
+				DMA_InitStructure.DMA_BufferSize        =   sizeof(_UART5_DMA_RX_BUF);       //传输数据数量
+#endif
+				DMA_InitStructure.DMA_Channel           =   DMA_Channel_4;
+				DMA_InitStructure.DMA_PeripheralBaseAddr=   (uint32_t)(&UART5->DR);       //外设基地址
+				DMA_InitStructure.DMA_DIR               =   DMA_DIR_PeripheralToMemory;   //外设到存储器
+				DMA_InitStructure.DMA_PeripheralInc     =   DMA_PeripheralInc_Disable;    //外设地址不递增
+				DMA_InitStructure.DMA_MemoryInc         =   DMA_MemoryInc_Enable;         //存储器地址递增
+				DMA_InitStructure.DMA_MemoryDataSize    =   DMA_MemoryDataSize_Byte;      //存储器数据宽度
+				DMA_InitStructure.DMA_PeripheralDataSize=   DMA_PeripheralDataSize_Byte;  //外设数据宽度
+				DMA_InitStructure.DMA_Mode              =   DMA_Mode_Normal;              //是否开循环模式
+				DMA_InitStructure.DMA_Priority          =   DMA_Priority_Medium  ;        //优先级中等
+				DMA_InitStructure.DMA_FIFOMode          =   DMA_FIFOMode_Disable;
+				DMA_InitStructure.DMA_FIFOThreshold     =   DMA_FIFOThreshold_1QuarterFull;
+				DMA_InitStructure.DMA_MemoryBurst       =   DMA_MemoryBurst_Single;       //存储器突发，单次传输
+				DMA_InitStructure.DMA_PeripheralBurst   =   DMA_PeripheralBurst_Single;   //外设突发，单次传输
+				DMA_Init(DMA1_Stream0, &DMA_InitStructure);
 				DMA_Cmd(DMA1_Stream0, ENABLE);                        //使能DMA通道开启
 
-
   //配置Memory1,Memory0是第一个使用的Memory
-				#if EN_UART5_DMA_SECOND_FIFO
+#if EN_UART5_DMA_SECOND_FIFO
 					DMA_DoubleBufferModeConfig(DMA1_Stream0,  (uint32_t)&_UART5_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
 					DMA_DoubleBufferModeCmd(DMA1_Stream0, ENABLE);
-				#endif
-			#endif
-			#if EN_UART5_DMA_TX
-
+#endif			
+			NVIC_InitStructure.NVIC_IRQChannel										=	UART5_IRQn;          //串口5接收中断
+			NVIC_InitStructure.NVIC_IRQChannelCmd									=	ENABLE;
+			NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	1;
+			NVIC_InitStructure.NVIC_IRQChannelSubPriority					=	2;
+			NVIC_Init(&NVIC_InitStructure);
+      USART_ITConfig(UART5, USART_IT_IDLE, ENABLE);
+			USART_Cmd(UART5, ENABLE);
+				
 			//串口5配置发送DMA
 			USART_DMACmd(UART5, USART_DMAReq_Tx, ENABLE);   //启用USART的DMA接口，DMA1、数据流7、通道4
 			DMA_Cmd(DMA1_Stream7, DISABLE);                 // 关DMA通道
 			DMA_DeInit(DMA1_Stream7);
 
 			while(DMA_GetCmdStatus(DMA1_Stream7) != DISABLE) {}
-			DMA_uart5.DMA_Channel = DMA_Channel_4;
-			DMA_uart5.DMA_PeripheralBaseAddr	= (uint32_t)(&UART5->DR);
-			DMA_uart5.DMA_Memory0BaseAddr   	= (uint32_t)&_UART5_DMA_TX_BUF[0];
-			DMA_uart5.DMA_DIR 			    = DMA_DIR_MemoryToPeripheral;
-			DMA_uart5.DMA_BufferSize			= sizeof(_UART5_DMA_TX_BUF);   //发送数据放在该数组中
-			DMA_uart5.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
-			DMA_uart5.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
-			DMA_uart5.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
-			DMA_uart5.DMA_MemoryDataSize 		= DMA_MemoryDataSize_Byte;
-			DMA_uart5.DMA_Mode 				= DMA_Mode_Normal;
-			DMA_uart5.DMA_Priority 			= DMA_Priority_Low ;
-			DMA_uart5.DMA_FIFOMode 			= DMA_FIFOMode_Disable;
-			DMA_uart5.DMA_FIFOThreshold 		= DMA_FIFOThreshold_Full;
-			DMA_uart5.DMA_MemoryBurst 		= DMA_MemoryBurst_Single;
-			DMA_uart5.DMA_PeripheralBurst 	= DMA_PeripheralBurst_Single;
-			DMA_Init(DMA1_Stream7,&DMA_uart5);
+			DMA_InitStructure.DMA_Channel 						= DMA_Channel_4;
+			DMA_InitStructure.DMA_PeripheralBaseAddr	= (uint32_t)(&UART5->DR);
+			DMA_InitStructure.DMA_Memory0BaseAddr   	= (uint32_t)&_UART5_DMA_TX_BUF[0];
+			DMA_InitStructure.DMA_DIR 			    			= DMA_DIR_MemoryToPeripheral;
+			DMA_InitStructure.DMA_BufferSize					= sizeof(_UART5_DMA_TX_BUF);   //发送数据放在该数组中
+			DMA_InitStructure.DMA_PeripheralInc 			= DMA_PeripheralInc_Disable;
+			DMA_InitStructure.DMA_MemoryInc 					= DMA_MemoryInc_Enable;
+			DMA_InitStructure.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
+			DMA_InitStructure.DMA_MemoryDataSize 			= DMA_MemoryDataSize_Byte;
+			DMA_InitStructure.DMA_Mode 								= DMA_Mode_Normal;
+			DMA_InitStructure.DMA_Priority 						= DMA_Priority_Low ;
+			DMA_InitStructure.DMA_FIFOMode 						= DMA_FIFOMode_Disable;
+			DMA_InitStructure.DMA_FIFOThreshold 			= DMA_FIFOThreshold_Full;
+			DMA_InitStructure.DMA_MemoryBurst 				= DMA_MemoryBurst_Single;
+			DMA_InitStructure.DMA_PeripheralBurst 		= DMA_PeripheralBurst_Single;
+			DMA_Init(DMA1_Stream7,&DMA_InitStructure);
 			DMA_Cmd(DMA1_Stream7, ENABLE);                        //使能DMA通道开启
 				
+
 			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Stream7_IRQn;     // DMA发送中断
 			NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;   // 优先级设置
-			NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+			NVIC_InitStructure.NVIC_IRQChannelSubPriority				 = 1;
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 			NVIC_Init(&NVIC_InitStructure);
-
-		#endif
-#endif
-			#if EN_UART5_RX
-
-				NVIC_InitStructure.NVIC_IRQChannel						=	UART5_IRQn;          //串口5接收中断
-				NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
-				NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority	=	1;
-				NVIC_InitStructure.NVIC_IRQChannelSubPriority			=	2;
-				NVIC_Init(&NVIC_InitStructure);
-				
-				USART_ITConfig(UART5, USART_IT_IDLE, ENABLE);//空闲中断
-			//USART_ITConfig(UART5, USART_IT_TXNE, ENABLE);//接收非空中断
-				USART_Cmd(UART5, ENABLE);
-			#endif
-
-				USART_Cmd(UART5, ENABLE);
+//			DMA_ITConfig(DMA1_Stream7,DMA_IT_TC,ENABLE);	
  }
-			#if EN_UART5_DMA_TX
+
 			/**
 			************************************************************************************************************************
 			* @Name     : UART5_MYDMA_Enable
@@ -1030,11 +936,11 @@ void uart4_init(u32 bound)
 			* @Note     : 发送内容是_UART5_DMA_TX_BUF[100]数组
 			************************************************************************************************************************
 			**/	
-		void UART5_MYDMA_Enable(u16 ndtr)
+void UART5_MYDMA_Enable(u16 ndtr)
 		{	
-			DMA_ClearFlag(DMA1_Stream7,DMA_FLAG_TCIF7);//清除DMA2_Steam7传输完成标志
+			DMA_ClearFlag(DMA1_Stream7,DMA_FLAG_TCIF7);					//清除DMA2_Steam7传输完成标志
 			
-			DMA_Cmd(DMA1_Stream7, DISABLE);                      //关闭DMA传输 
+			DMA_Cmd(DMA1_Stream7, DISABLE);                     //关闭DMA传输 
 			
 			while (DMA_GetCmdStatus(DMA1_Stream7) != DISABLE){}	//确保DMA可以被设置  
 				
@@ -1043,32 +949,38 @@ void uart4_init(u32 bound)
 			DMA_Cmd(DMA1_Stream7, ENABLE);                      //开启DMA传输 
 				
 		}	  
-			#endif
 
-			#if EN_UART5_RX_IRQ
-
-			void UART5_IRQHandler(void)
+  void DMA1_Stream7_IRQHandler(void)
+		{
+			//清除标志
+			if(DMA_GetFlagStatus(DMA1_Stream7,DMA_FLAG_TCIF7)!=RESET)//等待DMA1_Steam3传输完成
+			{
+				DMA_Cmd(DMA1_Stream7, DISABLE);                      //关闭DMA传输
+				DMA_ClearFlag(DMA1_Stream7,DMA_FLAG_TCIF7);//清除DMA1_Steam3传输完成标志
+			}
+		}
+		
+void UART5_IRQHandler(void)
 			{
 				static uint32_t this_time_rx_len = 0;
 				if(USART_GetITStatus(UART5, USART_IT_IDLE) != RESET)
 					{
 						(void)UART5->SR;
 						(void)UART5->DR;
+#if EN_UART5_DMA_SECOND_FIFO == 1
+				if(DMA_GetCurrentMemoryTarget(DMA1_Stream0) == 0)
+					{
+						DMA_Cmd(DMA1_Stream0, DISABLE);
+						DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
+						this_time_rx_len = UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
-			#if EN_UART5_DMA_SECOND_FIFO 
-						if(DMA_GetCurrentMemoryTarget(DMA1_Stream0) == 0)
-							{
-								DMA_Cmd(DMA1_Stream0, DISABLE);
-								DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
-								this_time_rx_len = UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
+						DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);
+						DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[1][0],DMA_Memory_1);
+						DMA_Cmd(DMA1_Stream0, ENABLE);
 
-								DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);
-								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[1][0],DMA_Memory_1);
-								DMA_Cmd(DMA1_Stream0, ENABLE);
-
-								if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-									USART5_Data_Receive_Process;
-							}
+//						if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
+							USART5_Data_Receive_Process;
+					}
 						//Target is Memory1
 						else
 							{
@@ -1081,26 +993,27 @@ void uart4_init(u32 bound)
 								DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[0][0],DMA_Memory_0);
 								DMA_Cmd(DMA1_Stream0, ENABLE);
 								
-								if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-									USART5_Data_Receive_Process;
+//							if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
+								USART5_Data_Receive_Process;
 							}
-				#else
-						DMA_Cmd(DMA1_Stream0, DISABLE);                          //关闭串口5的DMA接收通道
+#else
+						DMA_Cmd(DMA1_Stream0, DISABLE);                          												//关闭串口5的DMA接收通道
 						DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
 						this_time_rx_len = UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0); //获取DMA_GetCurrDataCounter剩余数据量
 
-						DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);      //设置当前DMA剩余数据量
-						DMA_Cmd(DMA1_Stream0, ENABLE);                                       //开启串口5的DMA接收通道
+								USART5_Data_Receive_Process		
+						DMA_SetCurrDataCounter(DMA1_Stream0, UART5_DMA_RX_BUF_LEN);      								//设置当前DMA剩余数据量
+						DMA_Cmd(DMA1_Stream0, ENABLE);                                       						//开启串口5的DMA接收通道
 
-						if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-								 USART5_Data_Receive_Process //_UART5_DMA_RX_BUF作为DMA接收缓存区
-			//		
-			#endif
-				}
-			}
-			#endif
+//						if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
+								USART5_Data_Receive_Process																						//_UART5_DMA_RX_BUF作为DMA接收缓存区
 
 #endif
+					}
+			}
+
+#endif
+			
 #if EN_UART6
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
    #define UART6_DMA_RX_BUF_LEN 100
@@ -1117,10 +1030,7 @@ void uart4_init(u32 bound)
 	 {
 			GPIO_InitTypeDef GPIO_InitStructure;
 			USART_InitTypeDef USART_InitStructure;
-			#if EN_UART6_RX|EN_UART6_TX
-				NVIC_InitTypeDef NVIC_InitStructure;
-			#endif
-
+			NVIC_InitTypeDef NVIC_InitStructure;
 
 			RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC,ENABLE);
 			RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART6,ENABLE);
@@ -1146,11 +1056,9 @@ void uart4_init(u32 bound)
 			USART_InitStructure.USART_WordLength            =   USART_WordLength_8b;
 			USART_Init(USART6, &USART_InitStructure);
 
-	#if EN_UART6_DMA
 					DMA_InitTypeDef DMA_uart6;
 					RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 			
-			#if EN_UART6_DMA_RX
 			//串口5配置接收DMA
 				USART_DMACmd(USART6, USART_DMAReq_Rx, ENABLE);    //启用USART的DMA接口，DMA1、数据流0、通道4
 				DMA_StructInit(&DMA_uart6);              //DMA各个参数赋初值
@@ -1184,8 +1092,6 @@ void uart4_init(u32 bound)
 					DMA_DoubleBufferModeConfig(DMA2_Stream1,  (uint32_t)&_UART6_DMA_RX_BUF[1][0], DMA_Memory_0);   //first used memory configuration
 					DMA_DoubleBufferModeCmd(DMA2_Stream1, ENABLE);
 				#endif
-			#endif
-			#if EN_UART6_DMA_TX
 
 			//串口5配置发送DMA
 			USART_DMACmd(USART6, USART_DMAReq_Tx, ENABLE);   //启用USART的DMA接口，DMA1、数据流7、通道4
@@ -1217,9 +1123,6 @@ void uart4_init(u32 bound)
 			NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 			NVIC_Init(&NVIC_InitStructure);
 
-		#endif
-#endif
-			#if EN_UART6_RX
 
 				NVIC_InitStructure.NVIC_IRQChannel						=	USART6_IRQn;          //串口5接收中断
 				NVIC_InitStructure.NVIC_IRQChannelCmd					=	ENABLE;
@@ -1230,11 +1133,10 @@ void uart4_init(u32 bound)
 				USART_ITConfig(USART6, USART_IT_IDLE, ENABLE);//空闲中断
 			//USART_ITConfig(USART6, USART_IT_TXNE, ENABLE);//接收非空中断
 				USART_Cmd(USART6, ENABLE);
-			#endif
 
 				USART_Cmd(USART6, ENABLE);
  }
-			#if EN_UART6_DMA_TX
+
 			/**
 			************************************************************************************************************************
 			* @Name     : UART5_MYDMA_Enable
@@ -1257,9 +1159,6 @@ void uart4_init(u32 bound)
 			DMA_Cmd(DMA2_Stream7, ENABLE);                      //开启DMA传输 
 				
 		}	  
-			#endif
-
-			#if EN_UART6_RX_IRQ
 
 			void UART6_IRQHandler(void)
 			{
@@ -1312,5 +1211,4 @@ void uart4_init(u32 bound)
 			#endif
 				}
 			}
-			#endif
 #endif
