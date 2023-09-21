@@ -1,56 +1,13 @@
-#ifndef __USART1_H__
-#define __USART1_H__
+#ifndef __CH100_DMA_H
+#define __CH100_DMA_H
 #include "public.h"
-#define PITCH_MAX 35.0f
-#define PITCH_MIN -25.0f
-#define YAW_MAX 40				//cyq:ÔÆÌ¨½Ç¶ÈµÄ·¶Î§
-#define YAW_MIN -40
-/*
-*********************************************************************************************************
-*                                               MACROS
-*********************************************************************************************************
-*/
-
-#define  BSP_USART1_DMA_RX_BUF_LEN               64u                   
- 
-#define BSP_USART1_RX_BUF_SIZE_IN_FRAMES         (BSP_USART1_RX_BUF_SIZE / RC_FRAME_LENGTH)
-#define  RC_FRAME_LENGTH                            18u
-
-/*
-*********************************************************************************************************
-*                                             FUNCTION PROTOTYPES
-*********************************************************************************************************
-*/
-void USART1_IRQHandler(void);
-//static void USART1_FIFO_Init(void);
-void *USART1_GetRxBuf(void);
-void usart1_init(uint32_t baud_rate);
-void RemoteDataPrcess(uint8_t *pData);
+extern float pitch_Angle1, yaw_Angle1, roll_Angle1; 
+extern float pitch_Gyro1, yaw_Gyro1, roll_Gyro1;
+extern float x_Acc1, y_Acc1, z_Acc1;
 
 #define CH100_RX_BUFF_SIZE 100
 
-#define EN_USART1 								1
-#define EN_USART1_DMA_SECOND_FIFO 0
 
-
-#define EN_USART2       					1
-#define EN_UART2_DMA_SECOND_FIFO  0
-
-
-#define EN_USART3									1
-#define EN_USART3_DMA_SECOND_FIFO 0
-
-
-#define EN_UART4									1
-#define EN_UART4_DMA_SECOND_FIFO  0
-
-
-#define EN_UART5									1
-#define EN_UART5_DMA_SECOND_FIFO  0
-
-
-#define EN_USART6									1
-#define EN_USART6_DMA_SECOND_FIFO 0
 
  /* Definition for USART_CH100 resources ******************************************/
   #define USART_CH100                           USART3
@@ -98,19 +55,6 @@ void RemoteDataPrcess(uint8_t *pData);
 //  #define USART_CH100_DMA_TX_IRQHandler         DMA2_Stream6_IRQHandler
 //  #define USART_CH100_DMA_RX_IRQHandler         DMA2_Stream1_IRQHandler
 
-#define USART6_Data_Receive_Process				do{}while(0) 
-
 void ch100_USART_Config(void);
-void uart5_init(u32 bound);
-void uart4_init(u32 bound);
-void usart2_init(u32 bound);
-void usart6_init(u32 bound);
-#define UART4_RX_BUF_LENGTH   100
-#define UART4_TX_BUF_LENGTH   100
-extern uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
-extern uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
-void Uart4DmaSendDataProc(DMA_Stream_TypeDef *DMA_Streamx,u16 ndtr);
-void Uart4SendByteInfoProc(u8 nSendInfo);
-void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount);
 
 #endif
