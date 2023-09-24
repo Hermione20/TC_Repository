@@ -7,10 +7,40 @@
 *                                               VARIABLES
 *********************************************************************************************************
 */
-
-
 static uint8_t _USART1_DMA_RX_BUF[2][BSP_USART1_DMA_RX_BUF_LEN];
 static uint8_t _USART1_RX_BUF[BSP_USART1_DMA_RX_BUF_LEN];
+
+#define BSP_USART2_DMA_RX_BUF_LEN 100
+static uint8_t _USART2_DMA_RX_BUF[2][BSP_USART2_DMA_RX_BUF_LEN];
+static uint8_t _USART2_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];
+
+#define CH100_RX_BUFF_SIZE 100
+uint8_t ch100_Rx_Buffer[CH100_RX_BUFF_SIZE];
+__align(4) id0x91_t dat; /* struct must be 4 byte aligned */
+
+uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
+uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
+
+static uint8_t USART5_DMA_TX_BUF[100];
+static uint8_t judge_rxdata_buf[100];
+static uint8_t _UART5_RX_BUF[100];
+
+uint8_t judge_dma_rxbuff[2][100];
+uint8_t  tx_buf[66];
+uint8_t  pdata[32];
+uint8_t  ddata[66];
+uint8_t client_graphic_busy = 0;
+u32 bullet_num=0;
+
+#if EN_UART5_DMA_SECOND_FIFO == 1	
+uint8_t _UART5_DMA_RX_BUF[2][BSP_UART5_DMA_RX_BUF_LEN];
+#else
+uint8_t _UART5_DMA_RX_BUF[100];
+#endif
+
+#define BSP_USART6_DMA_RX_BUF_LEN 100
+static uint8_t _USART6_DMA_RX_BUF[2][BSP_USART6_DMA_RX_BUF_LEN];
+static uint8_t _USART6_RX_BUF[BSP_USART6_DMA_RX_BUF_LEN];
 
 #if EN_USART1
 void usart1_init(uint32_t baud_rate)
@@ -98,7 +128,7 @@ void USART1_IRQHandler(void)
      if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);
-
+					USART1_Data_Receive_Process
 			}
 		}
 		
@@ -113,6 +143,7 @@ void USART1_IRQHandler(void)
        if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[1]);
+					USART1_Data_Receive_Process
 			}
 		}
 	}       
@@ -120,9 +151,7 @@ void USART1_IRQHandler(void)
 #endif
 
 
-#define BSP_USART2_DMA_RX_BUF_LEN 100
-static uint8_t _USART2_DMA_RX_BUF[2][BSP_USART2_DMA_RX_BUF_LEN];
-static uint8_t _USART2_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];
+
 
 #if EN_USART2
 void usart2_init(uint32_t baud_rate)
@@ -210,7 +239,7 @@ void USART2_IRQHandler(void)
      if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);
-
+					USART2_Data_Receive_Process
 			}
 		}
 		
@@ -225,6 +254,7 @@ void USART2_IRQHandler(void)
        if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[1]);
+					USART2_Data_Receive_Process
 			}
 		}
 	}       
@@ -232,12 +262,10 @@ void USART2_IRQHandler(void)
 
 #endif
 
-#define CH100_RX_BUFF_SIZE 100
-uint8_t ch100_Rx_Buffer[CH100_RX_BUFF_SIZE];
-__align(4) id0x91_t dat; /* struct must be 4 byte aligned */
+
 
 #if EN_USART3
-void ch100_USART_Config(void)
+void usart3_init(u32 bound)
 {
   USART_InitTypeDef USART_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -285,7 +313,7 @@ void ch100_USART_Config(void)
 	NVIC_Init(&NVIC_InitStructure);
 
   /* Enable the USART OverSampling by 8 */
-  USART_InitStructure.USART_BaudRate = 921600;
+  USART_InitStructure.USART_BaudRate = bound;
   USART_InitStructure.USART_WordLength = USART_WordLength_8b;
   USART_InitStructure.USART_StopBits = USART_StopBits_1;
   /* When using Parity the word length must be configured to 9 bits */
@@ -336,6 +364,7 @@ void USART_CH100_IRQHandler(void)
 		USART_DMACmd(USART_CH100, USART_DMAReq_Rx, DISABLE);
 		memcpy(&dat, &ch100_Rx_Buffer[6], sizeof(id0x91_t));
 //		CH100_getDATA();
+		USART3_Data_Receive_Process
 		USART_DMACmd(USART_CH100, USART_DMAReq_Rx, ENABLE);
 		DMA_Cmd(USART_CH100_RX_DMA_STREAM,ENABLE);//重新置位后，地址指针变成0
 	}
@@ -344,29 +373,10 @@ void USART_CH100_IRQHandler(void)
 
 
 
-static uint8_t USART5_DMA_TX_BUF[100];
-static uint8_t judge_rxdata_buf[100];
-static uint8_t _UART5_RX_BUF[100];
 
 
-uint8_t judge_dma_rxbuff[2][100];
-uint8_t  tx_buf[66];
-uint8_t  pdata[32];
-uint8_t  ddata[66];
-uint8_t client_graphic_busy = 0;
-u32 bullet_num=0;
-#if EN_UART5_DMA_SECOND_FIFO == 1	
-uint8_t _UART5_DMA_RX_BUF[2][BSP_UART5_DMA_RX_BUF_LEN];
-#else
-uint8_t _UART5_DMA_RX_BUF[100];
-#endif
 
 
-/**
-  * @brief  UART初始化
-  * @param  void
-  * @retval void
-  */
 #if EN_UART5
 void uart5_init(u32 bound)
 {
@@ -514,8 +524,9 @@ void UART5_IRQHandler(void)
           DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[1][0],DMA_Memory_1);
           DMA_Cmd(DMA1_Stream0, ENABLE);
 
-          if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-            judgement_data_handle(_UART5_DMA_RX_BUF[0],this_time_rx_len);
+//          if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
+//            judgement_data_handle(_UART5_DMA_RX_BUF[0],this_time_rx_len);
+					UART5_Data_Receive_Process
         }
       //Target is Memory1
       else
@@ -527,11 +538,12 @@ void UART5_IRQHandler(void)
 
           DMA_SetCurrDataCounter(DMA1_Stream0, BSP_UART5_DMA_RX_BUF_LEN);
           DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[0][0],DMA_Memory_0);
-//			DMA1_Stream0->NDTR = (uint16_t)BSP_UART5_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
-//			DMA1_Stream0->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
+//				DMA1_Stream0->NDTR = (uint16_t)BSP_UART5_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
+//				DMA1_Stream0->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
           DMA_Cmd(DMA1_Stream0, ENABLE);
-//			FIFO_S_Puts(&_UART5_RX_FIFO,(void *)&_UART5_DMA_RX_BUF[1][0],this_time_rx_len);
-//			unpack_fifo_data(&judge_unpack_obj,DN_REG_ID);
+					UART5_Data_Receive_Process
+//				FIFO_S_Puts(&_UART5_RX_FIFO,(void *)&_UART5_DMA_RX_BUF[1][0],this_time_rx_len);
+//				unpack_fifo_data(&judge_unpack_obj,DN_REG_ID);
 //          if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
 //            judgement_data_handle(_UART5_DMA_RX_BUF[1],this_time_rx_len);
         }
@@ -542,9 +554,10 @@ void UART5_IRQHandler(void)
 
       DMA_SetCurrDataCounter(DMA1_Stream0, 100);      //设置当前DMA剩余数据量
       DMA_Cmd(DMA1_Stream0, ENABLE);                                       //开启串口5的DMA接收通道
-
+			
+				UART5_Data_Receive_Process
 //      if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-//        judgement_data_handle(_UART5_DMA_RX_BUF,this_time_rx_len);  //_UART5_DMA_RX_BUF作为DMA接收缓存区
+//      judgement_data_handle(_UART5_DMA_RX_BUF,this_time_rx_len);  //_UART5_DMA_RX_BUF作为DMA接收缓存区
 #endif
 
     }
@@ -552,15 +565,15 @@ void UART5_IRQHandler(void)
 
 #endif
 	
-	/*-----UART4_TX-----PC10-----*/
-/*-----UART4_RX-----PC11-----*/
 
 
-uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
-uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
+
+
 
 #if EN_UART4
-void uart4_init(u32 bound)
+	/*-----UART4_TX-----PC10-----*/
+/*-----UART4_RX-----PC11-----*/
+	void uart4_init(u32 bound)
 {
   USART_InitTypeDef uart4;
   GPIO_InitTypeDef  gpio;
@@ -665,6 +678,7 @@ void UART4_IRQHandler(void)
       length = UART4_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA1_Stream2);
 
 //      targetOffsetDataDeal(length, UART4_DMA_RX_BUF );
+			UART4_Data_Receive_Process
       DMA_SetCurrDataCounter(DMA1_Stream2,UART4_RX_BUF_LENGTH);
       DMA_Cmd(DMA1_Stream2, ENABLE);
 
@@ -727,9 +741,7 @@ void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
 #endif
 
 			
-#define BSP_USART6_DMA_RX_BUF_LEN 100
-static uint8_t _USART6_DMA_RX_BUF[2][BSP_USART6_DMA_RX_BUF_LEN];
-static uint8_t _USART6_RX_BUF[BSP_USART6_DMA_RX_BUF_LEN];
+
 
 #if EN_USART6
 void usart6_init(uint32_t baud_rate)
@@ -817,7 +829,7 @@ void USART6_IRQHandler(void)
      if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);
-
+					USART6_Data_Receive_Process
 			}
 		}
 		
@@ -832,6 +844,7 @@ void USART6_IRQHandler(void)
        if(this_time_rx_len == RC_FRAME_LENGTH)
 			{
 //				RemoteDataPrcess(_USART1_DMA_RX_BUF[1]);
+					USART6_Data_Receive_Process
 			}
 		}
 	}       

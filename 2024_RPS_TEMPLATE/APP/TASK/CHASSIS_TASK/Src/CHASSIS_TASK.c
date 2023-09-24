@@ -66,6 +66,6 @@ void get_romote_set()
 	if(Chassis_angle.Remote_speed >= 50)
 	{	
 		temp_angle=atan2(vy,vx);
-		Chassis_angle.Remote_angle = fmod(2*pi+temp_angle,2*pi);
+		Chassis_angle.Remote_angle = fmod(2*PI+temp_angle,2*PI);
 	}
 }

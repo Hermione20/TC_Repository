@@ -16,16 +16,17 @@
 
 	
 //接收RX0中断使能
-#define CAN1_RX0_INT_ENABLE	1		//0,不使能;1,使能.								    
-#define CAN2_RX0_INT_ENABLE 1
-#define CAN1_TX0_INT_ENABLE 1
-#define CAN2_TX0_INT_ENABLE 1
+#define EN_CAN1	1		//0,不使能;1,使能.								    
+#define EN_CAN2 1
 
 
-u8 CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化
+void CAN1_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化
  
-u8 CAN2_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化 
+void CAN2_Mode_Init(u8 tbs2,u8 tbs1,u16 brp,u8 mode);//CAN初始化 
  
+#define CAN1_Data_Receive_Process do{}while(0);
+#define CAN2_Data_Receive_Process do{}while(0);
+	 
 u8 CAN1_Send_Msg(u8* msg,u8 len);						//发送数据
 
 u8 CAN1_Receive_Msg(u8 *buf);							//接收数据

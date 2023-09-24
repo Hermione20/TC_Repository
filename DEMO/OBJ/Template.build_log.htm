@@ -1,0 +1,154 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.23.0.0
+Copyright (C) 2017 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: 1 TC, 1, LIC=FQQMA-1GMXH-06NQU-SYV97-GX9R7-4ZUR3
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.23
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 4 (build 422)
+Assembler:       Armasm.exe V5.06 update 4 (build 422)
+Linker/Locator:  ArmLink.exe V5.06 update 4 (build 422)
+Library Manager: ArmAr.exe V5.06 update 4 (build 422)
+Hex Converter:   FromElf.exe V5.06 update 4 (build 422)
+CPU DLL:         SARMCM3.DLL V5.23
+Dialog DLL:      DCM.DLL V1.15.0.0
+Target DLL:      Segger\JL2CM3.dll V2.99.23.0
+Dialog DLL:      TCM.DLL V1.27.0.0
+ 
+<h2>Project:</h2>
+C:\Users\TC\Desktop\TC_Repository\TC_Repository\DEMO\USER\Template.uvprojx
+Project File Date:  09/23/2023
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 4 (build 422)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'Template'
+compiling CHASSIS_TASK.c...
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(27): error:  #20: identifier "chassis_rotate_flag" is undefined
+    chassis_rotate_flag = 0;
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(36): error:  #20: identifier "pid_cha1_angle" is undefined
+  		PID_struct_init(&pid_cha1_angle[0], POSITION_PID, 8000, 10, 8,0.1f,3);//24, 0.2f,20);
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(37): error:  #20: identifier "pid_cha1_speed" is undefined
+    	PID_struct_init(&pid_cha1_speed[0], POSITION_PID, 15000, 500, 210,0.1f,2);//38,0.5f,20);
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(152): error:  #20: identifier "gim" is undefined
+  		if( gim.ctrl_mode!= GIMBAL_AUTO_SMALL_BUFF &&					
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(152): error:  #20: identifier "GIMBAL_AUTO_SMALL_BUFF" is undefined
+  		if( gim.ctrl_mode!= GIMBAL_AUTO_SMALL_BUFF &&					
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(153): error:  #20: identifier "GIMBAL_AUTO_BIG_BUFF" is undefined
+  				gim.ctrl_mode!=   GIMBAL_AUTO_BIG_BUFF &&
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(343): error:  #20: identifier "transition1" is undefined
+  	transition1[k] = sin(Chassis_angle.include_angle[k]);
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(344): error:  #20: identifier "transition2" is undefined
+  	transition2[k] = Chassis_angle.Remote_speed*transition1[k];
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(345): error:  #20: identifier "transition3" is undefined
+  	transition3[k] = (transition2[k])/Chassis_angle.handle_speed[k];	
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(349): error:  #20: identifier "retransition2" is undefined
+  	retransition2[k] = Chassis_angle.get_speedw*Chassis_angle.get_speedw+Chassis_angle.handle_speed[k]*Chassis_angle.handle_speed[k];
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(350): error:  #20: identifier "retransition3" is undefined
+  	retransition3[k] = Chassis_angle.Remote_speed*Chassis_angle.Remote_speed;
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(377): error:  #65: expected a ";"
+  {
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(403): error:  #169: expected a declaration
+  }
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(451): error:  #169: expected a declaration
+      case CHASSIS_ROTATE:         //Ð¡ÍÓÂÝ
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(456): error:  #169: expected a declaration
+      case CHASSIS_REVERSE:
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(461): error:  #169: expected a declaration
+      case CHASSIS_SEPARATE:
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(466): error:  #169: expected a declaration
+      case CHASSIS_AUTO_SUP:
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(471): error:  #169: expected a declaration
+      default:
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(476): error:  #169: expected a declaration
+      }
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(480): error:  #260-D: explicit type is missing ("int" assumed)
+  	start_angle_handle();
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(480): error:  #147: declaration is incompatible with "void start_angle_handle()"  (declared at line 317)
+  	start_angle_handle();
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c(481): error:  #169: expected a declaration
+  }
+..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c: 0 warnings, 22 errors
+compiling usart.c...
+..\BSP\usart\Src\usart.c(131): error:  #254: type name is not allowed
+  					
+SART1_Data_Receive_Process_0
+..\BSP\usart\Src\usart.c(131): error:  #20: identifier "rc" is undefined
+  					
+SART1_Data_Receive_Process_0
+..\BSP\usart\Src\usart.c: 0 warnings, 2 errors
+"..\OBJ\Template.axf" - 24 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                http://www.keil.com/pack/ARM.CMSIS.5.8.0.pack
+                ARM::CMSIS:CORE:5.5.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 5.5.0
+   * Component: DSP Variant: Source Version: 1.9.0-dev
+
+Package Vendor: Keil
+                http://www.keil.com/pack/Keil.ARM_Compiler.1.3.0.pack
+                Keil.ARM Compiler::Compiler:I/O:STDERR:ITM:1.2.0
+                Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
+   * Component: STDERR Variant: ITM Version: 1.2.0
+
+<h2>Collection of Component include folders:</h2>
+  .\RTE\_Template
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\Core\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\DSP\Include
+  C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude
+  C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE:5.5.0
+
+   * Component: ARM::CMSIS:DSP:Source:1.9.0-dev
+      Include file:  CMSIS\DSP\Include\arm_common_tables.h
+      Include file:  CMSIS\DSP\Include\arm_const_structs.h
+      Include file:  CMSIS\DSP\Include\arm_const_structs_f16.h
+      Source file:   CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctions.c
+      Source file:   CMSIS\DSP\Source\QuaternionMathFunctions\QuaternionMathFunctions.c
+      Source file:   CMSIS\DSP\Source\BayesFunctions\BayesFunctions.c
+      Include file:  CMSIS\DSP\Include\arm_common_tables_f16.h
+      Source file:   CMSIS\DSP\Source\CommonTables\CommonTables.c
+      Source file:   CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctions.c
+      Source file:   CMSIS\DSP\Source\ControllerFunctions\ControllerFunctions.c
+      Source file:   CMSIS\DSP\Source\DistanceFunctions\DistanceFunctions.c
+      Source file:   CMSIS\DSP\Source\FastMathFunctions\FastMathFunctions.c
+      Include file:  CMSIS\DSP\Include\arm_math.h
+      Include file:  CMSIS\DSP\Include\arm_math_f16.h
+      Source file:   CMSIS\DSP\Source\SVMFunctions\SVMFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\CommonTables\CommonTablesF16.c
+      Source file:   CMSIS\DSP\Source\FilteringFunctions\FilteringFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\FastMathFunctions\FastMathFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctions.c
+      Source file:   CMSIS\DSP\Source\DistanceFunctions\DistanceFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\MatrixFunctions\MatrixFunctions.c
+      Source file:   CMSIS\DSP\Source\SupportFunctions\SupportFunctions.c
+      Source file:   CMSIS\DSP\Source\SVMFunctions\SVMFunctions.c
+      Source file:   CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\StatisticsFunctions\StatisticsFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\MatrixFunctions\MatrixFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctions.c
+      Source file:   CMSIS\DSP\Source\FilteringFunctions\FilteringFunctions.c
+      Source file:   CMSIS\DSP\Source\TransformFunctions\TransformFunctions.c
+      Source file:   CMSIS\DSP\Source\ComplexMathFunctions\ComplexMathFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\SupportFunctions\SupportFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\TransformFunctions\TransformFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\BayesFunctions\BayesFunctionsF16.c
+      Source file:   CMSIS\DSP\Source\InterpolationFunctions\InterpolationFunctionsF16.c
+
+   * Component: Keil.ARM Compiler::Compiler:I/O:STDERR:ITM:1.2.0
+      Source file:   Source\retarget_io.c
+Target not created.
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

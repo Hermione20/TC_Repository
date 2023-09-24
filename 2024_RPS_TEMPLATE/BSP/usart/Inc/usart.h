@@ -98,9 +98,14 @@ void RemoteDataPrcess(uint8_t *pData);
 //  #define USART_CH100_DMA_TX_IRQHandler         DMA2_Stream6_IRQHandler
 //  #define USART_CH100_DMA_RX_IRQHandler         DMA2_Stream1_IRQHandler
 
-#define USART6_Data_Receive_Process				do{}while(0) 
+#define USART1_Data_Receive_Process				do{}while(0);
+#define USART2_Data_Receive_Process				do{}while(0);
+#define USART3_Data_Receive_Process				do{}while(0);
+#define UART4_Data_Receive_Process				do{}while(0);
+#define UART5_Data_Receive_Process				do{}while(0);
+#define USART6_Data_Receive_Process				do{}while(0);
 
-void ch100_USART_Config(void);
+void usart3_init(u32 bound);
 void uart5_init(u32 bound);
 void uart4_init(u32 bound);
 void usart2_init(u32 bound);
