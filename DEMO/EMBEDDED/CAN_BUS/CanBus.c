@@ -10,7 +10,7 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
     {
     case GIMBAL_YAW_MOTOR:
 		{
-			GM6020EncoderTask(can1_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
+//			GM6020EncoderTask(can1_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
 		}
  
         break;
@@ -456,3 +456,5 @@ void HT_430_Position_closed_Loop_T_R_OR_W(CAN_TypeDef *CANx,int ID,int16_t V,int
 	
 	CAN_TransmitStatus(CANx,CAN_Transmit(CANx,&Motor_HT430_CanTxMsg));
 }
+
+

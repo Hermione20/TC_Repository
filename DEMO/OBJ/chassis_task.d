@@ -1,6 +1,5 @@
 ..\obj\chassis_task.o: ..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c
 ..\obj\chassis_task.o: ..\APP\TASK\CHASSIS_TASK\Inc\CHASSIS_TASK.h
-..\obj\chassis_task.o: ..\HEADFILE\main.h
 ..\obj\chassis_task.o: ..\HEADFILE\public.h
 ..\obj\chassis_task.o: ..\USER\stm32f4xx.h
 ..\obj\chassis_task.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm4.h

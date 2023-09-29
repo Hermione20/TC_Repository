@@ -1,6 +1,16 @@
+#ifndef __CHASSIS_TASK_H 
+#define __CHASSIS_TASK_H
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
+#include "public.h"
 /*----------------------------------------------------------------------------*/
+
+#define NORMAL_FORWARD_BACK_SPEED								 550
+#define NORMAL_LEFT_RIGHT_SPEED  								 550
+#define HIGH_FORWARD_BACK_SPEED 								 1600
+#define HIGH_LEFT_RIGHT_SPEED   								 800
+#define CHASSIS_ROTATE_MOVING_FORWARD_BACK_SPEED 900
+#define CHASSIS_ROTATE_MOVING_LEFT_RIGHT_SPEED   600
+
 
 //∂®“Â NULL
 #ifndef NULL
@@ -22,9 +32,30 @@
 #define RAD_TO_ANGLE 57.295779513082320876798154814105f
 #endif
 
+#define VAL_LIMIT(val, min, max)\
+if(val<=min)\
+{\
+	val = min;\
+}\
+else if(val>=max)\
+{\
+	val = max;\
+}\
+
+#define Ref_Fdb(ref,fdb)\
+{\
+ if((fdb - ref) >= 180)\
+{\
+	ref = ref + 360;\
+}\
+ else if((fdb - ref) <= -180)\
+{\
+	ref = ref - 360;\
+}\
+}\
 /**
 ************************************************************************************************************************
-* @EnumName     : chassis_mode_e
+* @EnumName : chassis_mode_e
 * @brief    : This enumeration describes the various control modes of the chassis
 * @param    : CHASSIS_RELAX     
 *	@param		:	CHASSIS_STOP		
@@ -41,6 +72,8 @@
 * @Note     : 					
 ************************************************************************************************************************
 **/
+
+
 typedef enum
 {
   CHASSIS_RELAX          = 0,
@@ -56,11 +89,12 @@ typedef enum
   CHASSIS_SEPARATE 		 	 = 10,
   CHASSIS_AUTO_SUP       = 11,
 } chassis_mode_e;
+
+
 typedef enum
 {
 	READY  =0,
 	STANDBY=1,
-
 }chassis_gim_e ;
 /**
 ************************************************************************************************************************
@@ -85,6 +119,9 @@ typedef struct
   float angle4_ref;
   float angle3_fdb;
   float angle4_fdb;
+	
+	float angle_ref[4];
+	float angle_fdb[4];
   /* speed loop */
   float speed1_ref;
   float speed2_ref;
@@ -95,7 +132,19 @@ typedef struct
   float speed4_ref;
   float speed3_fdb;
   float speed4_fdb;
+	
+	float speed_ref[4];
+	float speed_fdb[4];
 } cha_pid_t;
+
+
+typedef enum
+{
+  NORMAL_SPEED_MODE          = 0,
+	HIGH_SPEED_MODE            = 1,
+	LOW_SPEED_MODE             = 2,
+} chassis_speed_mode_e;
+
 
 /**
 ************************************************************************************************************************
@@ -114,9 +163,13 @@ typedef struct
 		double           vy; // left/right
 		double           vw; // 
 		
-		chassis_mode_e  ctrl_mode;
-		chassis_mode_e  last_ctrl_mode;
-		chassis_gim_e		chassis_gim;
+		chassis_mode_e  			ctrl_mode;
+		chassis_mode_e  			last_ctrl_mode;
+		chassis_gim_e					chassis_gim;
+		chassis_speed_mode_e  chassis_speed_mode;
+
+		uint16_t        forward_back_speed;
+		uint16_t 				left_right_speed;
 	
 		float           gyro_angle;
 		float           gyro_palstance;
@@ -124,6 +177,7 @@ typedef struct
 		int16_t         wheel_speed_fdb[4];
 		int16_t         wheel_speed_ref[4];
 		int16_t         current[4];
+		int16_t					voltage[4];
 		
 		float						sin_chassis_angle;
 		float						cos_chassis_angle;
@@ -136,7 +190,8 @@ typedef struct
 		int32_t         position_ref;
 		uint8_t         follow_gimbal;
 		
-		cha_pid_t      cha_pid;
+		cha_pid_t      cha_pid_6020;
+		cha_pid_t			 cha_pid_3508;
 } chassis_t;
 
 	
@@ -179,6 +234,10 @@ void limit_angle_to_0_2pi(float angle);
 void get_chassis_speed_ref(Remote *rc);
 void chassis_stop_handle(void);
 void get_remote_set(void);
+void start_angle_handle(void);
+void start_chassis_6020(void);
+void get_chassis_ctrl_mode(void);
+void set_3508current_6020voltage(void);
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 
@@ -186,6 +245,8 @@ double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 
 
+
+#endif
 
 
 
