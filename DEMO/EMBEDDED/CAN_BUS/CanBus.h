@@ -28,7 +28,10 @@
 #define RIGHT_FRICTION1 0X00
 #define LEFT_FRIICTION2 0X00
 #define RIGHT_FRICTION2 0X00
-/************************************************************************/
+
+
+
+
 
 void Can1ReceiveMsgProcess(CanRxMsg * msg);
 void Can2ReceiveMsgProcess(CanRxMsg * msg);

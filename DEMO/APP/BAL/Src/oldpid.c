@@ -92,6 +92,7 @@ float pid_calc(pid_t *pid, float get, float set)
   if (pid->pid_mode == POSITION_PID) //position PID
   {
       pid->pout = pid->p * pid->err[NOW];
+//			pid->iout += pid->i *pid->err[NOW];
       pid->iout += pid->i * ((pid->err[NOW]+pid->err[LAST])/2);
       pid->dout = pid->d * (pid->err[NOW] - pid->err[LAST]);
     

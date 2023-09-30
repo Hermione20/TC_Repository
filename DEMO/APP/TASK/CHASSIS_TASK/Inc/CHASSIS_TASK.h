@@ -11,6 +11,13 @@
 #define CHASSIS_ROTATE_MOVING_FORWARD_BACK_SPEED 900
 #define CHASSIS_ROTATE_MOVING_LEFT_RIGHT_SPEED   600
 
+#define  I_TIMES_V_TO_WATT    0.0000225f    //I -16384~+16384 V .filter_rate
+//电机发热计算 p=i^2*FACTOR_2+i*FACTOR_1+FACTOR0; i是直接发给电调的数-16384~16384 使用虚拟示波器读值后matlab拟合
+#define FACTOR_2	0.000000161f
+#define FACTOR_1	-0.0000229f
+#define FACTOR_0  0.458f
+//#define TOTATE_PARA    PI/180.0f
+
 
 //定义 NULL
 #ifndef NULL
@@ -236,7 +243,9 @@ void chassis_stop_handle(void);
 void get_remote_set(void);
 void start_angle_handle(void);
 void start_chassis_6020(void);
+float get_6020power(void);
 void get_chassis_ctrl_mode(void);
+void power_limit_handle(void);
 void set_3508current_6020voltage(void);
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 

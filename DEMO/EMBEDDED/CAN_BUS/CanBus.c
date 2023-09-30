@@ -10,11 +10,8 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
     {
     case GIMBAL_YAW_MOTOR:
 		{
-//			GM6020EncoderTask(can1_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
-		}
- 
-        break;
-    
+//			GM6020EncoderTask(can2_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
+		}break;
     default:
         break;
     }
@@ -25,7 +22,8 @@ void Can2ReceiveMsgProcess(CanRxMsg * msg)
     can2_count++;
     switch (msg->StdId)
     {
-    case /* constant-expression */1:
+    case GIMBAL_YAW_MOTOR:
+			GM6020EncoderTask(can2_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
         /* code */
         break;
 
