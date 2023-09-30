@@ -86,14 +86,13 @@ float pid_calc(pid_t *pid, float get, float set)
   pid->set = set;
   pid->err[NOW] = set - get;
 
-  if ((pid->input_max_err != 0) && (fabs(pid->err[NOW]) > pid->input_max_err))//没用上
+  if ((pid->input_max_err != 0) && (fabs(pid->err[NOW]) > pid->input_max_err))
       return 0;
 
   if (pid->pid_mode == POSITION_PID) //position PID
   {
       pid->pout = pid->p * pid->err[NOW];
-//			pid->iout += pid->i *pid->err[NOW];
-      pid->iout += pid->i * ((pid->err[NOW]+pid->err[LAST])/2);
+      pid->iout += pid->i * pid->err[NOW];
       pid->dout = pid->d * (pid->err[NOW] - pid->err[LAST]);
     
       abs_limit(&(pid->iout), pid->integral_limit);
@@ -133,7 +132,7 @@ float pid_calc1(pid_t *pid, float get, float set)
   if (pid->pid_mode == POSITION_PID) //position PID
   {
       pid->pout = pid->p * pid->err[NOW];
-      pid->iout += pid->i * ((pid->err[NOW]+pid->err[LAST])/2);
+      pid->iout += pid->i * pid->err[NOW];
       pid->dout = pid->d * (pid->err[NOW] - pid->err[LAST]);
     
       abs_limit(&(pid->iout), pid->integral_limit);
@@ -197,6 +196,18 @@ void pid_clr(pid_t *pid)
 	pid->err[0] = 0;
   pid->err[1] = 0;
 	pid->err[2] = 0;
+}
+
+float pid_double_loop_cal(pid_t *Outer_loop_pid,
+                          pid_t *Inner_loop_pid,
+                          float outer_ref,
+                          float outer_fdb,
+                          float Inner_fdb,
+                          float feedforward)
+{
+	float Inner_ref;
+  Inner_ref = pid_calc(Outer_loop_pid,outer_fdb,outer_ref) + feedforward;
+  return pid_calc(Inner_loop_pid,Inner_fdb,Inner_ref);
 }
 
 
@@ -264,7 +275,7 @@ pid_t pid_right_distance= {0};
 pid_t pid_angle_distance= {0};
 pid_t pid_spring[2] = {0};
 
-pid_t pid_cha_6020_angle[4] = {0};
-pid_t pid_cha_6020_speed[4] = {0};
-pid_t pid_cha_3508_angle[4] = {0};
-pid_t pid_cha_3508_speed[4] = {0};
+pid_t pid_cha_6020_angle[4]={0};
+pid_t pid_cha_3508_angle[4]={0};
+pid_t pid_cha_6020_speed[4]={0};
+pid_t pid_cha_3508_speed[4]={0};

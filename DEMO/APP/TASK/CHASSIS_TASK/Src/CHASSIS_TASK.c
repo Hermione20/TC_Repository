@@ -146,8 +146,8 @@ void chassis_param_init()//底盘参数初始化
 //    a[i]=(float)Chassis_angle.handle_speed1[i]*(pid_spd[i].p+pid_spd[i].d);
 //  float b[4];
 //  for(int i=0; i<4; i++)
-//    b[i]=-pid_spd[i].p*(float)chassis.wheel_speed_fdb[i]+pid_spd[i].iout \
-//         -pid_spd[i].d*(float)chassis.wheel_speed_fdb[i]-pid_spd[i].d*pid_spd[i].err[LAST];
+//    b[i]=-pid_cha_3508_speed[i].p*(float)chassis.cha_pid_3508.speed_fdb[i]+pid_cha_3508_speed[i].iout \
+//         -pid_cha_3508_speed[i].d*(float)chassis.cha_pid_3508.speed_fdb[i]-pid_cha_3508_speed[i].d*pid_cha_3508_speed[i].err[LAST];
 //  // Max_power=heat_power+drive_power
 //  //	i_n=a[n]*k+b[n]	带入
 //  //Max_Power=m*k^2+n*k+o
@@ -156,17 +156,17 @@ void chassis_param_init()//底盘参数初始化
 
 //  float n=2*FACTOR_2*(a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3]) + \
 //          FACTOR_1*(a[0] + a[1] + a[2] + a[3]) + \
-//          I_TIMES_V_TO_WATT*(a[0]*(float)chassis.wheel_speed_fdb[0] + \
-//                             a[1]*(float)chassis.wheel_speed_fdb[1] + \
-//                             a[2]*(float)chassis.wheel_speed_fdb[2] + \
-//                             a[3]*(float)chassis.wheel_speed_fdb[3]);
+//          I_TIMES_V_TO_WATT*(a[0]*(float)chassis.cha_pid_3508.speed_fdb[0] + \
+//                             a[1]*(float)chassis.cha_pid_3508.speed_fdb[1] + \
+//                             a[2]*(float)chassis.cha_pid_3508.speed_fdb[2] + \
+//                             a[3]*(float)chassis.cha_pid_3508.speed_fdb[3]);
 
 //  float l=(b[0]*b[0] + b[1]*b[1] + b[2]*b[2] + b[3]*b[3])*FACTOR_2 + \
 //          (b[0] + b[1] + b[2] + b[3])*FACTOR_1 + \
-//          I_TIMES_V_TO_WATT*(b[0]*(float)chassis.wheel_speed_fdb[0] + \
-//                             b[1]*(float)chassis.wheel_speed_fdb[1] + \
-//                             b[2]*(float)chassis.wheel_speed_fdb[2] + \
-//                             b[3]*(float)chassis.wheel_speed_fdb[3]) + \
+//          I_TIMES_V_TO_WATT*(b[0]*(float)chassis.cha_pid_3508.speed_fdb[0] + \
+//                             b[1]*(float)chassis.cha_pid_3508.speed_fdb[1] + \
+//                             b[2]*(float)chassis.cha_pid_3508.speed_fdb[2] + \
+//                             b[3]*(float)chassis.cha_pid_3508.speed_fdb[3]) + \
 //          4*FACTOR_0 - \
 //          max_power;
 //  return (-n+(float)sqrt((double)(n*n-4*m*l)+1.0f))/(2*m);

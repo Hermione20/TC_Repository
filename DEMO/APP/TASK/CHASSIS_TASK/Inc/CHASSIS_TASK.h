@@ -247,6 +247,7 @@ float get_6020power(void);
 void get_chassis_ctrl_mode(void);
 void power_limit_handle(void);
 void set_3508current_6020voltage(void);
+static float get_the_limite_rate(float max_power);
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 
