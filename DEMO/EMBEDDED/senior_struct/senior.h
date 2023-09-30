@@ -24,10 +24,10 @@ typedef struct
 	volatile Encoder left_behind_GM6020;
 	volatile Encoder right_behind_GM6020;
 
-	volatile Encoder right_front_motor;
-	volatile Encoder left_front_motor;
-	volatile Encoder left_behind_motor;
-	volatile Encoder right_behind_motor;
+	volatile Encoder right_front_M3508;
+	volatile Encoder left_front_M3508;
+	volatile Encoder left_behind_M3508;
+	volatile Encoder right_behind_M3508;
 }steering_wheel_t;
 
 typedef struct

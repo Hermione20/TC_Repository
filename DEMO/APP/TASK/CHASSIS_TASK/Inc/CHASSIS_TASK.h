@@ -18,6 +18,10 @@
 #define FACTOR_0  0.458f
 //#define TOTATE_PARA    PI/180.0f
 
+#define  WARNING_VOLTAGE       12.5
+
+#define  TARGET_VOLTAGE        12
+
 
 //∂®“Â NULL
 #ifndef NULL
@@ -152,7 +156,13 @@ typedef enum
 	LOW_SPEED_MODE             = 2,
 } chassis_speed_mode_e;
 
-
+//remote data process
+typedef __packed struct
+{
+    int16_t forward_back_ref;
+    int16_t left_right_ref;
+    int16_t rotate_ref;
+}ChassisSpeed_Ref_t;
 /**
 ************************************************************************************************************************
 * @StructName : cha_pid_t
@@ -175,8 +185,7 @@ typedef struct
 		chassis_gim_e					chassis_gim;
 		chassis_speed_mode_e  chassis_speed_mode;
 
-		uint16_t        forward_back_speed;
-		uint16_t 				left_right_speed;
+		ChassisSpeed_Ref_t  ChassisSpeed_Ref;
 	
 		float           gyro_angle;
 		float           gyro_palstance;
@@ -221,6 +230,7 @@ typedef struct
 		float Remote_speed;
 		float deviation_angle[4];
 		int16_t handle_speed[4];
+		int16_t handle_speed_lim[4];
 		float get_speedw;
 		float yaw_angle_0_2pi;
 		float yaw_angle__pi_pi;
@@ -228,13 +238,7 @@ typedef struct
 
 
 
-//remote data process
-typedef __packed struct
-{
-    int16_t forward_back_ref;
-    int16_t left_right_ref;
-    int16_t rotate_ref;
-}ChassisSpeed_Ref_t;
+
 
 
 void limit_angle_to_0_2pi(float angle);
@@ -247,7 +251,10 @@ float get_6020power(void);
 void get_chassis_ctrl_mode(void);
 void power_limit_handle(void);
 void set_3508current_6020voltage(void);
+float get_max_power2(float voltage);
+float get_max_power1(float voltage);
 static float get_the_limite_rate(float max_power);
+void cap_limit_mode_switch(void);
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 

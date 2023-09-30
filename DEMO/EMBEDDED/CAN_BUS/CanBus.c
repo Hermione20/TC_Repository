@@ -3,11 +3,34 @@
 static uint32_t can1_count = 0;
 static uint32_t can2_count = 0;
 
+
 void Can1ReceiveMsgProcess(CanRxMsg * msg)
 {
     can1_count++;
     switch (msg->StdId)
     {
+			case UP_CAN2_TO_DOWN_CAN1_1:
+		{
+			can_chassis_data.if_follow_gim=(msg->Data[0]);
+			can_chassis_data.speed_mode=(msg->Data[1]);
+			can_chassis_data.chassis_mode=(msg->Data[2]);
+			can_chassis_data.yaw_Encoder_ecd_angle=(msg->Data[3]<<24)|(msg->Data[4]<<16)|(msg->Data[5]<<8)|(msg->Data[6]);
+			
+		}break;
+			case UP_CAN2_TO_DOWN_CAN1_2:
+		{
+			can_chassis_data.yaw_Encoder_filter_rate=(msg->Data[0]<<8)|msg->Data[1];
+			can_chassis_data.x=(msg->Data[2]<<8)|msg->Data[3];
+			can_chassis_data.y=(msg->Data[4]<<8)|msg->Data[5];
+			can_chassis_data.chassis_power=(msg->Data[6]<<8)|msg->Data[7];
+	
+		}break;
+			case UP_CAN2_TO_DOWN_CAN1_3:
+		{
+			can_chassis_data.chassis_power_buffer=(msg->Data[0]<<8)|msg->Data[1];
+			can_chassis_data.chassis_power_limit=msg->Data[2];
+	
+		}break;
     case GIMBAL_YAW_MOTOR:
 		{
 //			GM6020EncoderTask(can2_count,&yaw_Encoder,msg,GMYawEncoder_Offset);

@@ -273,8 +273,8 @@ pid_t pid_speed_bias    = {0};
 pid_t pid_front_distance= {0};
 pid_t pid_right_distance= {0};
 pid_t pid_angle_distance= {0};
-pid_t pid_spring[2] = {0};
-
+pid_t pid_spring[2] 		= {0};
+      
 pid_t pid_cha_6020_angle[4]={0};
 pid_t pid_cha_3508_angle[4]={0};
 pid_t pid_cha_6020_speed[4]={0};
