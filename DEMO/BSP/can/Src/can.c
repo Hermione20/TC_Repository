@@ -1,28 +1,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "can.h"
 /**
-  ******************************************************************************
-  * @file    can.c
-  * @author  TC
-  * @version V1.0.0
-  * @date    07-September-2023
-  * @brief   This file provides firmware functions to manage the following 
-  *          functionalities of the Controller area network (CAN) peripheral:
-  *           + Initialization and Configuration 
-  *           + CAN Frames Transmission
-  *           + CAN Frames Reception
-  *           + Operation modes switch
-  *           + Error management
-  *           + Interrupts and flags
-  *
-@verbatim
- ===============================================================================
-                        ##### How to use #####
- ===============================================================================
-    [..]
-      (#) Enable the CAN controller interface clock using 
-          RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN1, ENABLE); for CAN1 
-          and RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2, ENABLE); for CAN2
       -@- 如果您只使用CAN2，则必须启用CAN1时钟
        
       (#) CAN pins configuration
@@ -50,36 +28,11 @@
         (++) 使用CAN_GetFlagStatus()函数检查CAN标志。 
         (++) 通过初始化阶段的CAN_ITConfig()函数和中断例程中的CAN_GetITStatus()函数使用CAN中断来检查事件是否发生。
              检查一个标志后，你应该使用CAN_ClearFlag()函数清除它。在检查中断事件后，您应该使用CAN_ClearITPendingBit()函数清除它。  
-
-@endverbatim
-           
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  *
-  ******************************************************************************  
-  */
-	
  
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
 u8 CAN1_receive_buf[20];
 u8 CAN2_receive_buf[20];
 
-int16_t  pitch_ecd_bias =6000;
-int16_t  yaw_ecd_bias  = 5000;
 
 /*----------------------------------------------------------------------------------------------------------------------*/
 

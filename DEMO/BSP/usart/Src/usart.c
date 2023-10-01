@@ -1,46 +1,29 @@
 #include "usart.h"
 
-/*-----USART1_RX-----PB7----*/ 
+/*****************************************VARIABLES*******************************************************/
+/*********************************************************************************************************/                                             
 
-/*
-*********************************************************************************************************
-*                                               VARIABLES
-*********************************************************************************************************
-*/
 static uint8_t _USART1_DMA_RX_BUF[2][BSP_USART1_DMA_RX_BUF_LEN];
 static uint8_t _USART1_RX_BUF[BSP_USART1_DMA_RX_BUF_LEN];
 
 static uint8_t _USART2_DMA_RX_BUF[2][BSP_USART2_DMA_RX_BUF_LEN];
 static uint8_t _USART2_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];
 
-uint8_t ch100_Rx_Buffer[CH100_RX_BUFF_SIZE];
-__align(4) id0x91_t dat; /* struct must be 4 byte aligned */
+static uint8_t ch100_Rx_Buffer[CH100_RX_BUFF_SIZE];
 
-uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
-uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
+static uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
+static uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
 
-static uint8_t USART5_DMA_TX_BUF[100];
-static uint8_t judge_rxdata_buf[100];
-static uint8_t _UART5_RX_BUF[100];
-
-uint8_t judge_dma_rxbuff[2][100];
-uint8_t  tx_buf[66];
-uint8_t  pdata[32];
-uint8_t  ddata[66];
-uint8_t client_graphic_busy = 0;
-u32 bullet_num=0;
-
+static uint8_t UART5_DMA_TX_BUF[UART5_TX_BUF_LENGTH];
 #if EN_UART5_DMA_SECOND_FIFO == 1	
 uint8_t _UART5_DMA_RX_BUF[2][BSP_UART5_DMA_RX_BUF_LEN];
 #else
 uint8_t _UART5_DMA_RX_BUF[100];
 #endif
 
-static uint8_t _USART6_DMA_RX_BUF[2][BSP_USART6_DMA_RX_BUF_LEN];
-static uint8_t _USART6_RX_BUF[BSP_USART6_DMA_RX_BUF_LEN];
-u8 USART6_DMA_RX_BUF[USART6_RX_BUF_LENGTH] = {0};
-
-
+static uint8_t USART6_DMA_RX_BUF[USART6_RX_BUF_LENGTH] = {0};
+/*********************************************************************************************************/
+/*********************************************************************************************************/
 
 #if EN_USART1
 void usart1_init(uint32_t baud_rate)
@@ -112,7 +95,7 @@ void usart1_init(uint32_t baud_rate)
 //串口接收中断服务函数
 void USART1_IRQHandler(void)
 {
-	static uint32_t this_time_rx_len_1 = 0;
+	static uint32_t this_time_rx_len1 = 0;
 	if(USART_GetITStatus(USART1, USART_IT_IDLE) != RESET)
 	{
 		(void)USART1->SR;
@@ -121,11 +104,11 @@ void USART1_IRQHandler(void)
 		{
 			DMA_Cmd(DMA2_Stream2, DISABLE);
 			DMA_ClearFlag(DMA2_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);	
-			this_time_rx_len_1 = BSP_USART1_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);
+			this_time_rx_len1 = BSP_USART1_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);
 			DMA2_Stream2->NDTR = (uint16_t)BSP_USART1_DMA_RX_BUF_LEN;     //relocate the dma memory pointer to the beginning position
 			DMA2_Stream2->CR |= (uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 1
 			DMA_Cmd(DMA2_Stream2, ENABLE);
-     if(this_time_rx_len_1 == RC_FRAME_LENGTH)
+     if(this_time_rx_len1 == RC_FRAME_LENGTH)
 			{
 					RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);
 					USART1_Data_Receive_Process_0
@@ -136,11 +119,11 @@ void USART1_IRQHandler(void)
 		{
 			DMA_Cmd(DMA2_Stream2, DISABLE);
 			DMA_ClearFlag(DMA2_Stream2, DMA_FLAG_TCIF2 | DMA_FLAG_HTIF2);
-			this_time_rx_len_1 = BSP_USART1_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);
+			this_time_rx_len1 = BSP_USART1_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream2);
 			DMA2_Stream2->NDTR = (uint16_t)BSP_USART1_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
 			DMA2_Stream2->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
 			DMA_Cmd(DMA2_Stream2, ENABLE);
-       if(this_time_rx_len_1 == RC_FRAME_LENGTH)
+       if(this_time_rx_len1 == RC_FRAME_LENGTH)
 			{		
 					USART1_Data_Receive_Process_1
 			}
@@ -222,7 +205,7 @@ void usart2_init(uint32_t baud_rate)
 //串口接收中断服务函数
 void USART2_IRQHandler(void)
 {
-	static uint32_t this_time_rx_len_2 = 0;
+	static uint32_t this_time_rx_len2 = 0;
 	if(USART_GetITStatus(USART2, USART_IT_IDLE) != RESET)
 	{
 		(void)USART2->SR;
@@ -231,23 +214,25 @@ void USART2_IRQHandler(void)
 		{
 			DMA_Cmd(DMA1_Stream5, DISABLE);
 			DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5 | DMA_FLAG_HTIF5);	
-			this_time_rx_len_2 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream5);
+			this_time_rx_len2 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream5);
 			DMA1_Stream5->NDTR = (uint16_t)BSP_USART2_DMA_RX_BUF_LEN;     //relocate the dma memory pointer to the beginning position
 			DMA1_Stream5->CR |= (uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 1
 			DMA_Cmd(DMA1_Stream5, ENABLE);
-					USART2_Data_Receive_Process
 
+//				RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);
+					USART2_Data_Receive_Process
 		}
 		
 		else 
 		{
 			DMA_Cmd(DMA1_Stream5, DISABLE);
 			DMA_ClearFlag(DMA1_Stream5, DMA_FLAG_TCIF5 | DMA_FLAG_HTIF5);
-			this_time_rx_len_2 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream5);
+			this_time_rx_len2 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream5);
 			DMA1_Stream5->NDTR = (uint16_t)BSP_USART2_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
 			DMA1_Stream5->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
 			DMA_Cmd(DMA1_Stream5, ENABLE);
 
+//				RemoteDataPrcess(_USART1_DMA_RX_BUF[1]);
 					USART2_Data_Receive_Process
 
 		}
@@ -356,7 +341,8 @@ void USART_CH100_IRQHandler(void)
 		USART_ClearITPendingBit(USART_CH100,USART_IT_IDLE);//清除中断标志位
 		DMA_Cmd(USART_CH100_RX_DMA_STREAM,DISABLE);  
 		USART_DMACmd(USART_CH100, USART_DMAReq_Rx, DISABLE);
-		memcpy(&dat, &ch100_Rx_Buffer[6], sizeof(id0x91_t));
+//		memcpy(&dat, &ch100_Rx_Buffer[6], sizeof(id0x91_t));
+//		CH100_getDATA();
 		USART3_Data_Receive_Process
 		USART_DMACmd(USART_CH100, USART_DMAReq_Rx, ENABLE);
 		DMA_Cmd(USART_CH100_RX_DMA_STREAM,ENABLE);//重新置位后，地址指针变成0
@@ -536,10 +522,6 @@ void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount)
 
 			
 
-
-
-
-
 #if EN_UART5
 void uart5_init(u32 bound)
 {
@@ -626,9 +608,9 @@ void uart5_init(u32 bound)
   while(DMA_GetCmdStatus(DMA1_Stream7) != DISABLE) {}
   DMA_InitStructure.DMA_Channel = DMA_Channel_4;
   DMA_InitStructure.DMA_PeripheralBaseAddr	= (uint32_t)(&UART5->DR);
-  DMA_InitStructure.DMA_Memory0BaseAddr   	= (uint32_t)&tx_buf[0];
+  DMA_InitStructure.DMA_Memory0BaseAddr   	= (uint32_t)&UART5_DMA_TX_BUF[0];
   DMA_InitStructure.DMA_DIR 			    = DMA_DIR_MemoryToPeripheral;
-	DMA_InitStructure.DMA_BufferSize			= sizeof(tx_buf);   //发送数据放在该数组中
+	DMA_InitStructure.DMA_BufferSize			= sizeof(UART5_DMA_TX_BUF);   //发送数据放在该数组中
   DMA_InitStructure.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
   DMA_InitStructure.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
   DMA_InitStructure.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
@@ -661,16 +643,10 @@ void MYDMA_Enable(DMA_Stream_TypeDef *DMA_Streamx,u16 ndtr)
 }	  
 
 
-/**
-  * @brief  裁判系统空闲中断(UART4)
-  * @param  void
-  * @retval void
-  * @note   DJI很毒,以50HZ发送Info包，当有实时数据包产生时，在最近的一帧Info前无间隔加上实时数据包
-  */
 
 void UART5_IRQHandler(void)
 {
-  static uint32_t this_time_rx_len_5 = 0;
+  static uint32_t this_time_rx_len5 = 0;
   if(USART_GetITStatus(UART5, USART_IT_IDLE) != RESET)
     {
       (void)UART5->SR;
@@ -681,15 +657,15 @@ void UART5_IRQHandler(void)
         {
           DMA_Cmd(DMA1_Stream0, DISABLE);
           DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
-          this_time_rx_len_5 = BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
+          this_time_rx_len5 = BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
           DMA_SetCurrDataCounter(DMA1_Stream0, BSP_UART5_DMA_RX_BUF_LEN);
           DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[1][0],DMA_Memory_1);
           DMA_Cmd(DMA1_Stream0, ENABLE);
 
-//          if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-//            judgement_data_handle(_UART5_DMA_RX_BUF[0],this_time_rx_len);
-					UART5_Data_Receive_Process
+          if(this_time_rx_len5 > (HEADER_LEN + CMD_LEN + CRC_LEN))
+
+					UART5_Data_Receive_Process0
         }
       //Target is Memory1
       else
@@ -697,30 +673,24 @@ void UART5_IRQHandler(void)
           DMA_Cmd(DMA1_Stream0, DISABLE);
           DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
 
-          this_time_rx_len_5 =BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
+          this_time_rx_len5 =BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0);
 
           DMA_SetCurrDataCounter(DMA1_Stream0, BSP_UART5_DMA_RX_BUF_LEN);
           DMA_MemoryTargetConfig (DMA1_Stream0,(uint32_t)&_UART5_DMA_RX_BUF[0][0],DMA_Memory_0);
-//				DMA1_Stream0->NDTR = (uint16_t)BSP_UART5_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
-//				DMA1_Stream0->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
           DMA_Cmd(DMA1_Stream0, ENABLE);
-					UART5_Data_Receive_Process
-//				FIFO_S_Puts(&_UART5_RX_FIFO,(void *)&_UART5_DMA_RX_BUF[1][0],this_time_rx_len);
-//				unpack_fifo_data(&judge_unpack_obj,DN_REG_ID);
-//          if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-//            judgement_data_handle(_UART5_DMA_RX_BUF[1],this_time_rx_len);
+          if(this_time_rx_len5 > (HEADER_LEN + CMD_LEN + CRC_LEN))
+						UART5_Data_Receive_Process1
         }
 #else
       DMA_Cmd(DMA1_Stream0, DISABLE);                          //关闭串口5的DMA接收通道
       DMA_ClearFlag(DMA1_Stream0, DMA_FLAG_TCIF0 | DMA_FLAG_HTIF0);
-      this_time_rx_len_5 = BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0); //获取DMA_GetCurrDataCounter剩余数据量
+      this_time_rx_len5 = BSP_UART5_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA1_Stream0); //获取DMA_GetCurrDataCounter剩余数据量
 
       DMA_SetCurrDataCounter(DMA1_Stream0, BSP_UART5_DMA_RX_BUF_LEN);      //设置当前DMA剩余数据量
       DMA_Cmd(DMA1_Stream0, ENABLE);                                       //开启串口5的DMA接收通道
-			
+			 if(this_time_rx_len5 > (HEADER_LEN + CMD_LEN + CRC_LEN))
 				UART5_Data_Receive_Process
-//      if(this_time_rx_len > (HEADER_LEN + CMD_LEN + CRC_LEN))
-//      judgement_data_handle(_UART5_DMA_RX_BUF,this_time_rx_len);  //_UART5_DMA_RX_BUF作为DMA接收缓存区
+     
 #endif
 
     }
@@ -737,7 +707,7 @@ void UART5_IRQHandler(void)
 
 
 #if EN_USART6
-void usart6_init(u32 bound)
+void usart6_init()
 {
     USART_InitTypeDef usart;
     GPIO_InitTypeDef  gpio;
@@ -762,7 +732,7 @@ void usart6_init(u32 bound)
 
     USART_DeInit(USART6);
 //    USART_StructInit(&usart);
-    usart.USART_BaudRate = bound;
+    usart.USART_BaudRate = 961200;
     usart.USART_WordLength = USART_WordLength_8b;
     usart.USART_StopBits = USART_StopBits_1;
     usart.USART_Parity = USART_Parity_No;
@@ -820,32 +790,17 @@ void usart6_init(u32 bound)
 //串口接收中断服务函数
 void USART6_IRQHandler(void)
 {
-	static uint32_t this_time_rx_len_6 = 0;
+	static uint32_t this_time_rx_len6 = 0;
 	if(USART_GetITStatus(USART6, USART_IT_IDLE) != RESET)
 	{
 		(void)USART6->SR;
 		(void)USART6->DR;
-		if(DMA_GetCurrentMemoryTarget(DMA2_Stream1) == 0)
-		{
-			DMA_Cmd(DMA2_Stream1, DISABLE);
-			DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);	
-			this_time_rx_len_6 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream1);
-			DMA2_Stream1->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;     //relocate the dma memory pointer to the beginning position
-			DMA2_Stream1->CR |= (uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 1
-			DMA_Cmd(DMA2_Stream1, ENABLE);
-					USART6_Data_Receive_Process
-		}
-		
-		else 
-		{
-			DMA_Cmd(DMA2_Stream1, DISABLE);
-			DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);
-			this_time_rx_len_6 = BSP_USART2_DMA_RX_BUF_LEN - DMA_GetCurrDataCounter(DMA2_Stream1);
-			DMA2_Stream1->NDTR = (uint16_t)BSP_USART6_DMA_RX_BUF_LEN;      //relocate the dma memory pointer to the beginning position
-			DMA2_Stream1->CR &= ~(uint32_t)(DMA_SxCR_CT);                  //enable the current selected memory is Memory 0
-			DMA_Cmd(DMA2_Stream1, ENABLE);
-					USART6_Data_Receive_Process
-		}
+		DMA_Cmd(DMA2_Stream1, DISABLE); 
+		DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);  //************************************
+		this_time_rx_len6 = USART6_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA2_Stream1);
+		USART6_Data_Receive_Process
+		DMA_SetCurrDataCounter(DMA2_Stream1,USART6_RX_BUF_LENGTH);
+		DMA_Cmd(DMA2_Stream1, ENABLE);
 	}       
 }
 

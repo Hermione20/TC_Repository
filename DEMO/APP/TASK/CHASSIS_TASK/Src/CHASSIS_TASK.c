@@ -332,7 +332,7 @@ void chassis_stop_handle(void)
 
 
 
-float homing_flag,last_homing_flag;
+
 void follow_gimbal_handle(void)
 {
 
@@ -378,11 +378,8 @@ void follow_gimbal_handle(void)
 
 void separate_gimbal_handle(void)
 {
-
-
   chassis.vy = ChassisSpeedRef.left_right_ref;
-  chassis.vx = ChassisSpeedRef.forward_back_ref;
-		
+  chassis.vx = ChassisSpeedRef.forward_back_ref;	
 	Chassis_angle.get_speedw = 0;
 }
 
@@ -404,7 +401,7 @@ void rotate_follow_gimbal_handle(void)
 //		{
 //			gyro_speed=400;
 //		}
-		
+//		
 //if(gim.ctrl_mode==GIMBAL_AUTO_SMALL_BUFF||gim.ctrl_mode==GIMBAL_AUTO_BIG_BUFF)
 //	{gyro_speed=100;}
 
@@ -743,7 +740,7 @@ void chassis_task()
 //	Chassis_angle.get_yaw_angle=(-yaw_Encoder.ecd_angle-yaw_num_get*360)*ANGLE_TO_RAD;
 	
 	convert_ecd_angle_to_0_2pi(yaw_Encoder.ecd_angle,Chassis_angle.yaw_angle_0_2pi);
-	
+	chassis.ctrl_mode=can_chassis_data.chassis_mode;
 	switch (chassis.ctrl_mode)
     {
 
@@ -759,7 +756,7 @@ void chassis_task()
     }
     break;
     case CHASSIS_ROTATE:         //Ð¡ÍÓÂÝ
-    {;
+    {
 				rotate_follow_gimbal_handle();
     }
     break;
