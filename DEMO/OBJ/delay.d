@@ -84,6 +84,7 @@
 ..\obj\delay.o: ..\EMBEDDED\senior\LK_TECH\LK_TECH.h
 ..\obj\delay.o: ..\EMBEDDED\senior\REMOTE\REMOTE.h
 ..\obj\delay.o: ..\EMBEDDED\senior\PM01\PM01.h
+..\obj\delay.o: ..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.h
 ..\obj\delay.o: ..\EMBEDDED\senior_struct\senior.h
 ..\obj\delay.o: ..\USER\BSP.h
 ..\obj\delay.o: ..\BSP\can\Inc\can.h

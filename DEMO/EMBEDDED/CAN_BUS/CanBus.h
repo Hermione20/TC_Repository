@@ -66,15 +66,4 @@ void Can2ReceiveMsgProcess(CanRxMsg * msg);
 //void HT_430_Position_closed_Loop_T_R_OR_W(CAN_TypeDef *CANx,int ID,int16_t V,int Flag_RW);
 
 
-void can_chassis_task(CAN_TypeDef *CANx,u8 if_follow_gim,
-										u8 speed_mode,
-										u8 chassis_mode,
-										float yaw_encoder_angle,
-										int16_t yaw_encoder_filter_rate,
-										int16_t x,
-										int16_t y,
-										int16_t chassis_power,
-										uint16_t chassis_power_buffer,
-										u8 chassis_power_limit);
-
 #endif

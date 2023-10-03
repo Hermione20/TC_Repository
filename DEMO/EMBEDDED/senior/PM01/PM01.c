@@ -1,6 +1,22 @@
 #include "PM01.h"
 
 
+/**
+  ******************************************************************************
+  * @file    LK_TECH.c
+  * @author  Lee_ZEKAI
+  * @version V1.1.0
+  * @date    03-October-2023
+  * @brief   此文件编写LK_TECH各型号电机的解算,入口参数包含通用
+						 编码器结构体，can总线的计数，can结构体，编码器初始值
+						 设定.发送任务函数见senior文件
+						 
+@verbatim
+ ===============================================================================
+ **/
+ 
+/******************************capacitance_define*************************************/
+volatile capacitance_message_t capacitance_message;
 
 void PM01_message_Process(volatile capacitance_message_t *v,CanRxMsg * msg)
 {
@@ -30,7 +46,7 @@ void PM01_message_Process(volatile capacitance_message_t *v,CanRxMsg * msg)
 	{
 		v->tempureture=(msg->Data[0]<<8)|msg->Data[1];
 		v->time=(msg->Data[2]<<8)|msg->Data[3];
-    v->this_time=(msg->Data[4]<<8)|msg->Data[5];
+        v->this_time=(msg->Data[4]<<8)|msg->Data[5];
 	}break;
 
 	default:

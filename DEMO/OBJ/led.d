@@ -85,6 +85,7 @@
 ..\obj\led.o: ..\EMBEDDED\senior\LK_TECH\LK_TECH.h
 ..\obj\led.o: ..\EMBEDDED\senior\REMOTE\REMOTE.h
 ..\obj\led.o: ..\EMBEDDED\senior\PM01\PM01.h
+..\obj\led.o: ..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.h
 ..\obj\led.o: ..\EMBEDDED\senior_struct\senior.h
 ..\obj\led.o: ..\USER\BSP.h
 ..\obj\led.o: ..\BSP\can\Inc\can.h

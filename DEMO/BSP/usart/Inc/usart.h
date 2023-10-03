@@ -25,10 +25,10 @@
 *                                    中断调用函数接口
 *********************************************************************************************************
 */
-#define USART1_Data_Receive_Process_0				do{RemoteDataPrcess(_USART1_DMA_RX_BUF[0]);}while(0);
+#define USART1_Data_Receive_Process_0				do{RemoteDataPrcess(_USART1_DMA_RX_BUF[0],this_time_rx_len1);}while(0);
 																									
 																										
-#define USART1_Data_Receive_Process_1				do{RemoteDataPrcess(_USART1_DMA_RX_BUF[1]);}while(0);
+#define USART1_Data_Receive_Process_1				do{RemoteDataPrcess(_USART1_DMA_RX_BUF[1],this_time_rx_len1);}while(0);
 
 #define USART2_Data_Receive_Process_0					do{}while(0);
 #define USART2_Data_Receive_Process_1					do{}while(0);
@@ -131,7 +131,7 @@ void usart3_init(u32 bound);
 void uart4_init (u32 bound);
 void uart5_init (u32 bound);
 void usart6_init();
-void RemoteDataPrcess(uint8_t *pData);
+
 void Uart4DmaSendDataProc(DMA_Stream_TypeDef *DMA_Streamx,u16 ndtr);
 void Uart4SendByteInfoProc(u8 nSendInfo);
 void Uart4SendBytesInfoProc(u8* pSendInfo, u16 nSendCount);

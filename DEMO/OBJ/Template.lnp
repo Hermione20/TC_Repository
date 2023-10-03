@@ -20,6 +20,7 @@
 "..\obj\lk_tech.o"
 "..\obj\pm01.o"
 "..\obj\remote.o"
+"..\obj\can_chassis_transmit.o"
 "..\obj\can.o"
 "..\obj\delay.o"
 "..\obj\sys.o"

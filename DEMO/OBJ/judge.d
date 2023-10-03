@@ -84,6 +84,7 @@
 ..\obj\judge.o: ..\EMBEDDED\senior\LK_TECH\LK_TECH.h
 ..\obj\judge.o: ..\EMBEDDED\senior\REMOTE\REMOTE.h
 ..\obj\judge.o: ..\EMBEDDED\senior\PM01\PM01.h
+..\obj\judge.o: ..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.h
 ..\obj\judge.o: ..\EMBEDDED\senior_struct\senior.h
 ..\obj\judge.o: ..\USER\BSP.h
 ..\obj\judge.o: ..\BSP\can\Inc\can.h

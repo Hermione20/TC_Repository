@@ -84,6 +84,7 @@
 ..\obj\usart.o: ..\EMBEDDED\senior\LK_TECH\LK_TECH.h
 ..\obj\usart.o: ..\EMBEDDED\senior\REMOTE\REMOTE.h
 ..\obj\usart.o: ..\EMBEDDED\senior\PM01\PM01.h
+..\obj\usart.o: ..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.h
 ..\obj\usart.o: ..\EMBEDDED\senior_struct\senior.h
 ..\obj\usart.o: ..\USER\BSP.h
 ..\obj\usart.o: ..\BSP\can\Inc\can.h

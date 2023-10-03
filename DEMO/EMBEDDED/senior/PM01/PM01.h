@@ -28,8 +28,7 @@ typedef struct
 
 
 void PM01_message_Process(volatile capacitance_message_t *v,CanRxMsg * msg);
-void power_send_handle1();
-void power_send_handle2();
+
 
 
 extern volatile capacitance_message_t capacitance_message;

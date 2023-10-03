@@ -34,8 +34,8 @@ float angle_flag[4];
 float deviation_angle_flag[4];
 
 float volatilAo;
-float abbbbb;
-float aaatest;
+u16 gyro_speed=400;
+u8 get_speedw_flag;
 
 u8      cap_flag;
 int16_t cap_flag_time;
@@ -74,7 +74,6 @@ void chassis_param_init()//底盘参数初始化
 		
     PID_struct_init(&pid_cha_6020_angle[3], POSITION_PID, 8000, 10, 9,0.4f,4);//23, 0.2f,15);
   	PID_struct_init(&pid_cha_6020_speed[3], POSITION_PID, 15000, 500, 200,0.1,10);//42,0.5f,20);
-	
 
 #if STANDARD == 3
   for (int k = 0; k < 4; k++)
@@ -104,7 +103,15 @@ void chassis_param_init()//底盘参数初始化
 }
 
 
-
+/**
+************************************************************************************************************************
+* @Name     : power_limit_handle
+* @brief    : 功率控制的主函数
+* @param		: None
+* @retval   : void
+* @Note     : 
+************************************************************************************************************************
+**/
 void power_limit_handle()
 {
 		volatilAo=capacitance_message.out_v;
@@ -113,8 +120,6 @@ void power_limit_handle()
 
 		get_6020power();
 		
-		
-
 		if(cap_flag==1||cap_flag==3)
 		power_limit_rate1=get_the_limite_rate(get_max_power1(capacitance_message.cap_voltage_filte)-Max_Power_6020);
 		else
@@ -156,6 +161,15 @@ void power_limit_handle()
 			
 }
 
+/**
+************************************************************************************************************************
+* @Name     : cap_limit_mode_switch
+* @brief    : canbus处进行电容模式的即时更新
+* @param    : none
+* @retval   : void
+* @Note     : 1->0 , 3->2
+************************************************************************************************************************
+**/
 void cap_limit_mode_switch()
 {       
 	if(can_chassis_data.speed_mode==0||can_chassis_data.speed_mode==1)
@@ -303,6 +317,15 @@ for (int i = 0; i < 4; i++)
 		VAL_LIMIT(kall6020[i],0,1);
 }
 
+/**
+************************************************************************************************************************
+* @Name     : limit_angle_to_0_2pi
+* @brief    : 将角度限制在0~2pi内
+* @param    : angle 类型 float
+* @retval   : angle 类型 float
+* @Note     : 
+************************************************************************************************************************
+**/
 float limit_angle_to_0_2pi(float angle)
 {
 		if (angle>=2*PI)angle -= 2*PI;
@@ -312,6 +335,16 @@ float limit_angle_to_0_2pi(float angle)
 }
 
 
+/**
+************************************************************************************************************************
+* @Name     : convert_ecd_angle_to_0_2pi
+* @brief    : 将电机编码器的机械角度值（范围正负无穷大）解算为范围在0~2pi的角度值      
+* @param		: ecd_angle 电机编码器的机械角度值  类型  double
+* @param		: _0_2pi_angle 范围在0~2pi的角度值  类型  float
+* @retval   : _0_2pi_angle 范围在0~2pi的角度值  类型  float
+* @Note     : 
+************************************************************************************************************************
+**/
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle)
 {
 	_0_2pi_angle=fmod(-ecd_angle*ANGLE_TO_RAD,2*PI);	
@@ -321,6 +354,16 @@ double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle)
 	return _0_2pi_angle;
 }
 
+
+/**
+************************************************************************************************************************
+* @Name     : chassis_mode_select
+* @brief    : 将上位机发送的命令经选择后具体实行
+* @param		: none
+* @retval   : void
+* @Note     : 
+************************************************************************************************************************
+**/
 void chassis_mode_select(void)
 {
 	
@@ -363,8 +406,6 @@ void chassis_mode_select(void)
     break;
     }
 	
-
-
 }
 
 void chassis_stop_handle(void)
@@ -428,12 +469,6 @@ void separate_gimbal_handle(void)
 }
 
 
-u32 rotate_mode_count = 0;
-u8  rotate_mode = 0;
-u8  sin_constant_flag;
-u8  get_speedw_flag = 0;
-u16 gyro_speed=400;
-
 void rotate_follow_gimbal_handle(void)
 {
 
@@ -487,14 +522,22 @@ else if(get_speedw_flag==1)
 			Chassis_angle.get_speedw = 0;
 }
 
-
+/**
+************************************************************************************************************************
+* @Name     :start_angle_handle
+* @brief    :解算出初始角，偏航角，驱动轮速度，以及限制级驱动轮速度
+* @param		:None 
+* @retval   :void
+* @Note     :加入功率限制标志位的驱动轮速度给定 是实际发送的值	
+							10.3 考虑transition3为nan的情况
+************************************************************************************************************************
+**/
 void start_angle_handle()
 {
 	Chassis_angle.start_angle[0] = Chassis_angle.yaw_angle_0_2pi + ((3*PI)/4);
 	Chassis_angle.start_angle[1] = Chassis_angle.yaw_angle_0_2pi + ((5*PI)/4);
 	Chassis_angle.start_angle[2] = Chassis_angle.yaw_angle_0_2pi + ((7*PI)/4);
 	Chassis_angle.start_angle[3] = Chassis_angle.yaw_angle_0_2pi + ((1*PI)/4);
-
 	for(int k=0;k<4;k++)
 	{Chassis_angle.start_angle[k]=limit_angle_to_0_2pi(Chassis_angle.start_angle[k]);}
 
@@ -548,11 +591,20 @@ for(int k=0;k<4;k++)
 }
 
 
+/**
+************************************************************************************************************************
+* @Name     : start_chassis_6020
+* @brief    : 航向轴电机pid速度环/角度环 反馈值的获取，给定值的设置
+* @param    : none
+* @retval   : void 
+* @Note     : 转劣弧的处理
+							6020功率的处理可能不完善（l）
+************************************************************************************************************************
+**/
 void start_chassis_6020()
 {		
 	for(int i=0;i<4;i++)
 	{
-		chassis.cha_pid_3508.speed_fdb[i]=steering_wheel.Driving_Encoder[i].filter_rate;
 		chassis.cha_pid_6020.angle_fdb[i]=steering_wheel.Heading_Encoder[i].ecd_angle;
 	}
 		
@@ -586,6 +638,8 @@ void start_chassis_6020()
 		for(int i=0;i<4;i++)
 		chassis.cha_pid_6020.angle_ref[i] = Chassis_angle.deviation_angle[i] * RAD_TO_ANGLE + (getnumb[i])*360;
 	}	
+	
+	
 		for(int k=0;k<4;k++)
 		Ref_Fdb(chassis.cha_pid_6020.angle_ref[k],chassis.cha_pid_6020.angle_fdb[k]);//最多转劣弧
 
@@ -620,18 +674,26 @@ void start_chassis_6020()
 		
 		for(int i=0;i<4;i++)
 		chassis.cha_pid_6020.speed_ref[i]=pid_cha_6020_angle[i].out;
-	}
-	else{}
-	
-	
+	}	
 
 }
 
+/**
+************************************************************************************************************************
+* @Name     : set_3508current_6020voltage
+* @brief    : 驱动轮电机速度环反馈获取和给定设置；驱动轮和航向轴电机pid最终给定计算处理
+* @param    : None
+* @retval   : void
+* @Note     : 四轮差速处理（老补丁）
+							功率控制切换限制
+************************************************************************************************************************
+**/
 void set_3508current_6020voltage()
 {		
 		
 		for (int i = 0; i < 4; i++)
 		{ 
+		chassis.cha_pid_3508.speed_fdb[i]=steering_wheel.Driving_Encoder[i].filter_rate;
 		chassis.cha_pid_3508.speed_ref[i]=Chassis_angle.handle_speed_lim[i];
 
 		pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],kall6020[0]*chassis.cha_pid_6020.speed_ref[i]);
@@ -688,7 +750,15 @@ for (int i = 0; i < 4; i++)
 }
 
 		
-
+/**
+************************************************************************************************************************
+* @Name     : get_remote_set
+* @brief    : 解算遥控器速度方向和大小
+* @param    : None
+* @retval   : void
+* @Note     : 10.3 优化了算法更精确更高刷新率
+************************************************************************************************************************
+**/
 void get_remote_set()
 {	
 	float temp_angle=0;
@@ -704,39 +774,6 @@ void get_remote_set()
 		{Chassis_angle.Remote_speed = 0;}
 }
 
-//void get_remote_set()
-//{
-//		vx = can_chassis_data.x;//vx，x是横轴
-//		vy = can_chassis_data.y;//vy，y是纵轴
-// Chassis_angle.Remote_speed = sqrt((vx*vx)+(vy*vy));
-//if(Chassis_angle.Remote_speed >= 50)
-//{
-// if(vx > 0)
-// {
-//	 Chassis_angle.Remote_angle = atan(vy / vx);
-//   if(Chassis_angle.Remote_angle < 0)
-//   {
-//		 Chassis_angle.Remote_angle += 2*PI;
-//	 } 
-// }
-// else if(vx<0) 
-// {
-//	 Chassis_angle.Remote_angle = atan(vy / vx);
-//	 Chassis_angle.Remote_angle += PI;
-// }
-// else
-//  {
-//		 if(vy < 0)
-//		 {
-//		 Chassis_angle.Remote_angle = 3 * PI /2;}
-//		 else if(vy > 0)
-//		 {
-//		 Chassis_angle.Remote_angle = PI / 2;
-//		 }
-//  }
-// } 
-//}
-
 
 /**
 ************************************************************************************************************************
@@ -750,17 +787,14 @@ void get_remote_set()
 
 void chassis_task()
 {
-//	yaw_num_get = -yaw_Encoder.ecd_angle/360;
-//	if(-yaw_Encoder .ecd_angle<0)
-//	{yaw_num_get -=1;}
-//	Chassis_angle.yaw_angle_0_2pi=(-yaw_Encoder.ecd_angle-yaw_num_get*360)*ANGLE_TO_RAD;
-//逆时针增大！
-	
+
+//逆时针增大！	
 	Chassis_angle.yaw_encoder_ecd_angle=can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
 	Chassis_angle.yaw_angle_0_2pi=convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 	
 	chassis_mode_select();
 	get_remote_set();
+	
 	start_angle_handle();
 	start_chassis_6020();
 #if POWER_LIMIT_HANDLE

@@ -64,7 +64,7 @@ else if(val>=max)\
 #include "LK_TECH.h"
 #include "REMOTE.h"
 #include "PM01.h"
-
+#include "can_chassis_transmit.h"
 
 
 #include "senior.h"

@@ -84,6 +84,7 @@
 ..\obj\dji_motor.o: ..\EMBEDDED\senior\LK_TECH\LK_TECH.h
 ..\obj\dji_motor.o: ..\EMBEDDED\senior\REMOTE\REMOTE.h
 ..\obj\dji_motor.o: ..\EMBEDDED\senior\PM01\PM01.h
+..\obj\dji_motor.o: ..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.h
 ..\obj\dji_motor.o: ..\EMBEDDED\senior_struct\senior.h
 ..\obj\dji_motor.o: ..\USER\BSP.h
 ..\obj\dji_motor.o: ..\BSP\can\Inc\can.h
