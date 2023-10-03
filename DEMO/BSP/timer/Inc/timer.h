@@ -6,7 +6,7 @@
 /***********************************************
 		Advanced-control timers (TIM1 and TIM8)
 ************************************************/
-#define EN_TIM1									1
+#define EN_TIMtc1									1
 #define	EN_TIM1_IRQ							1
 
 #define EN_TIM8									1
@@ -46,7 +46,7 @@
 #define TIM3_IRQProcess 				do{}while(0);
 #define TIM4_IRQProcess 				do{}while(0);
 #define TIM5_IRQProcess 				do{}while(0);
-#define TIM6_IRQProcess 				do{}while(0);//Control_Task
+#define TIM6_IRQProcess 				do{control_task();}while(0);//Control_Task
 #define TIM7_IRQProcess 				do{}while(0);
 #define TIM8_IRQProcess 				do{}while(0);
 

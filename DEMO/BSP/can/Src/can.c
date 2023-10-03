@@ -32,8 +32,6 @@
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
 u8 CAN1_receive_buf[20];
 u8 CAN2_receive_buf[20];
-
-
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 #if EN_CAN1
@@ -110,9 +108,10 @@ void CAN1_TX_IRQHandler(void) //CAN TX
                           CAN1_RX0_IRQHandler
 描述：CAN1的接收中断函数
 *************************************************************************/
+
 void CAN1_RX0_IRQHandler(void)
 {   
-		CanRxMsg rx_message;	
+			CanRxMsg rx_message;
 		if (CAN_GetITStatus(CAN1,CAN_IT_FMP0)!= RESET)
 		{
 				CAN_ClearITPendingBit(CAN1, CAN_IT_FF0);

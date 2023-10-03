@@ -71,10 +71,10 @@
 ..\obj\judge.o: ..\EMBEDDED\CAN_BUS\CanBus.h
 ..\obj\judge.o: ..\HEADFILE\main.h
 ..\obj\judge.o: ..\EMBEDDED\senior\CH100\CH100.h
+..\obj\judge.o: ..\EMBEDDED\senior\JUDGE\JUDGE.h
 ..\obj\judge.o: ..\EMBEDDED\senior\DJI_MOTOR\DJI_MOTOR.h
 ..\obj\judge.o: ..\EMBEDDED\senior\HI220\HI220.h
 ..\obj\judge.o: ..\EMBEDDED\senior\HT430\HT430.h
-..\obj\judge.o: ..\EMBEDDED\senior\JUDGE\JUDGE.h
 ..\obj\judge.o: ..\EMBEDDED\senior\Auto_Shoot\Auto_shoot.h
 ..\obj\judge.o: ..\EMBEDDED\senior\Auto_Shoot\proto\send.pb-c.h
 ..\obj\judge.o: ..\EMBEDDED\senior\Auto_Shoot\proto\protobuf-c.h
@@ -90,3 +90,6 @@
 ..\obj\judge.o: ..\BSP\usart\Inc\usart.h
 ..\obj\judge.o: ..\BSP\LED\led.h
 ..\obj\judge.o: ..\BSP\sys\Inc\sys.h
+..\obj\judge.o: ..\BSP\timer\Inc\timer.h
+..\obj\judge.o: ..\APP\TASK\CHASSIS_TASK\Inc\CHASSIS_TASK.H
+..\obj\judge.o: ..\APP\RTOS\Ins\control_task.h

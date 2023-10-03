@@ -186,7 +186,7 @@
             <hadIRAM2>1</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
-            <useUlib>0</useUlib>
+            <useUlib>1</useUlib>
             <EndSel>0</EndSel>
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\STLIB\inc;..\STLIB\src;..\APP\BAL\Ins;..\APP\RTOS\Ins;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Ins;..\APP\TASK\SHOOT_TASK\Ins;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\BSP\sys\Inc;..\BSP\LED;..\EMBEDDED\CAN_BUS;..\EMBEDDED\senior\Auto_Shoot;..\EMBEDDED\senior\Auto_Shoot\proto;..\EMBEDDED\senior\Auto_Shoot\Protocol;..\EMBEDDED\senior\CH100;..\EMBEDDED\senior\DJI_MOTOR;..\EMBEDDED\senior\HI220;..\EMBEDDED\senior\HT430;..\EMBEDDED\senior\JUDGE;..\EMBEDDED\senior\LK_TECH;..\EMBEDDED\senior\PM01;..\EMBEDDED\senior_struct;..\EMBEDDED\senior\REMOTE</IncludePath>
+              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\STLIB\inc;..\STLIB\src;..\APP\BAL\Ins;..\APP\RTOS\Ins;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Ins;..\APP\TASK\SHOOT_TASK\Ins;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\BSP\sys\Inc;..\BSP\LED;..\EMBEDDED\CAN_BUS;..\EMBEDDED\senior\Auto_Shoot;..\EMBEDDED\senior\Auto_Shoot\proto;..\EMBEDDED\senior\Auto_Shoot\Protocol;..\EMBEDDED\senior\CH100;..\EMBEDDED\senior\DJI_MOTOR;..\EMBEDDED\senior\HI220;..\EMBEDDED\senior\HT430;..\EMBEDDED\senior\JUDGE;..\EMBEDDED\senior\LK_TECH;..\EMBEDDED\senior\PM01;..\EMBEDDED\senior_struct;..\EMBEDDED\senior\REMOTE;..\BSP\timer\Inc;..\APP\RTOS\Ins</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -403,6 +403,13 @@
         </Group>
         <Group>
           <GroupName>RTOS</GroupName>
+          <Files>
+            <File>
+              <FileName>control_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\RTOS\Src\control_task.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>TASK</GroupName>
@@ -526,6 +533,11 @@
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\usart\Src\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\timer\Src\timer.c</FilePath>
             </File>
           </Files>
         </Group>

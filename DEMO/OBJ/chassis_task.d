@@ -71,10 +71,10 @@
 ..\obj\chassis_task.o: ..\EMBEDDED\CAN_BUS\CanBus.h
 ..\obj\chassis_task.o: ..\HEADFILE\main.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\CH100\CH100.h
+..\obj\chassis_task.o: ..\EMBEDDED\senior\JUDGE\JUDGE.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\DJI_MOTOR\DJI_MOTOR.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\HI220\HI220.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\HT430\HT430.h
-..\obj\chassis_task.o: ..\EMBEDDED\senior\JUDGE\JUDGE.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\Auto_Shoot\Auto_shoot.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\Auto_Shoot\proto\send.pb-c.h
 ..\obj\chassis_task.o: ..\EMBEDDED\senior\Auto_Shoot\proto\protobuf-c.h
@@ -90,3 +90,6 @@
 ..\obj\chassis_task.o: ..\BSP\usart\Inc\usart.h
 ..\obj\chassis_task.o: ..\BSP\LED\led.h
 ..\obj\chassis_task.o: ..\BSP\sys\Inc\sys.h
+..\obj\chassis_task.o: ..\BSP\timer\Inc\timer.h
+..\obj\chassis_task.o: ..\APP\TASK\CHASSIS_TASK\Inc\CHASSIS_TASK.H
+..\obj\chassis_task.o: ..\APP\RTOS\Ins\control_task.h

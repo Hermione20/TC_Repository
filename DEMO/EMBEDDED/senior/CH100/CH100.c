@@ -6,7 +6,7 @@ void CH100_getDATA(uint8_t *DataAddress,general_gyro_t *GYRO)
     memcpy(&dat, &DataAddress[6], sizeof(id0x91_t));
 
     volatile static float Last_yaw_temp1, Yaw_temp1;
-	volatile static int Yaw_count1;
+		volatile static int Yaw_count1;
 
     GYRO->pitch_Angle = -dat.eul[0];
 
