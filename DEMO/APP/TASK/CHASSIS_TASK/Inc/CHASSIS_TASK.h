@@ -6,12 +6,12 @@
 
 /*******************************CONFIG********************************/
 #define STANDARD              3
-#define POWER_LIMIT_HANDLE    1
+#define POWER_LIMIT_HANDLE    0
 
 #define RIGHT_FRONT_REVERSE   1
-#define LEFT_FRONT_REVERSE    1
+#define LEFT_FRONT_REVERSE    -1
 #define LEFT_BEHIND_REVERSE   1
-#define RIGHT_BEHIND_REVERSE  -1
+#define RIGHT_BEHIND_REVERSE  1
 /*******************************CONFIG********************************/
 
 
@@ -173,8 +173,6 @@ typedef struct
 		float           gyro_angle;
 		float           gyro_palstance;
 
-		int16_t         wheel_speed_fdb[4];
-		int16_t         wheel_speed_ref[4];
 		int16_t         current[4];
 		int16_t					voltage[4];
 		

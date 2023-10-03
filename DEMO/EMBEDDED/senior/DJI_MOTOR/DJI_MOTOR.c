@@ -103,7 +103,9 @@ void M3508orM2006EncoderTask(uint32_t can_count,volatile Encoder *v, CanRxMsg * 
 
 void GM6020EncoderTask(uint32_t can_count,volatile Encoder *v, CanRxMsg * msg,int offset)
 {
-
+	if(can_count <10)
+	v->ecd_bias=offset ;
+	
 	GM6020EncoderProcess(v, msg);
 	// 码盘中间值设定也需要修改
 	if (can_count <= 100)

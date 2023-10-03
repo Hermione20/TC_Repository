@@ -7,20 +7,12 @@ static uint32_t can2_count = 0;
 void Can1ReceiveMsgProcess(CanRxMsg * msg)
 {
     can1_count++;
-		switch(msg->StdId)
-		{
-					  case GIMBAL_YAW_MOTOR:
-		{
-			GM6020EncoderTask(can1_count,&yaw_Encoder,msg,GMYawEncoder_Offset);
-		}break;
-			
-   
+	  
 		can_chassis_receive_task(msg);
 		cap_limit_mode_switch();
 		PM01_message_Process(&capacitance_message,msg);
-		default:
-        break;
-    }
+
+    
 }
 
 void Can2ReceiveMsgProcess(CanRxMsg * msg)
