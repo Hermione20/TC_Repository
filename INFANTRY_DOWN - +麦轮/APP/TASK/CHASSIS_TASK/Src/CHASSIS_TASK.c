@@ -2,7 +2,7 @@
 #include "CHASSIS_TASK.h"
 /*----------------------------------------------------------------------------*/
 
-
+#define STANDARD      1
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
  
 ChassisSpeed_Ref_t ChassisSpeedRef;
@@ -80,9 +80,8 @@ void chassis_param_init()//底盘参数初始化
     {
       PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,16000,100,50,0.2,20); //24 0.3 10    38.0f,3.0f, 40
     }
-			PID_struct_init(&pid_chassis_angle, POSITION_PID, MAX_CHASSIS_VR_SPEED, 30, 0, 2.0,0.0f,3.0f);
-#endif
-#if STANDARD == 3
+			PID_struct_init(&pid_chassis_angle, POSITION_PID, 450, 30,  2.0,0.0f,3.0f);
+#elif STANDARD == 3
   for (int k = 0; k < 4; k++)
     {
       PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,15000, 15000,24,0.3, 10); //24 0.3 10    38.0f,3.0f, 40
@@ -362,60 +361,6 @@ double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle)
 }
 
 
-/**
-************************************************************************************************************************
-* @Name     : chassis_mode_select
-* @brief    : 将上位机发送的命令经选择后具体实行
-* @param		: none
-* @retval   : void
-* @Note     : 
-************************************************************************************************************************
-**/
-void chassis_mode_select(void)
-{
-
-#if 	 CHASSIS_TYPE == 1//舵轮	
-	chassis.ctrl_mode=can_chassis_data.chassis_mode;
-	chassis.last_ctrl_mode=can_chassis_data.chassis_mode;
-#endif
-
-	switch (chassis.ctrl_mode)
-    {
-
-    case CHASSIS_STOP:
-    {
-				chassis_stop_handle();
-    }
-    break;
-
-    case MANUAL_FOLLOW_GIMBAL:   //跟随云台模式
-    {
-				follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_ROTATE:         //小陀螺
-    {
-				rotate_follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_REVERSE:
-    {
-				reverse_follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_SEPARATE:
-    {
-				separate_gimbal_handle();
-    }
-    break;
-    default:
-    {
-				chassis_stop_handle();
-    }
-    break;
-    }
-	
-}
 
 void chassis_stop_handle(void)
 {
@@ -451,7 +396,7 @@ void follow_gimbal_handle(void)
 			
 	chassis.vy = ChassisSpeedRef.left_right_ref;
   chassis.vx = ChassisSpeedRef.forward_back_ref;
-	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_encoder_ecd_angle,0);
+	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi*RAD_TO_ANGLE,0);
 
 }
 
@@ -512,8 +457,8 @@ else if(get_speedw_flag==1)
 void rotate_follow_gimbal_handle(void)
 {
 
-  chassis.sin_chassis_angle = arm_sin_f32(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
-  chassis.cos_chassis_angle = arm_cos_f32(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
+  chassis.sin_chassis_angle = sinf(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
+  chassis.cos_chassis_angle = cosf(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
 
   chassis.foward_back_to_foward_back_rotate_speed = ChassisSpeedRef.forward_back_ref*chassis.cos_chassis_angle;
   chassis.foward_back_to_left_right_rotate_speed  = -ChassisSpeedRef.forward_back_ref*chassis.sin_chassis_angle;
@@ -522,7 +467,8 @@ void rotate_follow_gimbal_handle(void)
 
   chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
   chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
-
+	chassis.vw = chassis.ChassisSpeed_Ref.rotate_ref;
+	
 //出事的话加负号
 }
 #endif
@@ -847,20 +793,6 @@ for (int i = 0; i < 4; i++)
 
 
 
-void Chassis_PID_handle(void)
-{
-	#if POWER_LIMIT_HANDLE
-			power_limit_handle();	
-	#endif
-	
-			set_3508current_6020voltage();
-}
-
-void Motion_resolution(void)
-{
-		get_remote_set();
-		start_angle_handle();
-}
 
 
 /**
@@ -900,7 +832,6 @@ void get_remote_set()
 	
 		chassis.vx=ChassisSpeedRef.forward_back_ref;
 		chassis.vy=ChassisSpeedRef.left_right_ref;
-		chassis.vw=ChassisSpeedRef.rotate_ref;
 }
 #elif CHASSIS_TYPE == 4
 void get_remote_set()
@@ -910,13 +841,79 @@ void get_remote_set()
 	
 		chassis.vx=ChassisSpeedRef.forward_back_ref;
 		chassis.vy=ChassisSpeedRef.left_right_ref;
-		chassis.vw=ChassisSpeedRef.rotate_ref;
+	
 }
 #endif
 
+/**
+************************************************************************************************************************
+* @Name     : chassis_mode_select
+* @brief    : 将上位机发送的命令经选择后具体实行
+* @param		: none
+* @retval   : void
+* @Note     : 
+************************************************************************************************************************
+**/
+void chassis_mode_select(void)
+{
 
+#if CHASSIS_TYPE == 1//舵轮	
+	chassis.ctrl_mode=can_chassis_data.chassis_mode;
+	chassis.last_ctrl_mode=can_chassis_data.chassis_mode;
+#endif
 
+	switch (chassis.ctrl_mode)
+    {
 
+    case CHASSIS_STOP:
+    {
+				chassis_stop_handle();
+    }
+    break;
+
+    case MANUAL_FOLLOW_GIMBAL:   //跟随云台模式
+    {
+				follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_ROTATE:         //小陀螺
+    {
+				rotate_follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_REVERSE:
+    {
+				reverse_follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_SEPARATE:
+    {
+				separate_gimbal_handle();
+    }
+    break;
+    default:
+    {
+				chassis_stop_handle();
+    }
+    break;
+    }
+	
+}
+
+void Motion_resolution(void)
+{
+		get_remote_set();
+		start_angle_handle();
+}
+
+void Chassis_PID_handle(void)
+{
+	#if POWER_LIMIT_HANDLE
+			power_limit_handle();	
+	#endif
+	
+			set_3508current_6020voltage();
+}
 
 /**
 ************************************************************************************************************************
