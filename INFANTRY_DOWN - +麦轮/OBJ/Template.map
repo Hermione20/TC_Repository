@@ -2033,103 +2033,103 @@ Memory Map of the image
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x08000000   0x00000188   Data   RO         1510    RESET               startup_stm32f40_41xxx.o
-    0x08000188   0x00000000   Code   RO         3889  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08000188   0x00000004   Code   RO         4042    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0800018c   0x00000004   Code   RO         4045    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x08000190   0x00000000   Code   RO         4047    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x08000190   0x00000000   Code   RO         4049    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x08000190   0x00000008   Code   RO         4050    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x08000198   0x00000000   Code   RO         4052    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x08000198   0x00000000   Code   RO         4054    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x08000198   0x00000004   Code   RO         4043    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x08000000   0x00000188   Data   RO         1605    RESET               startup_stm32f40_41xxx.o
+    0x08000188   0x00000000   Code   RO         3984  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08000188   0x00000004   Code   RO         4137    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0800018c   0x00000004   Code   RO         4140    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x08000190   0x00000000   Code   RO         4142    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x08000190   0x00000000   Code   RO         4144    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x08000190   0x00000008   Code   RO         4145    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x08000198   0x00000000   Code   RO         4147    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x08000198   0x00000000   Code   RO         4149    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x08000198   0x00000004   Code   RO         4138    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x0800019c   0x00000040   Code   RO            4    .text               main.o
     0x080001dc   0x0000001a   Code   RO          322    .text               stm32f4xx_it.o
     0x080001f6   0x00000002   PAD
-    0x080001f8   0x00000210   Code   RO          375    .text               system_stm32f4xx.o
-    0x08000408   0x00000070   Code   RO          405    .text               bsp.o
-    0x08000478   0x000000c8   Code   RO          432    .text               control_task.o
-    0x08000540   0x00001e18   Code   RO          459    .text               chassis_task.o
-    0x08002358   0x00000524   Code   RO          490    .text               oldpid.o
-    0x0800287c   0x000000ec   Code   RO          622    .text               canbus.o
-    0x08002968   0x00000104   Code   RO          648    .text               ch100.o
-    0x08002a6c   0x00000390   Code   RO          684    .text               dji_motor.o
-    0x08002dfc   0x00000584   Code   RO          718    .text               hi220.o
-    0x08003380   0x000002ec   Code   RO          771    .text               judge.o
-    0x0800366c   0x0000019c   Code   RO          858    .text               pm01.o
-    0x08003808   0x000003e4   Code   RO          888    .text               remote.o
-    0x08003bec   0x00000284   Code   RO          919    .text               can_chassis_transmit.o
-    0x08003e70   0x00000290   Code   RO          949    .text               can.o
-    0x08004100   0x00000c64   Code   RO         1046    .text               usart.o
-    0x08004d64   0x00000394   Code   RO         1074    .text               timer.o
-    0x080050f8   0x000000e0   Code   RO         1101    .text               misc.o
-    0x080051d8   0x000009f0   Code   RO         1149    .text               stm32f4xx_can.o
-    0x08005bc8   0x000003a8   Code   RO         1221    .text               stm32f4xx_dma.o
-    0x08005f70   0x00000294   Code   RO         1293    .text               stm32f4xx_gpio.o
-    0x08006204   0x0000065c   Code   RO         1365    .text               stm32f4xx_rcc.o
-    0x08006860   0x00000ca2   Code   RO         1463    .text               stm32f4xx_tim.o
+    0x080001f8   0x00000210   Code   RO          441    .text               system_stm32f4xx.o
+    0x08000408   0x00000070   Code   RO          471    .text               bsp.o
+    0x08000478   0x000000c8   Code   RO          498    .text               control_task.o
+    0x08000540   0x00001e18   Code   RO          525    .text               chassis_task.o
+    0x08002358   0x00000524   Code   RO          556    .text               oldpid.o
+    0x0800287c   0x000000ec   Code   RO          714    .text               canbus.o
+    0x08002968   0x00000104   Code   RO          740    .text               ch100.o
+    0x08002a6c   0x00000390   Code   RO          776    .text               dji_motor.o
+    0x08002dfc   0x00000584   Code   RO          810    .text               hi220.o
+    0x08003380   0x000002ec   Code   RO          863    .text               judge.o
+    0x0800366c   0x0000019c   Code   RO          950    .text               pm01.o
+    0x08003808   0x000003e4   Code   RO          980    .text               remote.o
+    0x08003bec   0x00000284   Code   RO         1011    .text               can_chassis_transmit.o
+    0x08003e70   0x00000290   Code   RO         1041    .text               can.o
+    0x08004100   0x00000c64   Code   RO         1141    .text               usart.o
+    0x08004d64   0x00000394   Code   RO         1169    .text               timer.o
+    0x080050f8   0x000000e0   Code   RO         1196    .text               misc.o
+    0x080051d8   0x000009f0   Code   RO         1244    .text               stm32f4xx_can.o
+    0x08005bc8   0x000003a8   Code   RO         1316    .text               stm32f4xx_dma.o
+    0x08005f70   0x00000294   Code   RO         1388    .text               stm32f4xx_gpio.o
+    0x08006204   0x0000065c   Code   RO         1460    .text               stm32f4xx_rcc.o
+    0x08006860   0x00000ca2   Code   RO         1558    .text               stm32f4xx_tim.o
     0x08007502   0x00000002   PAD
-    0x08007504   0x00000454   Code   RO         1487    .text               stm32f4xx_usart.o
-    0x08007958   0x00000024   Code   RO         1511    .text               startup_stm32f40_41xxx.o
-    0x0800797c   0x0000001e   Code   RO         3901    .text               mc_w.l(llshl.o)
-    0x0800799a   0x00000024   Code   RO         3903    .text               mc_w.l(llsshr.o)
-    0x080079be   0x00000040   Code   RO         3907    .text               mc_w.l(memmovea.o)
-    0x080079fe   0x00000024   Code   RO         3909    .text               mc_w.l(memseta.o)
-    0x08007a22   0x00000024   Code   RO         3911    .text               mc_w.l(strstr.o)
-    0x08007a46   0x0000014e   Code   RO         3949    .text               mf_w.l(dadd.o)
-    0x08007b94   0x000000e4   Code   RO         3951    .text               mf_w.l(dmul.o)
-    0x08007c78   0x000000de   Code   RO         3953    .text               mf_w.l(ddiv.o)
-    0x08007d56   0x0000002c   Code   RO         3957    .text               mf_w.l(ffltl.o)
-    0x08007d82   0x00000022   Code   RO         3959    .text               mf_w.l(dflti.o)
-    0x08007da4   0x0000001a   Code   RO         3961    .text               mf_w.l(dfltui.o)
-    0x08007dbe   0x0000003e   Code   RO         3965    .text               mf_w.l(dfixi.o)
-    0x08007dfc   0x0000004a   Code   RO         3969    .text               mf_w.l(dfixl.o)
-    0x08007e46   0x00000026   Code   RO         3971    .text               mf_w.l(f2d.o)
-    0x08007e6c   0x00000030   Code   RO         3973    .text               mf_w.l(cdcmple.o)
-    0x08007e9c   0x00000030   Code   RO         3975    .text               mf_w.l(cdrcmple.o)
-    0x08007ecc   0x00000038   Code   RO         3977    .text               mf_w.l(d2f.o)
-    0x08007f04   0x00000020   Code   RO         4056    .text               mc_w.l(llushr.o)
-    0x08007f24   0x00000000   Code   RO         4067    .text               mc_w.l(iusefp.o)
-    0x08007f24   0x0000006e   Code   RO         4068    .text               mf_w.l(fepilogue.o)
-    0x08007f92   0x000000ba   Code   RO         4070    .text               mf_w.l(depilogue.o)
-    0x0800804c   0x000000a2   Code   RO         4072    .text               mf_w.l(dsqrt.o)
-    0x080080ee   0x00000086   Code   RO         4074    .text               mf_w.l(drem.o)
-    0x08008174   0x00000024   Code   RO         4078    .text               mc_w.l(init.o)
-    0x08008198   0x00000030   Code   RO         4010    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
-    0x080081c8   0x00000360   Code   RO         3729    i.__hardfp_asin     m_wm.l(asin.o)
-    0x08008528   0x000002d8   Code   RO         3979    i.__hardfp_atan     m_wm.l(atan.o)
-    0x08008800   0x000001f0   Code   RO         3743    i.__hardfp_atan2    m_wm.l(atan2.o)
-    0x080089f0   0x000000c8   Code   RO         3755    i.__hardfp_cos      m_wm.l(cos.o)
-    0x08008ab8   0x00000014   Code   RO         3781    i.__hardfp_fabs     m_wm.l(fabs.o)
-    0x08008acc   0x00000104   Code   RO         3787    i.__hardfp_fmod     m_wm.l(fmod.o)
-    0x08008bd0   0x000000c8   Code   RO         3841    i.__hardfp_sin      m_wm.l(sin.o)
-    0x08008c98   0x0000007a   Code   RO         3853    i.__hardfp_sqrt     m_wm.l(sqrt.o)
+    0x08007504   0x00000454   Code   RO         1582    .text               stm32f4xx_usart.o
+    0x08007958   0x00000024   Code   RO         1606    .text               startup_stm32f40_41xxx.o
+    0x0800797c   0x0000001e   Code   RO         3996    .text               mc_w.l(llshl.o)
+    0x0800799a   0x00000024   Code   RO         3998    .text               mc_w.l(llsshr.o)
+    0x080079be   0x00000040   Code   RO         4002    .text               mc_w.l(memmovea.o)
+    0x080079fe   0x00000024   Code   RO         4004    .text               mc_w.l(memseta.o)
+    0x08007a22   0x00000024   Code   RO         4006    .text               mc_w.l(strstr.o)
+    0x08007a46   0x0000014e   Code   RO         4044    .text               mf_w.l(dadd.o)
+    0x08007b94   0x000000e4   Code   RO         4046    .text               mf_w.l(dmul.o)
+    0x08007c78   0x000000de   Code   RO         4048    .text               mf_w.l(ddiv.o)
+    0x08007d56   0x0000002c   Code   RO         4052    .text               mf_w.l(ffltl.o)
+    0x08007d82   0x00000022   Code   RO         4054    .text               mf_w.l(dflti.o)
+    0x08007da4   0x0000001a   Code   RO         4056    .text               mf_w.l(dfltui.o)
+    0x08007dbe   0x0000003e   Code   RO         4060    .text               mf_w.l(dfixi.o)
+    0x08007dfc   0x0000004a   Code   RO         4064    .text               mf_w.l(dfixl.o)
+    0x08007e46   0x00000026   Code   RO         4066    .text               mf_w.l(f2d.o)
+    0x08007e6c   0x00000030   Code   RO         4068    .text               mf_w.l(cdcmple.o)
+    0x08007e9c   0x00000030   Code   RO         4070    .text               mf_w.l(cdrcmple.o)
+    0x08007ecc   0x00000038   Code   RO         4072    .text               mf_w.l(d2f.o)
+    0x08007f04   0x00000020   Code   RO         4151    .text               mc_w.l(llushr.o)
+    0x08007f24   0x00000000   Code   RO         4162    .text               mc_w.l(iusefp.o)
+    0x08007f24   0x0000006e   Code   RO         4163    .text               mf_w.l(fepilogue.o)
+    0x08007f92   0x000000ba   Code   RO         4165    .text               mf_w.l(depilogue.o)
+    0x0800804c   0x000000a2   Code   RO         4167    .text               mf_w.l(dsqrt.o)
+    0x080080ee   0x00000086   Code   RO         4169    .text               mf_w.l(drem.o)
+    0x08008174   0x00000024   Code   RO         4173    .text               mc_w.l(init.o)
+    0x08008198   0x00000030   Code   RO         4105    i.__ARM_fpclassify  m_wm.l(fpclassify.o)
+    0x080081c8   0x00000360   Code   RO         3824    i.__hardfp_asin     m_wm.l(asin.o)
+    0x08008528   0x000002d8   Code   RO         4074    i.__hardfp_atan     m_wm.l(atan.o)
+    0x08008800   0x000001f0   Code   RO         3838    i.__hardfp_atan2    m_wm.l(atan2.o)
+    0x080089f0   0x000000c8   Code   RO         3850    i.__hardfp_cos      m_wm.l(cos.o)
+    0x08008ab8   0x00000014   Code   RO         3876    i.__hardfp_fabs     m_wm.l(fabs.o)
+    0x08008acc   0x00000104   Code   RO         3882    i.__hardfp_fmod     m_wm.l(fmod.o)
+    0x08008bd0   0x000000c8   Code   RO         3936    i.__hardfp_sin      m_wm.l(sin.o)
+    0x08008c98   0x0000007a   Code   RO         3948    i.__hardfp_sqrt     m_wm.l(sqrt.o)
     0x08008d12   0x00000006   PAD
-    0x08008d18   0x00000438   Code   RO         4031    i.__ieee754_rem_pio2  m_wm.l(rred.o)
-    0x08009150   0x00000170   Code   RO         3993    i.__kernel_cos      m_wm.l(cos_i.o)
-    0x080092c0   0x000000f8   Code   RO         4028    i.__kernel_poly     m_wm.l(poly.o)
-    0x080093b8   0x00000130   Code   RO         4036    i.__kernel_sin      m_wm.l(sin_i.o)
-    0x080094e8   0x00000014   Code   RO         3997    i.__mathlib_dbl_infnan  m_wm.l(dunder.o)
-    0x080094fc   0x00000014   Code   RO         3998    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
-    0x08009510   0x00000020   Code   RO         3999    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
-    0x08009530   0x00000020   Code   RO         4002    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
-    0x08009550   0x0000000e   Code   RO         4082    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x0800955e   0x00000002   Code   RO         4083    i.__scatterload_null  mc_w.l(handlers.o)
-    0x08009560   0x0000000e   Code   RO         4084    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08008d18   0x00000438   Code   RO         4126    i.__ieee754_rem_pio2  m_wm.l(rred.o)
+    0x08009150   0x00000170   Code   RO         4088    i.__kernel_cos      m_wm.l(cos_i.o)
+    0x080092c0   0x000000f8   Code   RO         4123    i.__kernel_poly     m_wm.l(poly.o)
+    0x080093b8   0x00000130   Code   RO         4131    i.__kernel_sin      m_wm.l(sin_i.o)
+    0x080094e8   0x00000014   Code   RO         4092    i.__mathlib_dbl_infnan  m_wm.l(dunder.o)
+    0x080094fc   0x00000014   Code   RO         4093    i.__mathlib_dbl_infnan2  m_wm.l(dunder.o)
+    0x08009510   0x00000020   Code   RO         4094    i.__mathlib_dbl_invalid  m_wm.l(dunder.o)
+    0x08009530   0x00000020   Code   RO         4097    i.__mathlib_dbl_underflow  m_wm.l(dunder.o)
+    0x08009550   0x0000000e   Code   RO         4177    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x0800955e   0x00000002   Code   RO         4178    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08009560   0x0000000e   Code   RO         4179    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x0800956e   0x00000002   PAD
-    0x08009570   0x0000000c   Code   RO         4062    i.__set_errno       mc_w.l(errno.o)
-    0x0800957c   0x00000010   Code   RO         3981    i.atan              m_wm.l(atan.o)
-    0x0800958c   0x00000018   Code   RO         3783    i.fabs              m_wm.l(fabs.o)
-    0x080095a4   0x0000006e   Code   RO         3855    i.sqrt              m_wm.l(sqrt.o)
-    0x08009612   0x00000302   Data   RO          773    .constdata          judge.o
+    0x08009570   0x0000000c   Code   RO         4157    i.__set_errno       mc_w.l(errno.o)
+    0x0800957c   0x00000010   Code   RO         4076    i.atan              m_wm.l(atan.o)
+    0x0800958c   0x00000018   Code   RO         3878    i.fabs              m_wm.l(fabs.o)
+    0x080095a4   0x0000006e   Code   RO         3950    i.sqrt              m_wm.l(sqrt.o)
+    0x08009612   0x00000302   Data   RO          865    .constdata          judge.o
     0x08009914   0x00000004   PAD
-    0x08009918   0x00000050   Data   RO         3732    .constdata          m_wm.l(asin.o)
-    0x08009968   0x00000098   Data   RO         3982    .constdata          m_wm.l(atan.o)
-    0x08009a00   0x00000030   Data   RO         3994    .constdata          m_wm.l(cos_i.o)
-    0x08009a30   0x00000008   Data   RO         4030    .constdata          m_wm.l(qnan.o)
-    0x08009a38   0x000000c8   Data   RO         4033    .constdata          m_wm.l(rred.o)
-    0x08009b00   0x00000028   Data   RO         4037    .constdata          m_wm.l(sin_i.o)
-    0x08009b28   0x00000020   Data   RO         4080    Region$$Table       anon$$obj.o
+    0x08009918   0x00000050   Data   RO         3827    .constdata          m_wm.l(asin.o)
+    0x08009968   0x00000098   Data   RO         4077    .constdata          m_wm.l(atan.o)
+    0x08009a00   0x00000030   Data   RO         4089    .constdata          m_wm.l(cos_i.o)
+    0x08009a30   0x00000008   Data   RO         4125    .constdata          m_wm.l(qnan.o)
+    0x08009a38   0x000000c8   Data   RO         4128    .constdata          m_wm.l(rred.o)
+    0x08009b00   0x00000028   Data   RO         4132    .constdata          m_wm.l(sin_i.o)
+    0x08009b28   0x00000020   Data   RO         4175    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x20000000, Size: 0x00002cd8, Max: 0x00020000, ABSOLUTE)
@@ -2137,33 +2137,33 @@ Memory Map of the image
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x20000000   0x00000004   Data   RW            5    .data               main.o
-    0x20000004   0x00000014   Data   RW          376    .data               system_stm32f4xx.o
-    0x20000018   0x00000004   Data   RW          433    .data               control_task.o
+    0x20000004   0x00000014   Data   RW          442    .data               system_stm32f4xx.o
+    0x20000018   0x00000004   Data   RW          499    .data               control_task.o
     0x2000001c   0x00000004   PAD
-    0x20000020   0x00000080   Data   RW          461    .data               chassis_task.o
-    0x200000a0   0x00000008   Data   RW          623    .data               canbus.o
-    0x200000a8   0x0000000c   Data   RW          650    .data               ch100.o
-    0x200000b4   0x0000002c   Data   RW          720    .data               hi220.o
-    0x200000e0   0x00000002   Data   RW          774    .data               judge.o
-    0x200000e2   0x00000020   Data   RW          890    .data               remote.o
+    0x20000020   0x00000080   Data   RW          527    .data               chassis_task.o
+    0x200000a0   0x00000008   Data   RW          715    .data               canbus.o
+    0x200000a8   0x0000000c   Data   RW          742    .data               ch100.o
+    0x200000b4   0x0000002c   Data   RW          812    .data               hi220.o
+    0x200000e0   0x00000002   Data   RW          866    .data               judge.o
+    0x200000e2   0x00000020   Data   RW          982    .data               remote.o
     0x20000102   0x00000002   PAD
-    0x20000104   0x00000010   Data   RW         1048    .data               usart.o
-    0x20000114   0x00000010   Data   RW         1366    .data               stm32f4xx_rcc.o
-    0x20000124   0x00000004   Data   RW         4063    .data               mc_w.l(errno.o)
-    0x20000128   0x00000268   Zero   RW          460    .bss                chassis_task.o
-    0x20000390   0x0000147c   Zero   RW          491    .bss                oldpid.o
+    0x20000104   0x00000010   Data   RW         1143    .data               usart.o
+    0x20000114   0x00000010   Data   RW         1461    .data               stm32f4xx_rcc.o
+    0x20000124   0x00000004   Data   RW         4158    .data               mc_w.l(errno.o)
+    0x20000128   0x00000268   Zero   RW          526    .bss                chassis_task.o
+    0x20000390   0x0000147c   Zero   RW          557    .bss                oldpid.o
     0x2000180c   0x00000004   PAD
-    0x20001810   0x00000728   Zero   RW          524    .bss                senior.o
-    0x20001f38   0x0000004c   Zero   RW          649    .bss                ch100.o
-    0x20001f84   0x00000048   Zero   RW          719    .bss                hi220.o
-    0x20001fcc   0x000000c6   Zero   RW          772    .bss                judge.o
-    0x20002092   0x00000018   Zero   RW          859    .bss                pm01.o
-    0x200020aa   0x00000048   Zero   RW          889    .bss                remote.o
+    0x20001810   0x00000728   Zero   RW          616    .bss                senior.o
+    0x20001f38   0x0000004c   Zero   RW          741    .bss                ch100.o
+    0x20001f84   0x00000048   Zero   RW          811    .bss                hi220.o
+    0x20001fcc   0x000000c6   Zero   RW          864    .bss                judge.o
+    0x20002092   0x00000018   Zero   RW          951    .bss                pm01.o
+    0x200020aa   0x00000048   Zero   RW          981    .bss                remote.o
     0x200020f2   0x00000006   PAD
-    0x200020f8   0x00000020   Zero   RW          920    .bss                can_chassis_transmit.o
-    0x20002118   0x000007be   Zero   RW         1047    .bss                usart.o
+    0x200020f8   0x00000020   Zero   RW         1012    .bss                can_chassis_transmit.o
+    0x20002118   0x000007be   Zero   RW         1142    .bss                usart.o
     0x200028d6   0x00000002   PAD
-    0x200028d8   0x00000400   Zero   RW         1508    STACK               startup_stm32f40_41xxx.o
+    0x200028d8   0x00000400   Zero   RW         1603    STACK               startup_stm32f40_41xxx.o
 
 
 ==============================================================================
@@ -2175,34 +2175,34 @@ Image component sizes
 
        112          6          0          0          0        531   bsp.o
        656         22          0          0          0       2178   can.o
-       644         12          0          0         32       3853   can_chassis_transmit.o
-       236         30          0          8          0       1394   canbus.o
-       260         26          0         12         76       4020   ch100.o
-      7704        570          0        128        616      13084   chassis_task.o
+       644         12          0          0         32       3865   can_chassis_transmit.o
+       236         30          0          8          0       1398   canbus.o
+       260         26          0         12         76       4028   ch100.o
+      7704        570          0        128        616      13088   chassis_task.o
        200         14          0          4          0        965   control_task.o
-       912         10          0          0          0       5169   dji_motor.o
+       912         10          0          0          0       5173   dji_motor.o
       1412        114          0         44         72       2488   hi220.o
        748         16        770          2        198      10351   judge.o
-        64         14          0          4          0     306847   main.o
+        64         14          0          4          0     291571   main.o
        224         20          0          0          0       1877   misc.o
-      1316         10          0          0       5244       7747   oldpid.o
-       412          0          0          0         24       3026   pm01.o
-       996        134          0         32         72       6387   remote.o
-         0          0          0          0       1832       1892   senior.o
+      1316         10          0          0       5244     245251   oldpid.o
+       412          0          0          0         24       3030   pm01.o
+       996        134          0         32         72       6391   remote.o
+         0          0          0          0       1832       1896   senior.o
         36          8        392          0       1024        856   startup_stm32f40_41xxx.o
       2544         38          0          0          0       8204   stm32f4xx_can.o
        936         32          0          0          0       6453   stm32f4xx_dma.o
        660         44          0          0          0       4217   stm32f4xx_gpio.o
-        26          0          0          0          0       1250   stm32f4xx_it.o
+        26          0          0          0          0      61810   stm32f4xx_it.o
       1628         52          0         16          0      13124   stm32f4xx_rcc.o
       3234         60          0          0          0      23072   stm32f4xx_tim.o
       1108         34          0          0          0       7940   stm32f4xx_usart.o
        528         46          0         20          0       1867   system_stm32f4xx.o
        916         24          0          0          0       2663   timer.o
-      3172        158          0         16       1982       6677   usart.o
+      3172        158          0         16       1982       6685   usart.o
 
     ----------------------------------------------------------------------
-     30688       1494       1198        292      11184     448132   Object Totals
+     30688       1494       1198        292      11184     730972   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          4          0          4          6         12          0   (incl. Padding)
 
@@ -2282,8 +2282,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     38026       2054       1726        296      11184     446136   Grand Totals
-     38026       2054       1726        296      11184     446136   ELF Image Totals
+     38026       2054       1726        296      11184     728976   Grand Totals
+     38026       2054       1726        296      11184     728976   ELF Image Totals
      38026       2054       1726        296          0          0   ROM Totals
 
 ==============================================================================

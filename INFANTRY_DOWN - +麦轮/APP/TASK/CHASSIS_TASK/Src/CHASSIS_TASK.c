@@ -75,6 +75,13 @@ void chassis_param_init()//底盘参数初始化
     PID_struct_init(&pid_cha_6020_angle[3], POSITION_PID, 8000, 10, 9,0.4f,4);//23, 0.2f,15);
   	PID_struct_init(&pid_cha_6020_speed[3], POSITION_PID, 15000, 500, 200,0.1f,15);//42,0.5f,20);
 
+#if STANDARD == 1
+		for (int k = 0; k < 4; k++)
+    {
+      PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,16000,100,50,0.2,20); //24 0.3 10    38.0f,3.0f, 40
+    }
+			PID_struct_init(&pid_chassis_angle, POSITION_PID, MAX_CHASSIS_VR_SPEED, 30, 0, 2.0,0.0f,3.0f);
+#endif
 #if STANDARD == 3
   for (int k = 0; k < 4; k++)
     {
@@ -842,8 +849,6 @@ for (int i = 0; i < 4; i++)
 
 void Chassis_PID_handle(void)
 {
-
-
 	#if POWER_LIMIT_HANDLE
 			power_limit_handle();	
 	#endif
