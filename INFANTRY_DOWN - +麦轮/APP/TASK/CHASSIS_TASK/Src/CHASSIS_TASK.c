@@ -451,7 +451,7 @@ void follow_gimbal_handle(void)
 			
 	chassis.vy = ChassisSpeedRef.left_right_ref;
   chassis.vx = ChassisSpeedRef.forward_back_ref;
-	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle__pi_pi);
+	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_encoder_ecd_angle,0);
 
 }
 
