@@ -118,7 +118,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name>8頌</Name>
+          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -274,6 +274,16 @@
           <count>1</count>
           <WinNumber>2</WinNumber>
           <ItemText>judge_rece_mesg,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>capacitance_message,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>can_chassis_data,0x0A</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

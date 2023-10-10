@@ -2,10 +2,10 @@
 #include "CHASSIS_TASK.h"
 /*----------------------------------------------------------------------------*/
 
-#define STANDARD      1
+
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
  
-ChassisSpeed_Ref_t ChassisSpeedRef;
+
 Chassis_angle_t 	 Chassis_angle;
 chassis_t 		 		 chassis;
 
@@ -41,8 +41,8 @@ int16_t cap_flag_time;
 u16  Max_Power;
 u16  Max_Power_3508;
 u16  Max_Power_6020;
-float power_limit_start_time=850;
-float power_limit_start_flag=1;
+float power_limit_start_time;
+float power_limit_start_flag;
 float power_limit_rate2;
 float power_limit_rate1;
 float  max_chassis_power =35;
@@ -81,7 +81,8 @@ void chassis_param_init()//底盘参数初始化
       PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,16000,100,50,0.2,20); //24 0.3 10    38.0f,3.0f, 40
     }
 			PID_struct_init(&pid_chassis_angle, POSITION_PID, 450, 30,  2.0,0.0f,3.0f);
-#elif STANDARD == 3
+#endif
+#if STANDARD == 3
   for (int k = 0; k < 4; k++)
     {
       PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,15000, 15000,24,0.3, 10); //24 0.3 10    38.0f,3.0f, 40
@@ -126,7 +127,7 @@ void power_limit_handle()
 
 		get_6020power();
 		
-		if(cap_flag==1||cap_flag==3)//cap_flag==2
+		if(cap_flag==1||cap_flag==3)//||cap_flag==2cap_flag==2||
 		power_limit_rate1=get_the_limite_rate(get_max_power1(capacitance_message.cap_voltage_filte)-Max_Power_6020);
 		else
 		power_limit_rate2=get_the_limite_rate(get_max_power2(capacitance_message.cap_voltage_filte)-Max_Power_6020);
@@ -235,6 +236,7 @@ float get_max_power1(float voltage)
 		}
 			VAL_LIMIT(max_power,0,500);
 			power_limit_rate2=1;
+//		 return 70;
     return max_power;
 }
 
@@ -253,7 +255,7 @@ static float get_the_limite_rate(float max_power)
 {
   float a[4];
   for(int i=0; i<4; i++)
-    a[i]=(float)Chassis_angle.handle_speed_lim[i]*(pid_spd[i].p+pid_spd[i].d);
+    a[i]=(float)Chassis_angle.handle_speed_lim[i]*(pid_cha_3508_speed[i].p+pid_cha_3508_speed[i].d);
   float b[4];
   for(int i=0; i<4; i++)
     b[i]=-pid_cha_3508_speed[i].p*(float)chassis.cha_pid_3508.speed_fdb[i]+pid_cha_3508_speed[i].iout \
@@ -286,7 +288,7 @@ float get_6020power()
 {
 	for(int i=0;i<4;i++)
 	{
-	I6020[i]=pid_cha_6020_speed[i].out;
+	I6020[i]=pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],chassis.cha_pid_6020.speed_ref[i]);
 	VAL_LIMIT(I6020[i],-10000,10000);
 	dpower[i]=I6020[i]*pid_cha_6020_speed[i].get*k6020;
 	hpower[i]=k2_6020*I6020[i]*I6020[i]+k1_6020*I6020[i]+k0_6020;
@@ -313,7 +315,8 @@ if(all_power>max_chassis_power)
 		}else
 		{kall6020[i]=1;}
 	}
-}else
+}
+	else
 	{
 		for (int i = 0; i < 4; i++)
 		kall6020[i]=1;
@@ -353,14 +356,67 @@ float limit_angle_to_0_2pi(float angle)
 **/
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle)
 {
-	_0_2pi_angle=fmod(-ecd_angle*ANGLE_TO_RAD,2*PI);	
+	_0_2pi_angle=fmod(YAW_POLARITY*ecd_angle*ANGLE_TO_RAD,2*PI);	
 	if(_0_2pi_angle<0)
 		 _0_2pi_angle+=2*PI;
 
 	return _0_2pi_angle;
 }
 
+/**
+************************************************************************************************************************
+* @Name     : chassis_mode_select
+* @brief    : 将上位机发送的命令经选择后具体实行
+* @param		: none
+* @retval   : void
+* @Note     : 
+************************************************************************************************************************
+**/
+void chassis_mode_select(void)
+{
 
+#if 	 CHASSIS_TYPE == 1//舵轮	
+	chassis.ctrl_mode=can_chassis_data.chassis_mode;
+	chassis.last_ctrl_mode=can_chassis_data.chassis_mode;
+#endif
+
+	switch (chassis.ctrl_mode)
+    {
+
+    case CHASSIS_STOP:
+    {
+				chassis_stop_handle();
+    }
+    break;
+
+    case MANUAL_FOLLOW_GIMBAL:   //跟随云台模式
+    {
+				follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_ROTATE:         //小陀螺
+    {
+				rotate_follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_REVERSE:
+    {
+				reverse_follow_gimbal_handle();
+    }
+    break;
+    case CHASSIS_SEPARATE:
+    {
+				separate_gimbal_handle();
+    }
+    break;
+    default:
+    {
+				chassis_stop_handle();
+    }
+    break;
+    }
+	
+}
 
 void chassis_stop_handle(void)
 {
@@ -394,8 +450,8 @@ void follow_gimbal_handle(void)
 		else
 		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 			
-	chassis.vy = ChassisSpeedRef.left_right_ref;
-  chassis.vx = ChassisSpeedRef.forward_back_ref;
+	chassis.vy = chassis.ChassisSpeed_Ref.left_right_ref;
+  chassis.vx = chassis.ChassisSpeed_Ref.forward_back_ref;
 	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi*RAD_TO_ANGLE,0);
 
 }
@@ -415,8 +471,8 @@ void separate_gimbal_handle(void)
 #elif CHASSIS_TYPE == 2
 void separate_gimbal_handle(void)
 {
-	chassis.vy = ChassisSpeedRef.left_right_ref;
-  chassis.vx = ChassisSpeedRef.forward_back_ref;
+	chassis.vy = chassis.ChassisSpeed_Ref.left_right_ref;
+  chassis.vx = chassis.ChassisSpeed_Ref.forward_back_ref;
 	chassis.vw = 0;
 }
 #endif
@@ -456,19 +512,23 @@ else if(get_speedw_flag==1)
 #elif CHASSIS_TYPE == 2
 void rotate_follow_gimbal_handle(void)
 {
-
-  chassis.sin_chassis_angle = sinf(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
-  chassis.cos_chassis_angle = cosf(Chassis_angle.yaw_encoder_ecd_angle*ANGLE_TO_RAD);
-
-  chassis.foward_back_to_foward_back_rotate_speed = ChassisSpeedRef.forward_back_ref*chassis.cos_chassis_angle;
-  chassis.foward_back_to_left_right_rotate_speed  = -ChassisSpeedRef.forward_back_ref*chassis.sin_chassis_angle;
-  chassis.left_right_to_foward_back_rotate_speed  = ChassisSpeedRef.left_right_ref*chassis.sin_chassis_angle;
-  chassis.left_right_to_left_right_rotate_speed   = ChassisSpeedRef.left_right_ref*chassis.cos_chassis_angle;
-
-  chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
-  chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
-	chassis.vw = chassis.ChassisSpeed_Ref.rotate_ref;
+		if(Chassis_angle.yaw_angle_0_2pi>=PI)
+	{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi-(2*PI);}
+	else
+	{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 	
+  chassis.sin_chassis_angle = sinf(Chassis_angle.yaw_angle__pi_pi);
+  chassis.cos_chassis_angle = cosf(Chassis_angle.yaw_angle__pi_pi);
+
+  chassis.foward_back_to_foward_back_rotate_speed = chassis.ChassisSpeed_Ref.forward_back_ref*chassis.cos_chassis_angle;
+  chassis.foward_back_to_left_right_rotate_speed  = -chassis.ChassisSpeed_Ref.forward_back_ref*chassis.sin_chassis_angle;
+  chassis.left_right_to_foward_back_rotate_speed  = chassis.ChassisSpeed_Ref.left_right_ref*chassis.sin_chassis_angle;
+  chassis.left_right_to_left_right_rotate_speed   = chassis.ChassisSpeed_Ref.left_right_ref*chassis.cos_chassis_angle;
+	
+	chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
+	chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
+	
+	chassis.vw = chassis.ChassisSpeed_Ref.rotate_ref;
 //出事的话加负号
 }
 #endif
@@ -492,13 +552,13 @@ void rotate_follow_gimbal_handle(void)
 //麦轮
 #elif CHASSIS_TYPE == 2
  void reverse_follow_gimbal_handle(void)
-{;}
+{}
 #endif
 
 	
 	
 #if CHASSIS_TYPE == 2
-void mecanum_calc(float vx, float vy, float vw, float *speed)
+void mecanum_calc(float vx, float vy, float vw, int16_t *speed)
 {
   int16_t wheel_rpm[4];
   float   max = 0;
@@ -718,7 +778,7 @@ void set_3508current_6020voltage()
 
 #if POWER_LIMIT_HANDLE
 		pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],kall6020[i]*chassis.cha_pid_6020.speed_ref[i]);
-		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i] , power_limit_rate2*power_limit_rate1*chassis.cha_pid_3508.speed_ref[i]);			
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i] , power_limit_rate2*power_limit_rate1*chassis.cha_pid_3508.speed_ref[i]);
 #else
 		pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],chassis.cha_pid_6020.speed_ref[i]);
 		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
@@ -777,6 +837,7 @@ for (int i = 0; i < 4; i++)
  for (int i = 0; i < 4; i++)
 		{ 
 		chassis.cha_pid_3508.speed_fdb[i]=Mecanum_chassis.Driving_Encoder[i].filter_rate; 
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
 		}
 for (int i = 0; i < 4; i++)
     {   
@@ -793,6 +854,20 @@ for (int i = 0; i < 4; i++)
 
 
 
+void Chassis_PID_handle(void)
+{
+	#if POWER_LIMIT_HANDLE
+			power_limit_handle();	
+	#endif
+	
+			set_3508current_6020voltage();
+}
+
+void Motion_resolution(void)
+{
+		get_remote_set();
+		start_angle_handle();
+}
 
 
 /**
@@ -830,8 +905,9 @@ void get_remote_set()
 		Chassis_angle.yaw_encoder_ecd_angle=yaw_Encoder.ecd_angle;
 		Chassis_angle.yaw_angle_0_2pi=convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 	
-		chassis.vx=ChassisSpeedRef.forward_back_ref;
-		chassis.vy=ChassisSpeedRef.left_right_ref;
+//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
+//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
+
 }
 #elif CHASSIS_TYPE == 4
 void get_remote_set()
@@ -841,79 +917,13 @@ void get_remote_set()
 	
 		chassis.vx=ChassisSpeedRef.forward_back_ref;
 		chassis.vy=ChassisSpeedRef.left_right_ref;
-	
+
 }
 #endif
 
-/**
-************************************************************************************************************************
-* @Name     : chassis_mode_select
-* @brief    : 将上位机发送的命令经选择后具体实行
-* @param		: none
-* @retval   : void
-* @Note     : 
-************************************************************************************************************************
-**/
-void chassis_mode_select(void)
-{
 
-#if CHASSIS_TYPE == 1//舵轮	
-	chassis.ctrl_mode=can_chassis_data.chassis_mode;
-	chassis.last_ctrl_mode=can_chassis_data.chassis_mode;
-#endif
 
-	switch (chassis.ctrl_mode)
-    {
 
-    case CHASSIS_STOP:
-    {
-				chassis_stop_handle();
-    }
-    break;
-
-    case MANUAL_FOLLOW_GIMBAL:   //跟随云台模式
-    {
-				follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_ROTATE:         //小陀螺
-    {
-				rotate_follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_REVERSE:
-    {
-				reverse_follow_gimbal_handle();
-    }
-    break;
-    case CHASSIS_SEPARATE:
-    {
-				separate_gimbal_handle();
-    }
-    break;
-    default:
-    {
-				chassis_stop_handle();
-    }
-    break;
-    }
-	
-}
-
-void Motion_resolution(void)
-{
-		get_remote_set();
-		start_angle_handle();
-}
-
-void Chassis_PID_handle(void)
-{
-	#if POWER_LIMIT_HANDLE
-			power_limit_handle();	
-	#endif
-	
-			set_3508current_6020voltage();
-}
 
 /**
 ************************************************************************************************************************

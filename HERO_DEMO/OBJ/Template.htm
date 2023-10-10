@@ -3,7 +3,7 @@
 <title>Static Call Graph - [..\OBJ\Template.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image ..\OBJ\Template.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Mon Oct 09 23:17:02 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Wed Oct 11 00:03:27 2023
 <BR><P>
 <H3>Maximum Stack Usage =        232 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -270,7 +270,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;control_task
 </UL>
 
-<P><STRONG><a name="[80]"></a>hero_mode_switch_task</STRONG> (Thumb, 1794 bytes, Stack size 24 bytes, hero_mode_switch_task.o(.text))
+<P><STRONG><a name="[80]"></a>hero_mode_switch_task</STRONG> (Thumb, 1798 bytes, Stack size 24 bytes, hero_mode_switch_task.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = hero_mode_switch_task &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
@@ -352,7 +352,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_mode_select
 </UL>
 
-<P><STRONG><a name="[90]"></a>rotate_follow_gimbal_handle</STRONG> (Thumb, 312 bytes, Stack size 8 bytes, chassis_task.o(.text))
+<P><STRONG><a name="[90]"></a>rotate_follow_gimbal_handle</STRONG> (Thumb, 308 bytes, Stack size 8 bytes, chassis_task.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = rotate_follow_gimbal_handle &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
 <BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
@@ -381,7 +381,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[9a]"></a>mecanum_calc</STRONG> (Thumb, 374 bytes, Stack size 12 bytes, chassis_task.o(.text))
+<P><STRONG><a name="[9a]"></a>mecanum_calc</STRONG> (Thumb, 372 bytes, Stack size 12 bytes, chassis_task.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = mecanum_calc
 </UL>
 <BR>[Called By]<UL><LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;start_angle_handle
@@ -395,7 +395,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motion_resolution
 </UL>
 
-<P><STRONG><a name="[9b]"></a>set_3508current_6020voltage</STRONG> (Thumb, 164 bytes, Stack size 8 bytes, chassis_task.o(.text))
+<P><STRONG><a name="[9b]"></a>set_3508current_6020voltage</STRONG> (Thumb, 168 bytes, Stack size 8 bytes, chassis_task.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = set_3508current_6020voltage &rArr; pid_calc &rArr; __hardfp_fabs
 </UL>
 <BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc
@@ -411,7 +411,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chassis_task
 </UL>
 
-<P><STRONG><a name="[9d]"></a>get_remote_set</STRONG> (Thumb, 106 bytes, Stack size 16 bytes, chassis_task.o(.text))
+<P><STRONG><a name="[9d]"></a>get_remote_set</STRONG> (Thumb, 68 bytes, Stack size 16 bytes, chassis_task.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200<LI>Call Chain = get_remote_set &rArr; convert_ecd_angle_to_0_2pi &rArr; __hardfp_fmod &rArr; __aeabi_drsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convert_ecd_angle_to_0_2pi
@@ -485,16 +485,16 @@ Global Symbols
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_auto_angle_handle
 </UL>
 
-<P><STRONG><a name="[a1]"></a>Can1ReceiveMsgProcess</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, canbus.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Can1ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
+<P><STRONG><a name="[a1]"></a>Can1ReceiveMsgProcess</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, canbus.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Can1ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MF_EncoderTask
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN1_RX0_IRQHandler
 </UL>
 
-<P><STRONG><a name="[a3]"></a>Can2ReceiveMsgProcess</STRONG> (Thumb, 138 bytes, Stack size 8 bytes, canbus.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Can2ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
+<P><STRONG><a name="[a3]"></a>Can2ReceiveMsgProcess</STRONG> (Thumb, 106 bytes, Stack size 8 bytes, canbus.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Can2ReceiveMsgProcess &rArr; M3508orM2006EncoderTask &rArr; EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MF_EncoderTask
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;M3508orM2006EncoderTask
@@ -502,19 +502,20 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[4b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN2_RX0_IRQHandler
 </UL>
 
-<P><STRONG><a name="[73]"></a>can_bus_send_task</STRONG> (Thumb, 36 bytes, Stack size 8 bytes, canbus.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = can_bus_send_task &rArr; CAN_9015torsionControl &rArr; CAN_Transmit
+<P><STRONG><a name="[73]"></a>can_bus_send_task</STRONG> (Thumb, 64 bytes, Stack size 8 bytes, canbus.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = can_bus_send_task &rArr; Set_C620andC610_IQ1 &rArr; CAN_Transmit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015torsionControl
+<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_C620andC610_IQ1
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015torsionControl
 </UL>
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;control_task
 </UL>
 
-<P><STRONG><a name="[a8]"></a>GetEncoderBias</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, dji_motor.o(.text))
+<P><STRONG><a name="[a9]"></a>GetEncoderBias</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, dji_motor.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;M3508orM2006EncoderTask
 </UL>
 
-<P><STRONG><a name="[a6]"></a>EncoderProcess</STRONG> (Thumb, 224 bytes, Stack size 24 bytes, dji_motor.o(.text))
+<P><STRONG><a name="[a7]"></a>EncoderProcess</STRONG> (Thumb, 224 bytes, Stack size 24 bytes, dji_motor.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
@@ -522,39 +523,43 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;M3508orM2006EncoderTask
 </UL>
 
-<P><STRONG><a name="[a7]"></a>GM6020EncoderProcess</STRONG> (Thumb, 180 bytes, Stack size 16 bytes, dji_motor.o(.text), UNUSED)
+<P><STRONG><a name="[a8]"></a>GM6020EncoderProcess</STRONG> (Thumb, 180 bytes, Stack size 16 bytes, dji_motor.o(.text), UNUSED)
 <BR><BR>[Calls]<UL><LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderTask
+<BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderTask
 </UL>
 
-<P><STRONG><a name="[a4]"></a>M3508orM2006EncoderTask</STRONG> (Thumb, 32 bytes, Stack size 16 bytes, dji_motor.o(.text))
+<P><STRONG><a name="[a4]"></a>M3508orM2006EncoderTask</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, dji_motor.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = M3508orM2006EncoderTask &rArr; EncoderProcess
 </UL>
-<BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EncoderProcess
-<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetEncoderBias
+<BR>[Calls]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EncoderProcess
+<LI><a href="#[a9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetEncoderBias
 </UL>
 <BR>[Called By]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Can2ReceiveMsgProcess
 </UL>
 
-<P><STRONG><a name="[a9]"></a>GM6020EncoderTask</STRONG> (Thumb, 72 bytes, Stack size 24 bytes, dji_motor.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderProcess
+<P><STRONG><a name="[aa]"></a>GM6020EncoderTask</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, dji_motor.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderProcess
 </UL>
 
-<P><STRONG><a name="[aa]"></a>Set_GM6020_IQ1</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<P><STRONG><a name="[ab]"></a>Set_GM6020_IQ1</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
-<P><STRONG><a name="[ac]"></a>Set_GM6020_IQ2</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<P><STRONG><a name="[ad]"></a>Set_GM6020_IQ2</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
-<P><STRONG><a name="[ad]"></a>Set_C620andC610_IQ1</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<P><STRONG><a name="[a6]"></a>Set_C620andC610_IQ1</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = Set_C620andC610_IQ1 &rArr; CAN_Transmit
+</UL>
+<BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+</UL>
+<BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_bus_send_task
 </UL>
 
 <P><STRONG><a name="[ae]"></a>Set_C620andC610_IQ2</STRONG> (Thumb, 92 bytes, Stack size 48 bytes, dji_motor.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
 <P><STRONG><a name="[af]"></a>HI220_getDATA</STRONG> (Thumb, 1314 bytes, Stack size 32 bytes, hi220.o(.text))
@@ -627,8 +632,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MF_EncoderTask
 </UL>
 
-<P><STRONG><a name="[a2]"></a>MF_EncoderTask</STRONG> (Thumb, 74 bytes, Stack size 24 bytes, lk_tech.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = MF_EncoderTask &rArr; MF_EncoderProcess
+<P><STRONG><a name="[a2]"></a>MF_EncoderTask</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, lk_tech.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = MF_EncoderTask &rArr; MF_EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MF_EncoderProcess
 </UL>
@@ -637,25 +642,25 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[bc]"></a>CAN_9015Command</STRONG> (Thumb, 74 bytes, Stack size 40 bytes, lk_tech.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
 <P><STRONG><a name="[bd]"></a>CAN_9015setpidCommand</STRONG> (Thumb, 166 bytes, Stack size 56 bytes, lk_tech.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
 <P><STRONG><a name="[be]"></a>CAN_9015angleControl</STRONG> (Thumb, 90 bytes, Stack size 40 bytes, lk_tech.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
 <P><STRONG><a name="[bf]"></a>CAN_9015speedControl</STRONG> (Thumb, 82 bytes, Stack size 40 bytes, lk_tech.o(.text), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR><BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 
 <P><STRONG><a name="[a5]"></a>CAN_9015torsionControl</STRONG> (Thumb, 80 bytes, Stack size 40 bytes, lk_tech.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = CAN_9015torsionControl &rArr; CAN_Transmit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
+<BR>[Calls]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Transmit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;can_bus_send_task
 </UL>
@@ -723,7 +728,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
 <P><STRONG><a name="[1f]"></a>CAN1_RX0_IRQHandler</STRONG> (Thumb, 54 bytes, Stack size 24 bytes, can.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = CAN1_RX0_IRQHandler &rArr; Can1ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = CAN1_RX0_IRQHandler &rArr; Can1ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Receive
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_GetITStatus
@@ -759,7 +764,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f40_41xxx.o(RESET)
 </UL>
 <P><STRONG><a name="[4b]"></a>CAN2_RX0_IRQHandler</STRONG> (Thumb, 46 bytes, Stack size 24 bytes, can.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = CAN2_RX0_IRQHandler &rArr; Can2ReceiveMsgProcess &rArr; MF_EncoderTask &rArr; MF_EncoderProcess
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = CAN2_RX0_IRQHandler &rArr; Can2ReceiveMsgProcess &rArr; M3508orM2006EncoderTask &rArr; EncoderProcess
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_Receive
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_GetITStatus
@@ -1086,7 +1091,7 @@ Global Symbols
 
 <P><STRONG><a name="[134]"></a>CAN_TTComModeCmd</STRONG> (Thumb, 118 bytes, Stack size 0 bytes, stm32f4xx_can.o(.text), UNUSED)
 
-<P><STRONG><a name="[ab]"></a>CAN_Transmit</STRONG> (Thumb, 304 bytes, Stack size 8 bytes, stm32f4xx_can.o(.text))
+<P><STRONG><a name="[ac]"></a>CAN_Transmit</STRONG> (Thumb, 304 bytes, Stack size 8 bytes, stm32f4xx_can.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = CAN_Transmit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015speedControl
@@ -1094,9 +1099,9 @@ Global Symbols
 <LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015setpidCommand
 <LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015Command
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_C620andC610_IQ2
-<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_C620andC610_IQ1
-<LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_GM6020_IQ2
-<LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_GM6020_IQ1
+<LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_GM6020_IQ2
+<LI><a href="#[ab]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_GM6020_IQ1
+<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_C620andC610_IQ1
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CAN_9015torsionControl
 </UL>
 
@@ -2178,8 +2183,8 @@ Global Symbols
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hero_mode_switch_task
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;gimbal_init_handle
 <LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MF_EncoderProcess
-<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderProcess
-<LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EncoderProcess
+<LI><a href="#[a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GM6020EncoderProcess
+<LI><a href="#[a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EncoderProcess
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;pid_calc1
 </UL>
 

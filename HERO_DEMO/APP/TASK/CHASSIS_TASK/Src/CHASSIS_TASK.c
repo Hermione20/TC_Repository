@@ -41,8 +41,8 @@ int16_t cap_flag_time;
 u16  Max_Power;
 u16  Max_Power_3508;
 u16  Max_Power_6020;
-float power_limit_start_time=850;
-float power_limit_start_flag=1;
+float power_limit_start_time;
+float power_limit_start_flag;
 float power_limit_rate2;
 float power_limit_rate1;
 float  max_chassis_power =35;
@@ -127,7 +127,7 @@ void power_limit_handle()
 
 		get_6020power();
 		
-		if(cap_flag==1||cap_flag==3)//cap_flag==2
+		if(cap_flag==1||cap_flag==3)//||cap_flag==2cap_flag==2||
 		power_limit_rate1=get_the_limite_rate(get_max_power1(capacitance_message.cap_voltage_filte)-Max_Power_6020);
 		else
 		power_limit_rate2=get_the_limite_rate(get_max_power2(capacitance_message.cap_voltage_filte)-Max_Power_6020);
@@ -236,6 +236,7 @@ float get_max_power1(float voltage)
 		}
 			VAL_LIMIT(max_power,0,500);
 			power_limit_rate2=1;
+//		 return 70;
     return max_power;
 }
 
@@ -254,7 +255,7 @@ static float get_the_limite_rate(float max_power)
 {
   float a[4];
   for(int i=0; i<4; i++)
-    a[i]=(float)Chassis_angle.handle_speed_lim[i]*(pid_spd[i].p+pid_spd[i].d);
+    a[i]=(float)Chassis_angle.handle_speed_lim[i]*(pid_cha_3508_speed[i].p+pid_cha_3508_speed[i].d);
   float b[4];
   for(int i=0; i<4; i++)
     b[i]=-pid_cha_3508_speed[i].p*(float)chassis.cha_pid_3508.speed_fdb[i]+pid_cha_3508_speed[i].iout \
@@ -287,7 +288,7 @@ float get_6020power()
 {
 	for(int i=0;i<4;i++)
 	{
-	I6020[i]=pid_cha_6020_speed[i].out;
+	I6020[i]=pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],chassis.cha_pid_6020.speed_ref[i]);
 	VAL_LIMIT(I6020[i],-10000,10000);
 	dpower[i]=I6020[i]*pid_cha_6020_speed[i].get*k6020;
 	hpower[i]=k2_6020*I6020[i]*I6020[i]+k1_6020*I6020[i]+k0_6020;
@@ -314,7 +315,8 @@ if(all_power>max_chassis_power)
 		}else
 		{kall6020[i]=1;}
 	}
-}else
+}
+	else
 	{
 		for (int i = 0; i < 4; i++)
 		kall6020[i]=1;
@@ -511,9 +513,9 @@ else if(get_speedw_flag==1)
 void rotate_follow_gimbal_handle(void)
 {
 		if(Chassis_angle.yaw_angle_0_2pi>=PI)
-	{Chassis_angle.yaw_angle__pi_pi=-(Chassis_angle.yaw_angle_0_2pi-(2*PI));}
+	{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi-(2*PI);}
 	else
-	{Chassis_angle.yaw_angle__pi_pi=-Chassis_angle.yaw_angle_0_2pi;}
+	{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 	
   chassis.sin_chassis_angle = sinf(Chassis_angle.yaw_angle__pi_pi);
   chassis.cos_chassis_angle = cosf(Chassis_angle.yaw_angle__pi_pi);
@@ -522,9 +524,10 @@ void rotate_follow_gimbal_handle(void)
   chassis.foward_back_to_left_right_rotate_speed  = -chassis.ChassisSpeed_Ref.forward_back_ref*chassis.sin_chassis_angle;
   chassis.left_right_to_foward_back_rotate_speed  = chassis.ChassisSpeed_Ref.left_right_ref*chassis.sin_chassis_angle;
   chassis.left_right_to_left_right_rotate_speed   = chassis.ChassisSpeed_Ref.left_right_ref*chassis.cos_chassis_angle;
-
-  chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
-  chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
+	
+	chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
+	chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
+	
 	chassis.vw = chassis.ChassisSpeed_Ref.rotate_ref;
 //出事的话加负号
 }
@@ -775,7 +778,7 @@ void set_3508current_6020voltage()
 
 #if POWER_LIMIT_HANDLE
 		pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],kall6020[i]*chassis.cha_pid_6020.speed_ref[i]);
-		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i] , power_limit_rate2*power_limit_rate1*chassis.cha_pid_3508.speed_ref[i]);			
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i] , power_limit_rate2*power_limit_rate1*chassis.cha_pid_3508.speed_ref[i]);
 #else
 		pid_calc(&pid_cha_6020_speed[i],chassis.cha_pid_6020.speed_fdb[i],chassis.cha_pid_6020.speed_ref[i]);
 		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
@@ -902,8 +905,8 @@ void get_remote_set()
 		Chassis_angle.yaw_encoder_ecd_angle=yaw_Encoder.ecd_angle;
 		Chassis_angle.yaw_angle_0_2pi=convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 	
-		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
-		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
+//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
+//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
 
 }
 #elif CHASSIS_TYPE == 4

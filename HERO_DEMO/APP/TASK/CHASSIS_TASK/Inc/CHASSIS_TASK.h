@@ -5,13 +5,13 @@
 #include "public.h"
 /*----------------------------------------------------------------------------*/
 //底盘类型 1舵轮 2麦轮 3全向轮 4新舵轮
-#define CHASSIS_TYPE  2
+#define CHASSIS_TYPE  1
 
 /*******************************CONFIG********************************/
-#define STANDARD              1
-#define YAW_POLARITY 					1 //逆正  舵轮要顺正，改-1；麦轮1
+#define STANDARD              3
+#define YAW_POLARITY 					-1 //逆正  舵轮要顺正，改-1；麦轮1
 
-#define POWER_LIMIT_HANDLE    0
+#define POWER_LIMIT_HANDLE    1
 
 
 
