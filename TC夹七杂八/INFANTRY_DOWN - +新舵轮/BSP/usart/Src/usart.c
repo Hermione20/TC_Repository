@@ -2,27 +2,24 @@
 
 /*****************************************VARIABLES*******************************************************/
 /*********************************************************************************************************/                                             
-
-static uint8_t _USART1_DMA_RX_BUF[2][BSP_USART1_DMA_RX_BUF_LEN];
-static uint8_t _USART1_RX_BUF[BSP_USART1_DMA_RX_BUF_LEN];
-
-static uint8_t _USART2_DMA_RX_BUF[2][BSP_USART2_DMA_RX_BUF_LEN];
-static uint8_t _USART2_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];
-
-static uint8_t _USART3_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];//ch100
-
-static uint8_t UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];
-
-static uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
-static uint8_t UART5_DMA_TX_BUF[UART5_TX_BUF_LENGTH];
-
 #if EN_UART5_DMA_SECOND_FIFO == 1	
 uint8_t _UART5_DMA_RX_BUF[2][BSP_UART5_DMA_RX_BUF_LEN];
 #else
 uint8_t _UART5_DMA_RX_BUF[100];
 #endif
 
-static uint8_t USART6_DMA_RX_BUF[USART6_RX_BUF_LENGTH] = {0};
+	static uint8_t _USART1_DMA_RX_BUF[2][BSP_USART1_DMA_RX_BUF_LEN];//双缓冲接收区
+	static uint8_t _USART2_DMA_RX_BUF[2][BSP_USART2_DMA_RX_BUF_LEN];//双缓冲接收区
+	static uint8_t _USART3_RX_BUF[BSP_USART2_DMA_RX_BUF_LEN];//ch100单缓冲接收区
+	static uint8_t _UART4_DMA_RX_BUF[UART4_RX_BUF_LENGTH];	
+	static uint8_t _USART6_DMA_RX_BUF[BSP_USART6_RX_BUF_LENGTH];
+
+//static uint8_t USART1_DMA_TX_BUF[USART1_TX_BUF_LENGTH];//注释不配
+//static uint8_t USART2_DMA_TX_BUF[USART2_TX_BUF_LENGTH];
+//static uint8_t USART3_DMA_TX_BUF[USART3_TX_BUF_LENGTH];
+	static uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
+	static uint8_t UART5_DMA_TX_BUF[UART5_TX_BUF_LENGTH];
+//static uint8_t USART6_DMA_TX_BUF[USART6_TX_BUF_LENGTH];
 /*********************************************************************************************************/
 /*********************************************************************************************************/
 #if 0
@@ -414,7 +411,7 @@ void USART_CH100_IRQHandler(void)
   DMA_StructInit(&dma);
   dma.DMA_Channel = DMA_Channel_4;
   dma.DMA_PeripheralBaseAddr		= (uint32_t)(&UART4->DR);
-  dma.DMA_Memory0BaseAddr   		= (uint32_t)&UART4_DMA_RX_BUF;
+  dma.DMA_Memory0BaseAddr   		= (uint32_t)&_UART4_DMA_RX_BUF;
   dma.DMA_DIR 					= DMA_DIR_PeripheralToMemory;
   dma.DMA_BufferSize				= UART4_RX_BUF_LENGTH;//sizeof(USART1_DMA_RX_BUF);
   dma.DMA_PeripheralInc 			= DMA_PeripheralInc_Disable;
@@ -769,9 +766,9 @@ void usart6_init()
 //    DMA_StructInit(&dma);
     dma.DMA_Channel = DMA_Channel_5;
     dma.DMA_PeripheralBaseAddr	= (uint32_t)(&USART6->DR);
-    dma.DMA_Memory0BaseAddr   	= (uint32_t)&USART6_DMA_RX_BUF[0];
+    dma.DMA_Memory0BaseAddr   	= (uint32_t)&_USART6_DMA_RX_BUF[0];
     dma.DMA_DIR 			    = DMA_DIR_PeripheralToMemory;
-    dma.DMA_BufferSize			= USART6_RX_BUF_LENGTH;//sizeof(USART1_DMA_RX_BUF);
+    dma.DMA_BufferSize			= BSP_USART6_RX_BUF_LENGTH;//sizeof(USART1_DMA_RX_BUF);
     dma.DMA_PeripheralInc 		= DMA_PeripheralInc_Disable;
     dma.DMA_MemoryInc 			= DMA_MemoryInc_Enable;
     dma.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Byte;
@@ -819,11 +816,11 @@ void USART6_IRQHandler(void)
 		(void)USART6->DR;
 		DMA_Cmd(DMA2_Stream1, DISABLE); 
 		DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);  //************************************
-		this_time_rx_len6 = USART6_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA2_Stream1);
+		this_time_rx_len6 = BSP_USART6_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA2_Stream1);
 
 		USART6_Data_Receive_Process
 		
-		DMA_SetCurrDataCounter(DMA2_Stream1,USART6_RX_BUF_LENGTH);
+		DMA_SetCurrDataCounter(DMA2_Stream1,BSP_USART6_RX_BUF_LENGTH);
 		DMA_Cmd(DMA2_Stream1, ENABLE);
 	}       
 }
