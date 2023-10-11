@@ -3,9 +3,9 @@
 
 int main()
 {
-	gimbal_parameter_Init();
-   BSP_Init();
 
+   BSP_Init();
+	control_task_Init();
 	 
 	
 	while(1)

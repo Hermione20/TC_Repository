@@ -20,7 +20,7 @@ void control_task(void)
 							yaw_Encoder.filter_rate,
 							chassis.ChassisSpeed_Ref.left_right_ref,
 							chassis.ChassisSpeed_Ref.forward_back_ref,
-							550,
+							chassis.ChassisSpeed_Ref.rotate_ref,
 							judge_rece_mesg.power_heat_data.chassis_power,
 							judge_rece_mesg.power_heat_data.chassis_power_buffer,
 							judge_rece_mesg.game_robot_state.chassis_power_limit);
@@ -33,7 +33,7 @@ void control_task(void)
 							yaw_Encoder.filter_rate,
 							chassis.ChassisSpeed_Ref.left_right_ref,
 							chassis.ChassisSpeed_Ref.forward_back_ref,
-							550,
+							chassis.ChassisSpeed_Ref.rotate_ref,
 							judge_rece_mesg.power_heat_data.chassis_power,
 							judge_rece_mesg.power_heat_data.chassis_power_buffer,
 							judge_rece_mesg.game_robot_state.chassis_power_limit);
@@ -49,3 +49,8 @@ void control_task(void)
 	
 	
 }
+
+void control_task_Init(void)
+{
+	gimbal_parameter_Init();
+} 

@@ -5,6 +5,10 @@
 chassis_t chassis;
 int16_t chassis_speed = 0;
 
+
+u8 this_input_mode = 0;
+u8 last_input_mode = 0;
+
 int auto_cnt = 0;
 
 
@@ -12,7 +16,18 @@ void security_mode_switch_task(void)
 {
 	
 	
-	
+	//切换遥控模式的时候所有任务归位重新开始
+		last_input_mode = this_input_mode;
+		this_input_mode = RC_CtrlData.inputmode;
+		if(this_input_mode != last_input_mode)
+		{
+			gimbal_data.ctrl_mode = GIMBAL_RELAX;
+			gimbal_data.last_ctrl_mode = GIMBAL_RELAX;
+      chassis.ctrl_mode = CHASSIS_RELAX;
+			chassis.last_ctrl_mode = CHASSIS_RELAX;
+		}
+	//--------------------------------------
+    
 	switch (RC_CtrlData.inputmode)
     {
     case REMOTE_INPUT:
@@ -29,22 +44,11 @@ void security_mode_switch_task(void)
             gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref   += (RC_CtrlData.rc.ch2 - (int16_t)REMOTE_CONTROLLER_STICK_OFFSET) * STICK_TO_YAW_ANGLE_INC_FACT;
 					VAL_LIMIT(gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref, pitch_min, pitch_max);
         }
-        if (RC_CtrlData.RemoteSwitch.s3to2)
-        {
-
-            chassis.ctrl_mode = CHASSIS_ROTATE;
-        }
-        else
-        {
-            chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
-        }
+        
         /****************************底盘默认状态设置**********************************************/
         if(gimbal_data.ctrl_mode == GIMBAL_INIT||gimbal_data.ctrl_mode == GIMBAL_AUTO_BIG_BUFF||gimbal_data.ctrl_mode == GIMBAL_AUTO_SMALL_BUFF)
         {
             chassis.ctrl_mode = CHASSIS_STOP;
-        }else if (chassis.ctrl_mode != CHASSIS_ROTATE)
-        {
-            chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
         }
         /***************************云台默认状态设置**********************************************/
         if(gimbal_data.ctrl_mode != GIMBAL_INIT&&RC_CtrlData.inputmode != STOP&&gimbal_data.last_ctrl_mode == GIMBAL_RELAX)
@@ -61,11 +65,24 @@ void security_mode_switch_task(void)
 				
 				chassis.follow_gimbal = 1;
 			}
-			if(gimbal_data.ctrl_mode == GIMBAL_INIT&&gimbal_data.if_finish_Init)
-			{
-				gimbal_data.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
-			}
-			/*****************************************************************************************/
+			//遥控器模式的模式选择从这里开始
+            if (gimbal_data.if_finish_Init == 1)
+            {
+                gimbal_data.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
+
+                if (RC_CtrlData.RemoteSwitch.s3to2)
+                {
+
+                    chassis.ctrl_mode = CHASSIS_ROTATE;
+                    chassis.ChassisSpeed_Ref.rotate_ref = 550;
+                }
+                else
+                {
+                    chassis.ChassisSpeed_Ref.rotate_ref = 0;
+                    chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
+                }
+            }
+            /*****************************************************************************************/
 			
 			
 			
@@ -121,18 +138,10 @@ void security_mode_switch_task(void)
                 chassis.ChassisSpeed_Ref.left_right_ref = 0;
             }
 
-            if (RC_CtrlData.Key_Flag.Key_CTRL_TFlag)
-            {
-
-                chassis.ctrl_mode = CHASSIS_ROTATE;
-            }
-            else
-            {
-                chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
-            }
+            
 					 
            /*******************************键鼠云台赋值****************************************/
-            if (gimbal_data.ctrl_mode == GIMBAL_FOLLOW_ZGYRO)
+            if (gimbal_data.ctrl_mode == GIMBAL_FOLLOW_ZGYRO&&RC_CtrlData.mouse.press_r == 0)
             {
                 VAL_LIMIT(RC_CtrlData.mouse.x, -100, 100);
                 VAL_LIMIT(RC_CtrlData.mouse.y, -100, 100);
@@ -140,32 +149,13 @@ void security_mode_switch_task(void)
                 gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref -= RC_CtrlData.mouse.y * MOUSE_TO_PITCH_ANGLE_INC_FACT;
                 VAL_LIMIT(gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref, pitch_min, pitch_max);
             }
-            else
-            {
-                if (RC_CtrlData.Key_Flag.Key_V_TFlag)
-                {
-                    gimbal_data.ctrl_mode = GIMBAL_AUTO_BIG_BUFF;
-                }
-                else if (RC_CtrlData.Key_Flag.Key_Z_TFlag)
-                {
-                    gimbal_data.ctrl_mode = GIMBAL_AUTO_SMALL_BUFF;
-                }
-                else
-                {
-                    gimbal_data.ctrl_mode = GIMBAL_INIT;
-										gimbal_data.if_finish_Init = 0;
-                    chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
-                }
-            }
+            
          }
 
          /****************************底盘默认状态设置**********************************************/
         if(gimbal_data.ctrl_mode == GIMBAL_INIT||gimbal_data.ctrl_mode == GIMBAL_AUTO_BIG_BUFF||gimbal_data.ctrl_mode == GIMBAL_AUTO_SMALL_BUFF)
         {
             chassis.ctrl_mode = CHASSIS_STOP;
-        }else if (chassis.ctrl_mode != CHASSIS_ROTATE)
-        {
-            chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
         }
         /***************************云台默认状态设置**********************************************/
         if(gimbal_data.ctrl_mode != GIMBAL_INIT&&RC_CtrlData.inputmode != STOP&&gimbal_data.last_ctrl_mode == GIMBAL_RELAX)
@@ -179,10 +169,36 @@ void security_mode_switch_task(void)
 	    }
 			if( gimbal_data.ctrl_mode == GIMBAL_FOLLOW_ZGYRO)
 				chassis.follow_gimbal = 1;
-      if(gimbal_data.ctrl_mode == GIMBAL_INIT&&gimbal_data.if_finish_Init)
+      //键鼠模式的模式选择从这里开始
+			if(gimbal_data.if_finish_Init == 1)
 			{
-				gimbal_data.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
-			} 
+				if (RC_CtrlData.Key_Flag.Key_V_TFlag)
+                {
+                    gimbal_data.ctrl_mode = GIMBAL_AUTO_BIG_BUFF;
+                }
+                else if (RC_CtrlData.Key_Flag.Key_Z_TFlag)
+                {
+                    gimbal_data.ctrl_mode = GIMBAL_AUTO_SMALL_BUFF;
+                }
+                else
+                {
+                    gimbal_data.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
+                    chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
+                }
+
+                if (RC_CtrlData.Key_Flag.Key_CTRL_TFlag)
+                {
+
+                    chassis.ctrl_mode = CHASSIS_ROTATE;
+                    chassis.ChassisSpeed_Ref.rotate_ref = 550;
+                }
+                else
+                {
+                    chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
+                    chassis.ChassisSpeed_Ref.rotate_ref = 0;
+                }
+            }
+        /*****************************************************************************************/
        
 #else
 			
@@ -208,7 +224,7 @@ void security_mode_switch_task(void)
         {
             chassis.ctrl_mode = CHASSIS_ROTATE;
         }
-        chassis.rotate_speed = 550;
+  
 				
 #endif
 			/*****************************************************************************************/
@@ -223,7 +239,7 @@ void security_mode_switch_task(void)
     default:
         break;
     }
-    gimbal_data.last_ctrl_mode = gimbal_data.ctrl_mode;
+
 	chassis.last_ctrl_mode = chassis.ctrl_mode;
 	
 	
