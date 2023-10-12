@@ -6,7 +6,12 @@ int16_t chassis_speed = 0;
 u8 this_input_mode = 0;
 u8 last_input_mode = 0;
 
-void infantry_mode_switch_task(void)
+int Init_cnt = 0;
+
+float yaw_min = 0;
+float yaw_max = 0;
+
+void fighter_mode_switch_task(void)
 {
 		//切换遥控模式的时候所有任务归位重新开始
 		last_input_mode = this_input_mode;
@@ -29,6 +34,8 @@ void infantry_mode_switch_task(void)
             gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref += (RC_CtrlData.rc.ch3 - (int16_t)REMOTE_CONTROLLER_STICK_OFFSET) * STICK_TO_PITCH_ANGLE_INC_FACT;
             gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref   += (RC_CtrlData.rc.ch2 - (int16_t)REMOTE_CONTROLLER_STICK_OFFSET) * STICK_TO_YAW_ANGLE_INC_FACT;
 					VAL_LIMIT(gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref, pitch_min, pitch_max);
+          VAL_LIMIT(gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref, yaw_min, yaw_max);
+
         }
         
 
@@ -50,7 +57,13 @@ void infantry_mode_switch_task(void)
 			//遥控器模式的模式选择从这里开始
 			if(gimbal_data.if_finish_Init == 1)
 			{
+        Init_cnt++;
 				gimbal_data.ctrl_mode = GIMBAL_FOLLOW_ZGYRO;
+        if(Init_cnt == 1)
+        {
+          yaw_max = gimbal_gyro.yaw_Angle +100;
+          yaw_min = gimbal_gyro.yaw_Angle - 30;
+        }
 				
 
 			}
@@ -76,6 +89,7 @@ void infantry_mode_switch_task(void)
                 gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref += RC_CtrlData.mouse.x * MOUSE_TO_YAW_ANGLE_INC_FACT;
                 gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref -= RC_CtrlData.mouse.y * MOUSE_TO_PITCH_ANGLE_INC_FACT;
                 VAL_LIMIT(gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref, pitch_min, pitch_max);
+                VAL_LIMIT(gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref, yaw_min, yaw_max);
             }
             
          }
@@ -111,7 +125,7 @@ void infantry_mode_switch_task(void)
     case STOP:
     {
             gimbal_data.ctrl_mode = GIMBAL_RELAX;
-
+            Init_cnt = 0;
     }
         break;
     default:

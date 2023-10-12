@@ -326,9 +326,9 @@ void gimbal_parameter_Init(void)
     PID_struct_init ( &gimbal_data.pid_pit_speed_follow, POSITION_PID, 27000, 25000, 0.0f, 0.0f, 0 ); 
 
     PID_struct_init ( &gimbal_data.pid_yaw_follow, POSITION_PID,  150,200,
-                    20, 0.09f, 40 );
+                    10, 0.15f, 8 );
     PID_struct_init ( &gimbal_data.pid_yaw_speed_follow, POSITION_PID, 29800, 29800,
-                    350.0f, 0, 100 ); //I太大时，陀螺开启云台抖动严重
+                    150.0f, 0.8, 100 ); //I太大时，陀螺开启云台抖动严重
 #elif STANDARD == 7
     // 初始化下的参数
     PID_struct_init(&gimbal_data.pid_init_pit_Angle, POSITION_PID, 500, 4,

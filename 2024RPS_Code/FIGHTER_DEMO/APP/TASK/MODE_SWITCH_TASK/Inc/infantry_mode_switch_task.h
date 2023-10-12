@@ -12,7 +12,7 @@
 
 
 
-void infantry_mode_switch_task(void);
+void fighter_mode_switch_task(void);
 
 
 extern chassis_t chassis;
