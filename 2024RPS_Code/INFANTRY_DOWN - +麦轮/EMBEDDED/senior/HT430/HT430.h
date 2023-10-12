@@ -72,6 +72,7 @@ void HT_430_Position_closed_Loop_T_R_OR_W(CAN_TypeDef *CANx,int ID,int16_t V,int
 
 
 
+extern HT430_J10_t HT430_J10;
 
 
 
