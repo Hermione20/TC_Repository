@@ -42,7 +42,7 @@
 #define FACTOR_0  0.458f
 //#define TOTATE_PARA    PI/180.0f
 
-#define  WARNING_VOLTAGE       12.5
+#define  WARNING_VOLTAGE       13//²½±ø12.5
 
 #define  TARGET_VOLTAGE        12
 
@@ -252,6 +252,7 @@ void power_limit_handle(void);
 void set_3508current_6020voltage(void);
 float get_max_power2(float voltage);
 float get_max_power1(float voltage);
+float get_max_power(float voltage);
 static float get_the_limite_rate(float max_power);
 void cap_limit_mode_switch(void);
 void chassis_mode_select(void);

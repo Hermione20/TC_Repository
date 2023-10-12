@@ -37,7 +37,7 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
 
 void Can2ReceiveMsgProcess(CanRxMsg *msg)
 {
-
+		PM01_message_Process(&capacitance_message,msg);
     switch (msg->StdId)
     {
     case GIMBAL_YAW_MOTOR:
@@ -69,6 +69,7 @@ void can_bus_send_task(void)
 {
 	CAN_9015torsionControl(CAN2,gimbal_data.gim_ref_and_fdb.yaw_motor_input,GIMBAL_YAW_MOTOR);
 	CAN_9015torsionControl(CAN1,gimbal_data.gim_ref_and_fdb.pitch_motor_input,GIMBAL_PITCH_MOTOR);
+	
 	
 	Set_C620andC610_IQ1(CAN2,chassis.current[0],chassis.current[1],chassis.current[2],chassis.current[3]);
 	

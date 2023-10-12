@@ -1,7 +1,18 @@
 /* Includes ------------------------------------------------------------------*/
 #include "CHASSIS_TASK.h"
 /*----------------------------------------------------------------------------*/
-
+/**
+  ******************************************************************************
+  * @file    chassis.c
+  * @author  TC
+  * @version V1.1.0
+  * @date    11-October-2023
+  * @brief   此文件编写整合通用底盘，包括舵轮/麦轮 以及对应兵种功率限制
+						 均在头文件通过宏定义更改
+						 《主调用函数下拉至底部》
+@verbatim
+ ===============================================================================
+ **/
 
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
  
@@ -14,15 +25,10 @@ double yaw_ecd_angle;
 int16_t vx,vy;
 u8 chassis_rotate_flag;
 int getnumb[4];
-float getlastangle1;
-float getlastangle2;
-float getlastangle3;
-float getlastangle4;
 float transition1[4];
 float transition2[4];
 float transition3[4];
 float transition4[4];
-
 float retransition1_angle[4];
 float retransition2[4];
 float retransition3[4];
@@ -174,7 +180,7 @@ void power_limit_handle()
 {
 		volatilAo=capacitance_message.out_v;
 		capacitance_message.cap_voltage_filte=volatilAo/100;
-		power_limit_rate1=get_the_limite_rate(get_max_power1(capacitance_message.cap_voltage_filte));
+		power_limit_rate1=get_the_limite_rate(get_max_power(capacitance_message.cap_voltage_filte));
 		VAL_LIMIT(power_limit_rate1,0,1);	
 }
 #endif
@@ -227,6 +233,20 @@ void cap_limit_mode_switch()
 	 }
  }
 
+ //限制电压防止电压过低导致电机复位
+
+float get_max_power(float voltage)///////////////
+{ 
+	int max_power=0;
+  if(voltage>WARNING_VOLTAGE+3)
+    max_power=150;
+  else
+    max_power=(voltage-WARNING_VOLTAGE)/3.0f*200;
+  VAL_LIMIT(max_power,0,150);
+  return max_power;
+//  return 80;
+}
+ 
 float get_max_power1(float voltage)
 {
     int max_power=0;
@@ -793,15 +813,22 @@ for (int i = 0; i < 4; i++)
  for (int i = 0; i < 4; i++)
 		{ 
 		chassis.cha_pid_3508.speed_fdb[i]=Mecanum_chassis.Driving_Encoder[i].filter_rate; 
-		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
+		
 		}
 for (int i = 0; i < 4; i++)
     {   
     if(chassis.ctrl_mode!=CHASSIS_RELAX)				
-#if POWER_LIMIT_HANDLE
-		{chassis.current[i] = 1.0f * power_limit_rate1*pid_cha_3508_speed[i].out;	}
+#if POWER_LIMIT_HANDLE 
+		{
+		Chassis_angle.handle_speed_lim[i]=chassis.cha_pid_3508.speed_ref[i];
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
+		chassis.current[i] = 1.0f * power_limit_rate1*pid_cha_3508_speed[i].out;
+		}
 #else		
-		{chassis.current[i] = 1.0f * pid_cha_3508_speed[i].out;	}
+		{
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
+		chassis.current[i] = 1.0f * pid_cha_3508_speed[i].out;	
+		}
 #endif		
 		else
 			{

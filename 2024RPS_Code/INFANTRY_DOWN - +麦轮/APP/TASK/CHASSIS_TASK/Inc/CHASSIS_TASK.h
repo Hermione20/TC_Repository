@@ -259,7 +259,7 @@ void follow_gimbal_handle(void);
 void separate_gimbal_handle(void);
 void rotate_follow_gimbal_handle(void);
 void reverse_follow_gimbal_handle(void);
- 
+void buffer_power(void);
  
  
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
@@ -269,7 +269,7 @@ double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 extern Chassis_angle_t 	 Chassis_angle;
 extern chassis_t 		 		 chassis;
-
+extern u16 Max_Power;
 
 
 

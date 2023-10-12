@@ -127,7 +127,7 @@ void power_limit_handle()
 
 		get_6020power();
 		
-		if(cap_flag==1||cap_flag==3)//||cap_flag==2cap_flag==2||
+		if(cap_flag==1||cap_flag==2||cap_flag==3)//||cap_flag==2
 		power_limit_rate1=get_the_limite_rate(get_max_power1(capacitance_message.cap_voltage_filte)-Max_Power_6020);
 		else
 		power_limit_rate2=get_the_limite_rate(get_max_power2(capacitance_message.cap_voltage_filte)-Max_Power_6020);
@@ -135,7 +135,7 @@ void power_limit_handle()
 		VAL_LIMIT(power_limit_rate1,0,1);
 		VAL_LIMIT(power_limit_rate2,0,1);		 
 
-
+		buffer_power();
 		if(cap_flag==3||cap_flag==2)
 		{
 			power_limit_start_flag=1;
@@ -150,7 +150,6 @@ void power_limit_handle()
 				{
 					power_limit_start_time--;
 				}
-				
 				power_limit_start_flag=(1000-power_limit_start_time)/1000;
 	  }
     else if(cap_flag==0)
@@ -216,10 +215,10 @@ void cap_limit_mode_switch()
 				}
 	 }
  }
-
+    
 float get_max_power1(float voltage)
 {
-    int max_power=0;
+		int max_power=0;
 	  if(cap_flag==3)
 		{
 			if(voltage>WARNING_VOLTAGE+4)
@@ -242,13 +241,31 @@ float get_max_power1(float voltage)
 
 float get_max_power2(float voltage)
 {
-	int max_power=0;
+		int max_power=0;
 		max_power=judge_rece_mesg.game_robot_state.chassis_power_limit+
 (judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2;
 
 		VAL_LIMIT(max_power,0,350);
 		power_limit_rate1=1;
     return max_power;
+}
+
+void buffer_power(void)
+{
+ {Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+
+(judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2;
+} 
+ if(capacitance_message.cap_voltage_filte>=23.0)
+ {Max_Power=(23.7-capacitance_message.cap_voltage_filte)*150;
+	VAL_LIMIT(Max_Power,0,judge_rece_mesg.game_robot_state.chassis_power_limit+
+(judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2); 
+ }
+	
+//	Max_Power=50;
+  if(capacitance_message.cap_voltage_filte>=23.7)
+ {Max_Power=0;}
+	
+VAL_LIMIT(Max_Power,0,150);
 }
 
 static float get_the_limite_rate(float max_power)

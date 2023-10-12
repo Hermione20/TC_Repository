@@ -13,7 +13,9 @@ void control_task(void)
 
 	}	
 	else if(time_tick%10==9)
-		power_send_handle1(CAN1,can_chassis_data.chassis_power_limit);
+	{
+		power_send_handle1(CAN1,Max_Power);
+	}
 	else if(time_tick%10==5)
 		power_send_handle2(CAN1);
 	

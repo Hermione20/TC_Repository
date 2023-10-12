@@ -14,10 +14,14 @@ void control_task(void)
 	if(time_tick%2 == 0)
 	{
 		gimbal_task();
-			can_bus_send_task();
+		can_bus_send_task();
+		
 	}
 	
-	
+	if(time_tick%10==9)
+		power_send_handle1(CAN2,100);
+	if(time_tick%10==5)
+		power_send_handle2(CAN2);
 	
 }
 

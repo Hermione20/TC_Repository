@@ -118,7 +118,6 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -232,6 +231,11 @@
           <count>14</count>
           <WinNumber>1</WinNumber>
           <ItemText>RC_CtrlData,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>gimbal_data,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
