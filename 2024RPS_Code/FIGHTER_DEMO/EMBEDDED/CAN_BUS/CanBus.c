@@ -60,6 +60,7 @@ void can_bus_send_task(void)
 {
 	
 	Set_GM6020_IQ2(CAN2,gimbal_data.gim_ref_and_fdb.yaw_motor_input,0,0,0);
-	HT_430_Power_Open_Loop(CAN2,1,gimbal_data.gim_ref_and_fdb.pitch_motor_input);
+//	HT_430_Power_Open_Loop(CAN2,1,gimbal_data.gim_ref_and_fdb.pitch_motor_input);
+	HT_430_V_Clossed_Loop(CAN2,1,gimbal_data.gim_ref_and_fdb.pit_speed_ref);
 }
 

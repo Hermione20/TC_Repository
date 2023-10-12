@@ -7,8 +7,8 @@
 #define INFANTRY_PITCH_MAX 35.0f
 #define INFANTRY_PITCH_MIN -25.0f
 
-#define FIGHTER_PITCH_MAX 0.0f
-#define FIGHTER_PITCH_MIN 0.0f
+#define FIGHTER_PITCH_MAX 10.0f
+#define FIGHTER_PITCH_MIN -30.0f
 
 #define SECURITY_PITCH_MAX 35.0f
 #define SECURITY_PITCH_MIN -25.0f
@@ -80,8 +80,13 @@ typedef struct
   
   gim_ref_and_fdb_t gim_ref_and_fdb;
   gim_dynamic_ref_t gim_dynamic_ref;
-
-  u8 if_finish_Init;
+	
+	u8 if_finish_Init;
+	
+  pid_t pid_init_yaw_Angle; 
+  pid_t pid_init_pit_Angle; 
+  pid_t pid_init_yaw_speed; 
+  pid_t pid_init_pit_speed;
 
   pid_t pid_yaw_Angle; 
   pid_t pid_pit_Angle; 
@@ -93,12 +98,6 @@ typedef struct
   pid_t pid_auto_pit_Angle; 
   pid_t pid_auto_yaw_speed; 
   pid_t pid_auto_pit_speed; 
-
-  //英雄初始化pid参数
-  pid_t hero_pid_yaw_Angle; 
-  pid_t hero_pid_pit_Angle; 
-  pid_t hero_pid_yaw_speed; 
-  pid_t hero_pid_pit_speed;
 
   // 小符下的PID参数
   pid_t pid_yaw_small_buff;
