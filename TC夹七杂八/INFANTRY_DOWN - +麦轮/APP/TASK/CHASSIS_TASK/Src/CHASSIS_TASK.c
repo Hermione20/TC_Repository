@@ -25,10 +25,12 @@ double yaw_ecd_angle;
 int16_t vx,vy;
 u8 chassis_rotate_flag;
 int getnumb[4];
+
 float transition1[4];
 float transition2[4];
 float transition3[4];
 float transition4[4];
+
 float retransition1_angle[4];
 float retransition2[4];
 float retransition3[4];
@@ -125,7 +127,7 @@ void chassis_param_init()//底盘参数初始化
 * @Note     : 
 ************************************************************************************************************************
 **///舵轮
-#if POWER_LIMIT_HANDLE==1
+#if POWER_LIMIT_HANDLE == 1
 void power_limit_handle()
 {
 		volatilAo=capacitance_message.out_v;
@@ -142,7 +144,7 @@ void power_limit_handle()
 		VAL_LIMIT(power_limit_rate1,0,1);
 		VAL_LIMIT(power_limit_rate2,0,1);		 
 
-
+		buffer_power();
 		if(cap_flag==3||cap_flag==2)
 		{
 			power_limit_start_flag=1;
@@ -157,7 +159,6 @@ void power_limit_handle()
 				{
 					power_limit_start_time--;
 				}
-				
 				power_limit_start_flag=(1000-power_limit_start_time)/1000;
 	  }
     else if(cap_flag==0)
@@ -234,9 +235,16 @@ void cap_limit_mode_switch()
 	 }
  }
 
- //限制电压防止电压过低导致电机复位
-
-float get_max_power(float voltage)///////////////
+/**
+************************************************************************************************************************
+* @Name     : get_max_power
+* @brief    : 用于获取英雄最大功率控制
+* @param		: 超级电容电压值
+* @retval   : 最大功率
+* @Note     :
+************************************************************************************************************************
+**///限制电压防止电压过低导致电机复位
+float get_max_power(float voltage)
 { 
 	int max_power=0;
   if(voltage>WARNING_VOLTAGE+3)
@@ -247,10 +255,11 @@ float get_max_power(float voltage)///////////////
   return max_power;
 //  return 80;
 }
- 
+
+
 float get_max_power1(float voltage)
 {
-    int max_power=0;
+		int max_power=0;
 	  if(cap_flag==3)
 		{
 			if(voltage>WARNING_VOLTAGE+4)
@@ -273,7 +282,7 @@ float get_max_power1(float voltage)
 
 float get_max_power2(float voltage)
 {
-	int max_power=0;
+		int max_power=0;
 		max_power=judge_rece_mesg.game_robot_state.chassis_power_limit+
 (judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2;
 
@@ -312,6 +321,8 @@ void buffer_power(void)
 	VAL_LIMIT(Max_Power,0,150);
 }
 #endif
+
+
 
 static float get_the_limite_rate(float max_power)
 {
@@ -735,7 +746,7 @@ void start_chassis_6020()
 			Chassis_angle.handle_speed_lim[2] = LEFT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[2];
 			Chassis_angle.handle_speed_lim[3] = RIGHT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[3];
 
-//此处	chassis.cha_pid_6020.angle_ref 到时候放功率限制后的。
+
 	for(int i=0;i<4;i++)
 	{
 	if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90)
@@ -811,10 +822,10 @@ void set_3508current_6020voltage()
 
 				
 		
-		if(fabs(chassis.cha_pid_3508.speed_ref[0])<50&&
-			 fabs(chassis.cha_pid_3508.speed_ref[1])<50&&
-			 fabs(chassis.cha_pid_3508.speed_ref[2])<50&&
-			 fabs(chassis.cha_pid_3508.speed_ref[3])<50)
+		if(abs(chassis.cha_pid_3508.speed_ref[0])<50&&
+			 abs(chassis.cha_pid_3508.speed_ref[1])<50&&
+			 abs(chassis.cha_pid_3508.speed_ref[2])<50&&
+			 abs(chassis.cha_pid_3508.speed_ref[3])<50)
 		{
 			run_flag=0;
 		}
@@ -852,7 +863,7 @@ for (int i = 0; i < 4; i++)
     if(chassis.ctrl_mode!=CHASSIS_RELAX)				
 #if POWER_LIMIT_HANDLE 
 		{
-		Chassis_angle.handle_speed_lim[i]=chassis.cha_pid_3508.speed_ref[i];
+		Chassis_angle.handle_speed_lim[i]=chassis.cha_pid_3508.speed_ref[i];//此处赋值用于功率限制系数运算
 		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
 		chassis.current[i] = 1.0f * power_limit_rate1*pid_cha_3508_speed[i].out;
 		}
@@ -870,6 +881,7 @@ for (int i = 0; i < 4; i++)
 }
  
 #endif
+
 
 
 /**
@@ -906,12 +918,8 @@ void get_remote_set()
 {	
 		Chassis_angle.yaw_encoder_ecd_angle=yaw_Encoder.ecd_angle;
 		Chassis_angle.yaw_angle_0_2pi=convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
-	
-//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
-//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
 
 }
-//新舵轮
 #elif CHASSIS_TYPE == 4
 void get_remote_set()
 {	
@@ -923,23 +931,6 @@ void get_remote_set()
 
 }
 #endif
-
-
-void Chassis_PID_handle(void)
-{
-	#if POWER_LIMIT_HANDLE
-			power_limit_handle();	
-	#endif
-	
-			set_3508current_6020voltage();
-}
-
-void Motion_resolution(void)
-{
-		get_remote_set();
-		start_angle_handle();
-}
-
 
 /**
 ************************************************************************************************************************
@@ -994,6 +985,21 @@ void chassis_mode_select(void)
     break;
     }
 	
+}
+
+void Chassis_PID_handle(void)
+{
+	#if POWER_LIMIT_HANDLE
+			power_limit_handle();	
+	#endif
+	
+			set_3508current_6020voltage();
+}
+
+void Motion_resolution(void)
+{
+		get_remote_set();
+		start_angle_handle();
 }
 
 /**

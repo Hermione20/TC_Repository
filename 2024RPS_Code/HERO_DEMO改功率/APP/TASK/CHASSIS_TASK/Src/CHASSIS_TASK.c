@@ -182,7 +182,6 @@ void power_limit_handle()
 		capacitance_message.cap_voltage_filte=volatilAo/100;
 		power_limit_rate1=get_the_limite_rate(get_max_power(capacitance_message.cap_voltage_filte));
 		VAL_LIMIT(power_limit_rate1,0,1);	
-		buffer_power();
 }
 #endif
 /**
@@ -281,37 +280,6 @@ float get_max_power2(float voltage)
 		power_limit_rate1=1;
     return max_power;
 }
-
-//步兵功率限制
-#if POWER_LIMIT_HANDLE == 1
-void buffer_power(void)
-{
- {Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+
-(judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2;
-} 
- if(capacitance_message.cap_voltage_filte>=23.0)
- {Max_Power=(23.7-capacitance_message.cap_voltage_filte)*150;
-	VAL_LIMIT(Max_Power,0,judge_rece_mesg.game_robot_state.chassis_power_limit+
-(judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2); 
- }
-	
-//	Max_Power=50;
-  if(capacitance_message.cap_voltage_filte>=23.7)
- {Max_Power=0;}
-	
-VAL_LIMIT(Max_Power,0,150);
-}
-//英雄功率限制
-#elif POWER_LIMIT_HANDLE == 2
-void buffer_power(void)
-{
-	if(capacitance_message.cap_voltage_filte<22.5)
-		Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+(judge_rece_mesg.power_heat_data.chassis_power_buffer-10)*2; //5
-	else
-		Max_Power=0;
-	VAL_LIMIT(Max_Power,0,150);
-}
-#endif
 
 static float get_the_limite_rate(float max_power)
 {

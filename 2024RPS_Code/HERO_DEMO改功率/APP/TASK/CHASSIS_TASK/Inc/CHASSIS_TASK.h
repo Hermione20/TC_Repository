@@ -261,7 +261,7 @@ void follow_gimbal_handle(void);
 void separate_gimbal_handle(void);
 void rotate_follow_gimbal_handle(void);
 void reverse_follow_gimbal_handle(void);
-void buffer_power(void); 
+ 
  
  
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);

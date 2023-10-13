@@ -19,7 +19,7 @@ void control_task(void)
 	}
 	
 	if(time_tick%10==9)
-		power_send_handle1(CAN2,100);//power_send_handle1(Max_Power,100);
+		power_send_handle1(CAN2,100);
 	if(time_tick%10==5)
 		power_send_handle2(CAN2);
 	
