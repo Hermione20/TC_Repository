@@ -106,10 +106,10 @@ void GetRemoteSwitchAction(RC_Ctl_t *remote)
 	}
 	if((remote->rc.ch4 - 1024) < 5)
 	{
-		remote->RemoteSwitch.trigger = 1;
+		remote->RemoteSwitch.trigger = 0;
 	}else
 	{
-		remote->RemoteSwitch.trigger = 0;
+		remote->RemoteSwitch.trigger = 1;
 	}
 	
 }

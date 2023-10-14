@@ -87,7 +87,7 @@ else if(val>=max)\
 
 #include "hero_mode_switch_task.h"
 
-
+#include "42mm_shoot_task.h"
 
 
 
