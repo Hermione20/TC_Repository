@@ -5,7 +5,7 @@
 #include "public.h"
 /*----------------------------------------------------------------------------*/
 //底盘类型 1舵轮 2麦轮 3全向轮 4新舵轮
-#define CHASSIS_TYPE  1
+#define CHASSIS_TYPE  4
 #define POWER_LIMIT_HANDLE    1//0不开 1为舵轮 2为英雄(麦轮)
 
 /*******************************CONFIG********************************/
@@ -15,7 +15,7 @@
 
 
 
-#if     CHASSIS_TYPE == 1//舵轮
+#if     CHASSIS_TYPE == 1 || 4//舵轮
 #define RIGHT_FRONT_REVERSE    1 
 #define LEFT_FRONT_REVERSE    -1
 #define LEFT_BEHIND_REVERSE    1
@@ -28,6 +28,9 @@
 
 
 #elif   CHASSIS_TYPE == 3//全向轮
+
+#elif   CHASSIS_TYPE == 4//新舵轮
+#define  WARNING_VOLTAGE       12.5
 #endif
 /*******************************CONFIG********************************/
 
@@ -261,7 +264,7 @@ void rotate_follow_gimbal_handle(void);
 void reverse_follow_gimbal_handle(void);
 void buffer_power(void);
 float get_max_power(float voltage);
- 
+void steering_wheel_calc(double Length,double Weight); 
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
 
 

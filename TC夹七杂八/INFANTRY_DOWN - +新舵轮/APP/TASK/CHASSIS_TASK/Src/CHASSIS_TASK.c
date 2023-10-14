@@ -87,7 +87,7 @@ void chassis_param_init()//底盘参数初始化
       PID_struct_init(&pid_spd[k], POSITION_PID,15000, 15000,25,0.4, 0); //24 0.3 10    38.0f,3.0f, 40
     }
     PID_struct_init(&pid_chassis_angle, POSITION_PID, 500, 0, 300,0,500);//xisanhao
-	#elif STANDARD == 5
+#elif STANDARD == 5
   for (int k = 0; k < 4; k++)
     {
       PID_struct_init(&pid_spd[k], POSITION_PID,15000, 15000,22,0.3f, 0.5f); //24 0.3 10    38.0f,3.0f, 40
@@ -591,8 +591,9 @@ void steering_wheel_calc(double Length,double Weight)
 		else
 			R=0;
 
+		
 		if(Chassis_angle.get_speedw>=0)
-		{//transition1是各轮同圆半径，transition2是各轮偏航角 
+		{//transition1是各轮同圆半径Ri，transition2是各轮偏航角Ai（i=0，1，2，3） 
 		 //0左前轮 1左后轮 2右后轮 3右前轮 日
 			theta =PI/2-Chassis_angle.Remote_angle;
 	
@@ -1140,10 +1141,6 @@ void get_remote_set()
 }
 
 #endif
-
-
-
-
 
 /**
 ************************************************************************************************************************
