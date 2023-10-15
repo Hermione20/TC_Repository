@@ -68,10 +68,11 @@ void shoot_task(void);
 static void Shoot_42mm_speed_Select(uint16_t test_frictionSpeed_42);
 void heat_limit_42mm(u8 ifignore);
 void shoot_friction_handle_42(void);
+void shoot_bullet_handle_42(void);
+void shoot_param_init(void);
 
 
-
-
+extern _42mm_shoot_t _42mm_shoot;
 
 
 

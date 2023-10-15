@@ -1,16 +1,16 @@
 #ifndef __SENIOR_H
 #define __SENIOR_H
-#include "main.h"
+#include "public.h"
 
 
 #define  GMPitchEncoder_Offset 6165
 //yaw轴电机初始位置
 #define  GMYawEncoder_Offset   58500
 //底盘航向轴电机初始位置
-#define  GM1Encoder_Offset   1437
-#define  GM2Encoder_Offset   8042
-#define  GM3Encoder_Offset   4141
-#define  GM4Encoder_Offset   6732
+#define  GM1Encoder_Offset   1370-1024
+#define  GM2Encoder_Offset   1298+1024
+#define  GM3Encoder_Offset   1231-1024
+#define  GM4Encoder_Offset   3964+1024
 
 
 #ifndef STRUCT_MOTOR
@@ -86,18 +86,27 @@ typedef struct
 /***************************general friction encoder********************************************/
 typedef struct 
 {
-	volatile Encoder right_motor1;
-	volatile Encoder left_motor1;
-	volatile Encoder left_motor2;
-	volatile Encoder right_motor2;
+	volatile Encoder right_up_motor;
+	volatile Encoder left_up_motor;
+	volatile Encoder left_down_motor;
+	volatile Encoder right_down_motor;
+
+	volatile Encoder left_motor;
+	volatile Encoder right_motor;
 }friction_t;
 
 /************************************general poke encoder******************************************************/
 
 typedef struct 
 {
+	//哨兵
 	volatile Encoder right_poke;
 	volatile Encoder left_poke;
+	//英雄
+	volatile Encoder up_poke;
+	volatile Encoder down_poke;
+	//其他
+	volatile Encoder poke;
 }poke_t;
 
 /****************************************hero small gimbal encoder*****************************************************************/

@@ -155,7 +155,7 @@ void hero_mode_switch_task(void)
                 VAL_LIMIT(RC_CtrlData.mouse.x, -100, 100);
                 VAL_LIMIT(RC_CtrlData.mouse.y, -100, 100);
                 gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref += RC_CtrlData.mouse.x * MOUSE_TO_YAW_ANGLE_INC_FACT;
-                gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref -= RC_CtrlData.mouse.y * MOUSE_TO_PITCH_ANGLE_INC_FACT;
+                gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref -= RC_CtrlData.mouse.y * MOUSE_TO_PITCH_ANGLE_INC_FACT*10;
                 VAL_LIMIT(gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref, pitch_min, pitch_max);
             }
             /*****************************吊射模式下云台赋值***********************************/

@@ -434,6 +434,11 @@
               <FileType>1</FileType>
               <FilePath>..\APP\TASK\CHASSIS_TASK\Src\CHASSIS_TASK.c</FilePath>
             </File>
+            <File>
+              <FileName>42mm_shoot_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\SHOOT_TASK\Src\42mm_shoot_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
