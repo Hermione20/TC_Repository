@@ -141,8 +141,8 @@ extern pid_t pid_spd[4];
 
 
 extern pid_t pid_chassis_angle;
-extern pid_t pid_trigger;
-extern pid_t pid_trigger_speed;
+extern pid_t pid_trigger_angle[2];
+extern pid_t pid_trigger_speed[2];
 extern pid_t pid_trigger_second_speed;
 extern pid_t pid_imu_tmp;
 extern pid_t pid_rotate[4];
@@ -151,6 +151,8 @@ extern pid_t pid_front_distance;
 extern pid_t pid_right_distance;
 extern pid_t pid_angle_distance;
 extern pid_t pid_spring[2];
+extern pid_t pid_trigger_angle_buf;
+extern pid_t pid_trigger_speed_buf;
 extern pid_t pid_cha_6020_angle[4];
 extern pid_t pid_cha_3508_angle[4];
 extern pid_t pid_cha_6020_speed[4];

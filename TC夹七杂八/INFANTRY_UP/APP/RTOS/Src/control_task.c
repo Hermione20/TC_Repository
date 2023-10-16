@@ -26,6 +26,7 @@ void control_task(void)
 	if(time_tick%2 == 0)
 	{
 			gimbal_task();
+			shoot_task();
 			can_bus_send_task();
 	}
 	
@@ -36,4 +37,5 @@ void control_task(void)
 void control_task_Init(void)
 {
 		gimbal_parameter_Init();
+		shot_param_init();
 }

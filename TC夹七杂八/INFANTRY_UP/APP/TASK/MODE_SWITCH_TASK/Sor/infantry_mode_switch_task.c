@@ -78,7 +78,7 @@ void infantry_mode_switch_task(void)
     }
         break;
     case KEY_MOUSE_INPUT:
-    {
+    {   
         /*******************************底盘云台键鼠数据接收******************************************/
          if(gimbal_data.ctrl_mode != GIMBAL_INIT)
          {
@@ -184,17 +184,8 @@ void infantry_mode_switch_task(void)
                 chassis.ctrl_mode = MANUAL_FOLLOW_GIMBAL;
             }
 
-							if (RC_CtrlData.Key_Flag.Key_Q_TFlag)
-            {
-
-                bulletspead_level=1;
-            }
-            else
-            {
-                bulletspead_level=0;
-            }
 			}
-        
+					   
 			/*****************************************************************************************/
     }
         break;

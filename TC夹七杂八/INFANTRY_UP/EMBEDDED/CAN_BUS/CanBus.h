@@ -20,8 +20,8 @@
 #define SMALL_GIMBAL_MOTOR 0X00
 #define SCOPE_MOTOR 0X00
 /*********************************摩擦轮电机id**************************************/
-#define LEFT_FRICTION1 0X00
-#define RIGHT_FRICTION1 0X00
+#define LEFT_FRICTION1 0X201
+#define RIGHT_FRICTION1 0X202
 #define LEFT_FRIICTION2 0X00
 #define RIGHT_FRICTION2 0X00
 /*********************************舵轮上下板通信id*********************************/

@@ -170,7 +170,6 @@ static void shoot_bullet_handle(void)
 		click_time++;
 		if(click_time<20&&will_num_shoot>4)           //刚开始发弹且剩余量很多时可以提高射频     
 		{shoot_frequency=shoot_frequency*1.2;}
-
 	}
 	else
 	{ 

@@ -24,12 +24,21 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
 {
     switch (msg->StdId)
     {
-    case GIMBAL_YAW_MOTOR:
+
+		case 0x203:
 		{
-			
+			M3508orM2006EncoderTask(&general_poke.left_poke,msg);
+		}break;
+		case LEFT_FRICTION1:
+		{
+			M3508orM2006EncoderTask(&general_friction.left_motor1,msg);	
+		}break;
+		case RIGHT_FRICTION1:
+		{
+			M3508orM2006EncoderTask(&general_friction.right_motor1,msg);
 		}break;
     default:
-        break;
+    break;
     }
 }
 
@@ -60,6 +69,7 @@ void can_bus_send_task(void)
 {
 	
 	Set_GM6020_IQ1(CAN2,gimbal_data.gim_ref_and_fdb.yaw_motor_input,gimbal_data.gim_ref_and_fdb.pitch_motor_input,0,0);
-	
+	Set_C620andC610_IQ1(CAN1,0,0,shoot.poke_current[0],0);
+	Set_C620andC610_IQ1(CAN1,shoot.fric_current[0],shoot.fric_current[1],0,0);
 }
 

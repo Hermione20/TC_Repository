@@ -278,23 +278,23 @@ void gimbal_parameter_Init(void)
 
     //小幅下的参数
     PID_struct_init(&gimbal_data.pid_pit_small_buff, POSITION_PID, 70, 20,
-                    25.0f, 0.3f, 0); 
+                    15.0f, 0.01f, 8); 
     PID_struct_init(&gimbal_data.pid_pit_speed_small_buff, POSITION_PID, 25000, 20000,
-                    350.0f, 7.0f, 0); 
+                    170.0f, 0.001f, 60); 
     PID_struct_init(&gimbal_data.pid_yaw_small_buff, POSITION_PID, 60, 20,
                     15.0f, 0.3f, 20);
     PID_struct_init(&gimbal_data.pid_yaw_speed_small_buff, POSITION_PID, 25000, 25000,
-                    450.0f, 4.0f, 200);
+                    200.0f, 0.4f, 200);
 
     //大幅下的参数
     PID_struct_init(&gimbal_data.pid_pit_big_buff, POSITION_PID, 200, 10,
-                    20.0f, 0.2f, 2); 
+                    15.0f, 0.01f, 8); 
     PID_struct_init(&gimbal_data.pid_pit_speed_big_buff, POSITION_PID, 27000, 25000,
-                    300.0f, 8.0f, 200); 
+                    170.0f, 0.01f, 60); 
     PID_struct_init(&gimbal_data.pid_yaw_big_buff, POSITION_PID, 250, 4,
                     20.0f, 0.2f, 2); 
     PID_struct_init(&gimbal_data.pid_yaw_speed_big_buff, POSITION_PID, 25000, 5000,
-                    300.0f, 8.0f, 200);
+                    200.0f, 0.8f, 200);
 #elif STANDARD == 4
 #elif STANDARD == 5
 #elif STANDARD == 6
