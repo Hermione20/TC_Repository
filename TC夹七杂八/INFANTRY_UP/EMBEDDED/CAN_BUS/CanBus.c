@@ -27,15 +27,15 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
 
 		case 0x203:
 		{
-			M3508orM2006EncoderTask(&general_poke.left_poke,msg);
+			M3508orM2006EncoderTask(&general_poke.poke,msg);
 		}break;
 		case LEFT_FRICTION1:
 		{
-			M3508orM2006EncoderTask(&general_friction.left_motor1,msg);	
+			M3508orM2006EncoderTask(&general_friction.left_motor,msg);	
 		}break;
 		case RIGHT_FRICTION1:
 		{
-			M3508orM2006EncoderTask(&general_friction.right_motor1,msg);
+			M3508orM2006EncoderTask(&general_friction.right_motor,msg);
 		}break;
     default:
     break;

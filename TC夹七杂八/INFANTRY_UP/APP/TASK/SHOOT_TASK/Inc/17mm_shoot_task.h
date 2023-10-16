@@ -2,7 +2,7 @@
 #define __17MM_SHOOT_TASK
 #include "public.h"
 
-#define SHOOT_TYPE 3 //3步兵 6无人机  7哨兵
+#define SHOOT_TYPE 7 //3步兵 6无人机  7哨兵
 
 #define SHOOT_MOTOR_SPEED 550.0f //哨兵拨盘
 #define FRICTION_SPEED    950// 950
@@ -13,44 +13,6 @@
 #define FRICTION_SPEED_18  (-607)
 #define FRICTION_SPEED_30  (-935)
 
-#define residual_heat_normal_else_1 (40)
-#define residual_heat_normal_else_2 (28)
-#define residual_heat_normal_else_3 (28)
-#define residual_heat_normal_else_4 (25)
-
-
-#define residual_heat_normal_coling_1 (32)
-#define residual_heat_normal_coling_2 (25)
-#define residual_heat_normal_coling_3 (27)
-
-#define residual_heat_normal_speed_1 (27)
-#define residual_heat_normal_speed_2 (27)
-#define residual_heat_normal_speed_3 (25)
-
-#define residual_heat_normal_outburst_1 (30)
-#define residual_heat_normal_outburst_2 (23)
-#define residual_heat_normal_outburst_3 (40)
-
-#define residual_heat_middle_coling_1 (100)
-#define residual_heat_middle_coling_2 (35)
-#define residual_heat_middle_coling_3 (34)
-
-
-#define residual_heat_middle_speed_1 (100)
-#define residual_heat_middle_speed_2 (45)
-#define residual_heat_middle_speed_3 (43)
-
-
-#define residual_heat_middle_outburst_1 (100)
-#define residual_heat_middle_outburst_2 (35)
-#define residual_heat_middle_outburst_3 (80)
-
-//射频
-#define PID_SHOOT_MOTOR_SPEED_1    (-300)//-400
-#define PID_SHOOT_MOTOR_SPEED_2    (-400)//-250
-#define PID_SHOOT_MOTOR_SPEED_3    (-450)
-#define PID_SHOOT_MOTOR_SPEED_4    (-500)
-#define PID_SHOOT_MOTOR_SPEED_5    (-600)
 #endif
 
 
@@ -82,19 +44,19 @@ typedef enum
 
 typedef struct
 {
-	int16_t speed_ref[4];
-	int16_t speed_fdb[4];
-	int16_t angle_ref[4];
-	int16_t angle_fdb[4];
+	float speed_ref[4];
+	float speed_fdb[4];
+	float angle_ref[4];
+	float angle_fdb[4];
 	
 }shoot_pid_friction_t;
 
 typedef struct
 {
-	int16_t speed_ref[2];
-	int16_t speed_fdb[2];
-	int16_t angle_ref[2];
-	int16_t angle_fdb[2];
+	float speed_ref[2];
+	float speed_fdb[2];
+	float angle_ref[2];
+	float angle_fdb[2];
 	
 }shoot_pid_poke_t;
 
@@ -132,25 +94,9 @@ void heat_switch(void);
 void shoot_bullet_handle(void);
 void shoot_friction_handle(void);
 void shoot_state_mode_switch(void);
+void heat_shoot_frequency_limit(void);
+void bullets_spilling(void);
 extern shoot_t shoot;
 extern u8 press_l_state_switch;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif
