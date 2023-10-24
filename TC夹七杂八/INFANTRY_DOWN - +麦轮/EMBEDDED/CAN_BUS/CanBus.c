@@ -8,7 +8,9 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
     
 	  
 		can_chassis_receive_task(msg);
+	#if POWER_LIMIT_HANDLE
 		cap_limit_mode_switch();
+	#endif
 		PM01_message_Process(&capacitance_message,msg);
 
     

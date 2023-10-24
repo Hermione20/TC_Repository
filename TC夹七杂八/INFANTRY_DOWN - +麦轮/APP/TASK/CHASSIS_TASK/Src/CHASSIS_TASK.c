@@ -79,7 +79,7 @@ void chassis_param_init()//底盘参数初始化
   	PID_struct_init(&pid_cha_6020_speed[2], POSITION_PID, 15000, 500, 200,0.5,8);//40,0.5f,20);
 		
     PID_struct_init(&pid_cha_6020_angle[3], POSITION_PID, 8000, 10, 9,0.4f,4);//23, 0.2f,15);
-  	PID_struct_init(&pid_cha_6020_speed[3], POSITION_PID, 15000, 500, 200,0.1f,15);//42,0.5f,20);
+  	PID_struct_init(&pid_cha_6020_speed[3], POSITION_PID, 15000, 500, 200,0.1f,20);//42,0.5f,20);
 
 #if STANDARD == 1
 		for (int k = 0; k < 4; k++)
@@ -299,7 +299,7 @@ float get_max_power(float voltage)//限制电压防止电压过低导致电机复位
 * @Note     : 在此处处理缓冲功率
 ************************************************************************************************************************
 **///步兵功率限制
-#if POWER_LIMIT_HANDLE == 1
+#if POWER_LIMIT_HANDLE == 1 || 3
 void buffer_power(void)
 {
  {Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+
@@ -465,7 +465,7 @@ double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle)
 * @retval   : 
 * @Note     : 包括
 *							chassis_stop_handle          底盘关控				
-*							follow_gimbal_handle         底盘跟随云台模式控制
+*							follow_gimbal_handle         底盘跟随云台模式控制 主要是vx vy vw的获取
 *							separate_gimbal_handle       底盘云台分离模式控制
 *							rotate_follow_gimbal_handle	 小陀螺模式控制
 *             reverse_follow_gimbal_handle 小陀螺反转模式控制
@@ -476,11 +476,11 @@ void chassis_stop_handle(void)
   chassis.vy = 0;
   chassis.vx = 0;
 	chassis.vw = 0;
-  Chassis_angle.get_speedw = 0;
+  Chassis_angle.get_speedw = 0;//舵轮使用
 }
 
-//舵轮
-#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
+//舵轮/全向轮
+#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 3
 void follow_gimbal_handle(void)
 {
 		if(Chassis_angle.yaw_angle_0_2pi>=PI)
@@ -491,28 +491,37 @@ void follow_gimbal_handle(void)
 	 chassis.vy = can_chassis_data.y;
    chassis.vx = can_chassis_data.x;
    Chassis_angle.get_speedw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi,0); 
-}
-//麦轮
+}//麦轮（英雄）
 #elif CHASSIS_TYPE == 2
 void follow_gimbal_handle(void)
 {
 	
 	if(Chassis_angle.yaw_angle_0_2pi>=PI)
 		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi-(2*PI);}
-		else
+	else
 		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 			
 	chassis.vy = chassis.ChassisSpeed_Ref.left_right_ref;
   chassis.vx = chassis.ChassisSpeed_Ref.forward_back_ref;
 	chassis.vw = pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi*RAD_TO_ANGLE,0);
+}//新舵轮
+#elif CHASSIS_TYPE == 4
+void follow_gimbal_handle(void)
+{
+		if(Chassis_angle.yaw_angle_0_2pi>=PI)
+		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi-(2*PI);}
+		else
+		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 
+	 chassis.vy = can_chassis_data.y;
+   chassis.vx = can_chassis_data.x;
+   Chassis_angle.get_speedw = -pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi,0); 
 }
-
 #endif
 
 
-//舵轮
-#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
+//舵轮/全向轮/新舵轮
+#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 3 || CHASSIS_TYPE == 4
 void separate_gimbal_handle(void)
 {
   chassis.vy = can_chassis_data.y;
@@ -529,8 +538,8 @@ void separate_gimbal_handle(void)
 }
 #endif
 
-//舵轮
-#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
+//舵轮/全向轮/新舵轮
+#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 3 || CHASSIS_TYPE == 4
 void rotate_follow_gimbal_handle(void)
 {
 
@@ -572,10 +581,10 @@ void rotate_follow_gimbal_handle(void)
   chassis.sin_chassis_angle = sinf(Chassis_angle.yaw_angle__pi_pi);
   chassis.cos_chassis_angle = cosf(Chassis_angle.yaw_angle__pi_pi);
 
-  chassis.foward_back_to_foward_back_rotate_speed = chassis.ChassisSpeed_Ref.forward_back_ref*chassis.cos_chassis_angle;
+  chassis.foward_back_to_foward_back_rotate_speed =  chassis.ChassisSpeed_Ref.forward_back_ref*chassis.cos_chassis_angle;
   chassis.foward_back_to_left_right_rotate_speed  = -chassis.ChassisSpeed_Ref.forward_back_ref*chassis.sin_chassis_angle;
-  chassis.left_right_to_foward_back_rotate_speed  = chassis.ChassisSpeed_Ref.left_right_ref*chassis.sin_chassis_angle;
-  chassis.left_right_to_left_right_rotate_speed   = chassis.ChassisSpeed_Ref.left_right_ref*chassis.cos_chassis_angle;
+  chassis.left_right_to_foward_back_rotate_speed  =  chassis.ChassisSpeed_Ref.left_right_ref*chassis.sin_chassis_angle;
+  chassis.left_right_to_left_right_rotate_speed   =  chassis.ChassisSpeed_Ref.left_right_ref*chassis.cos_chassis_angle;
 	
 	chassis.vy = chassis.foward_back_to_left_right_rotate_speed  + chassis.left_right_to_left_right_rotate_speed;
 	chassis.vx = chassis.foward_back_to_foward_back_rotate_speed + chassis.left_right_to_foward_back_rotate_speed;
@@ -585,11 +594,10 @@ void rotate_follow_gimbal_handle(void)
 }
 #endif
 
-//舵轮
-#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
+//舵轮/全向轮/新舵轮
+#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 3 || CHASSIS_TYPE == 4
  void reverse_follow_gimbal_handle(void)
 {
-
 
   chassis.vy = can_chassis_data.y;
   chassis.vx = can_chassis_data.x;
@@ -712,21 +720,72 @@ void mecanum_calc(float vx, float vy, float vw, int16_t *speed)
   memcpy(speed, wheel_rpm, 4*sizeof(int16_t));//内存拷贝函数，rpm一分钟旋转量
 }//全向轮
 #elif CHASSIS_TYPE == 3
-//新舵轮
+void start_angle_handle()
+{
+		omni_calc2(chassis.vx, chassis.vy, Chassis_angle.get_speedw, chassis.cha_pid_3508.speed_ref);
+}
+void omni_calc1(float vx,float vy,float vw,int16_t *speed)
+{
+		int16_t wheel_rpm[4];
+		float   max = 0;
+	wheel_rpm[0] = (- vx/sqrt(2) - vy/sqrt(2) + vw*3.9f);//3.9f后面根据底盘半径改参
+  wheel_rpm[1] = (  vx/sqrt(2) - vy/sqrt(2) + vw*3.9f);
+  wheel_rpm[2] = (  vx/sqrt(2) + vy/sqrt(2) + vw*3.9f);
+  wheel_rpm[3] = (- vx/sqrt(2) + vy/sqrt(2) + vw*3.9f);
+	
+		  for (uint8_t i = 0; i < 4; i++)//找到最大的速度
+    {
+      if (abs(wheel_rpm[i]) > max)
+        max = abs(wheel_rpm[i]);
+    }
+  if (max > MAX_WHEEL_RPM)
+    {
+      float rate = MAX_WHEEL_RPM / max;
+      for (uint8_t i = 0; i < 4; i++)
+        wheel_rpm[i] *= rate;
+    }
+  memcpy(speed, wheel_rpm, 4*sizeof(int16_t));//内存拷贝函数，rpm一分钟旋转量
+		
+}
+void omni_calc2(float vx,float vy,float vw,int16_t *speed)
+{
+		int16_t wheel_rpm[4];
+		float   max = 0;
+		wheel_rpm[0] = (-vx + vw*3.9f);//3.9f后面根据底盘半径改参
+		wheel_rpm[1] = (-vy + vw*3.9f);
+		wheel_rpm[2] = (+vx + vw*3.9f);
+		wheel_rpm[3] = (+vy + vw*3.9f);
+		
+		  for (uint8_t i = 0; i < 4; i++)//找到最大的速度
+    {
+      if (abs(wheel_rpm[i]) > max)
+        max = abs(wheel_rpm[i]);
+    }
+  if (max > MAX_WHEEL_RPM)
+    {
+      float rate = MAX_WHEEL_RPM / max;
+      for (uint8_t i = 0; i < 4; i++)
+        wheel_rpm[i] *= rate;
+    }
+  memcpy(speed, wheel_rpm, 4*sizeof(int16_t));//内存拷贝函数，rpm一分钟旋转量
+		
+}//新舵轮
 #elif CHASSIS_TYPE == 4
 void start_angle_handle()
 {
-	void steering_wheel_calc(double Length,double Weight);
+	steering_wheel_calc(10,10);
 }
+float R,theta;
+float sL,lL,sW,lW;
 void steering_wheel_calc(double Length,double Weight)
 {
-		double R,theta;
+		
 		if(Chassis_angle.get_speedw!=0)
 			R=Chassis_angle.Remote_speed/fabs(Chassis_angle.get_speedw);
 		else
 			R=0;
 
-		float sL,lL,sW,lW;//short_Length,long_Length,short_Width,long_Width
+	//short_Length,long_Length,short_Width,long_Width
 		sL= -Length/2+R*sinf(theta);
 		lL=  Length/2+R*sinf(theta);
 		sW=	-Weight/2+R*cosf(theta);
@@ -734,119 +793,93 @@ void steering_wheel_calc(double Length,double Weight)
 		
 	//transition1是各轮同圆半径Ri，transition2是各轮偏航角Ai 
 	//0左前轮 1左后轮 2右后轮 3右前轮 日
-			theta =Chassis_angle.Remote_angle;
-			if(Chassis_angle.Remote_angle>(PI/2)&&Chassis_angle.Remote_angle<PI)
+	//遥控角归于第一象限
+			theta = Chassis_angle.Remote_angle-Chassis_angle.yaw_angle_0_2pi;
+			if(Chassis_angle.Remote_angle>=(PI/2)&&Chassis_angle.Remote_angle<PI)
 			theta-=PI/2;
-			else if(Chassis_angle.Remote_angle>PI&&Chassis_angle.Remote_angle<(3*PI/2))
+			else if(Chassis_angle.Remote_angle>=PI&&Chassis_angle.Remote_angle<(3*PI/2))
 			theta-=PI;
-			else if(Chassis_angle.Remote_angle>(3*PI/2)&&Chassis_angle.Remote_angle<(2*PI))
+			else if(Chassis_angle.Remote_angle>=(3*PI/2)&&Chassis_angle.Remote_angle<(2*PI))
 			theta-=3*PI/2;//边界条件记得处理
 			
-			if(Chassis_angle.get_speedw>=0)
-		{	
-			//第一象限
-			transition1[0]=sqrt(lW*lW+lL*lL);
-			transition1[1]=sqrt(sW*sW+lL*lL);
-			transition1[2]=sqrt(sW*sW+sL*sL);
-			transition1[3]=sqrt(lW*lW+sL*sL);
+//		if(Chassis_angle.get_speedw>=0) //舵轮底盘顺正
+//		{	
+			//角在第一象限
 		
-			transition2[0]=atan2(lL,lW);
-			transition2[1]=atan2(lL,sW);
-			transition2[2]=atan2(sL,sW);
-			transition2[3]=atan2(sL,lW);
+			transition1[1]=sqrt(lW*lW+lL*lL);
+			transition1[2]=sqrt(sW*sW+lL*lL);
+			transition1[3]=sqrt(sW*sW+sL*sL);
+			transition1[0]=sqrt(lW*lW+sL*sL);
+		
+			transition2[1]=atan2(lL,lW);
+			transition2[2]=atan2(lL,sW);
+			transition2[3]=atan2(sL,sW);
+			transition2[0]=atan2(sL,lW);
 			
+//			if(sW<0)transition2[1]+=PI;
+//			if(sW<0)transition2[2]+=PI;
       
-			if(Chassis_angle.Remote_angle>(PI/2)&&Chassis_angle.Remote_angle<PI)
+			if(Chassis_angle.Remote_angle>=(PI/2)&&Chassis_angle.Remote_angle<PI)
 			{		
 				
-			retransition1[0]=transition1[3];
-			retransition1[1]=transition1[0];
-			retransition1[2]=transition1[1];
-			retransition1[3]=transition1[2];
-			
-			retransition2[0]=transition2[3];
-			retransition2[1]=transition2[0];
-			retransition2[2]=transition2[1];
-			retransition2[3]=transition2[2];
-			
-			for(int i=0;i<4;i++)
-			{
-				transition1[i]=retransition1[i];
-				transition2[i]=retransition2[i]+PI/2;
-			}						
+				retransition1[0]=transition1[3];
+				retransition1[1]=transition1[0];
+				retransition1[2]=transition1[1];
+				retransition1[3]=transition1[2];
+				
+				retransition2[0]=transition2[3];
+				retransition2[1]=transition2[0];
+				retransition2[2]=transition2[1];
+				retransition2[3]=transition2[2];
+				
+				for(int i=0;i<4;i++)
+				{
+					transition1[i]=retransition1[i];
+					transition2[i]=retransition2[i]+PI/2;
+				}						
 			}
 			
-			if(Chassis_angle.Remote_angle>PI&&Chassis_angle.Remote_angle<(3*PI/2))
+			if(Chassis_angle.Remote_angle>=PI&&Chassis_angle.Remote_angle<(3*PI/2))
 			{		
-			retransition1[0]=transition1[2];
-			retransition1[1]=transition1[3];
-			retransition1[2]=transition1[0];
-			retransition1[3]=transition1[1];
-			
-			retransition2[0]=transition2[2];
-			retransition2[1]=transition2[3];
-			retransition2[2]=transition2[0];
-			retransition2[3]=transition2[1];
-			
-			for(int i=0;i<4;i++)
-			{
-				transition1[i]=retransition1[i];
-				transition2[i]=retransition2[i]-PI;
-			}						
+				retransition1[0]=transition1[2];
+				retransition1[1]=transition1[3];
+				retransition1[2]=transition1[0];
+				retransition1[3]=transition1[1];
+				
+				retransition2[0]=transition2[2];
+				retransition2[1]=transition2[3];
+				retransition2[2]=transition2[0];
+				retransition2[3]=transition2[1];
+				
+				for(int i=0;i<4;i++)
+				{
+					transition1[i]=retransition1[i];
+					transition2[i]=retransition2[i]+PI;
+				}						
 			}
 			
-			if(Chassis_angle.Remote_angle>(3*PI/2)&&Chassis_angle.Remote_angle<(2*PI))
+			if(Chassis_angle.Remote_angle>=(3*PI/2)&&Chassis_angle.Remote_angle<(2*PI))
 			{		
-			retransition1[0]=transition1[1];
-			retransition1[1]=transition1[2];
-			retransition1[2]=transition1[3];
-			retransition1[3]=transition1[0];
-			
-			retransition2[0]=transition2[1];
-			retransition2[1]=transition2[2];
-			retransition2[2]=transition2[3];
-			retransition2[3]=transition2[0];
-			
-			for(int i=0;i<4;i++)
-			{
-				transition1[i]=retransition1[i];
-				transition2[i]=retransition2[i]-PI/2;
-			}						
+				retransition1[0]=transition1[1];
+				retransition1[1]=transition1[2];
+				retransition1[2]=transition1[3];
+				retransition1[3]=transition1[0];
+				
+				retransition2[0]=transition2[1];
+				retransition2[1]=transition2[2];
+				retransition2[2]=transition2[3];
+				retransition2[3]=transition2[0];
+				
+				for(int i=0;i<4;i++)
+				{
+					transition1[i]=retransition1[i];
+					transition2[i]=retransition2[i]+3*PI/2;
+				}						
 			}
-		}
+//		}
 		
 		 if(Chassis_angle.get_speedw<0)
 		{
-			transition1[0]=sqrt(sW*sW+sL*sL);
-			transition1[1]=sqrt(lW*lW+sL*sL);
-			transition1[2]=sqrt(lW*lW+lL*lL);
-			transition1[3]=sqrt(sW*sW+lL*lL);
-		
-			transition2[0]=atan2(sL,sW);
-			transition2[1]=atan2(sL,lW);
-			transition2[2]=atan2(lL,lW);
-			transition2[3]=atan2(lL,sW);
-		
-			if(Chassis_angle.Remote_angle>(PI/2)&&Chassis_angle.Remote_angle<PI)
-			{		
-			retransition1[0]=transition1[3];
-			retransition1[1]=transition1[0];
-			retransition1[2]=transition1[1];
-			retransition1[3]=transition1[2];
-			
-			retransition2[0]=transition2[3];
-			retransition2[1]=transition2[0];
-			retransition2[2]=transition2[1];
-			retransition2[3]=transition2[2];
-			
-			for(int i=0;i<4;i++)
-			{
-			transition1[i]=retransition1[i];
-			transition2[i]=retransition2[i]+PI/2;
-			}						
-			}
-			else if(Chassis_angle.Remote_angle>PI&&Chassis_angle.Remote_angle<(3*PI/2))
-			{
 			retransition1[0]=transition1[2];
 			retransition1[1]=transition1[3];
 			retransition1[2]=transition1[0];
@@ -856,41 +889,22 @@ void steering_wheel_calc(double Length,double Weight)
 			retransition2[1]=transition2[3];
 			retransition2[2]=transition2[0];
 			retransition2[3]=transition2[1];
-			
-			for(int i=0;i<4;i++)
-			{
-				transition1[i]=retransition1[i];
-				transition2[i]=retransition2[i]-PI;
-			}
-			}			
-			else if(Chassis_angle.Remote_angle>PI&&Chassis_angle.Remote_angle<(3*PI/2))
-			{
-			retransition1[0]=transition1[1];
-			retransition1[1]=transition1[2];
-			retransition1[2]=transition1[3];
-			retransition1[3]=transition1[0];
-			
-			retransition2[0]=transition2[1];
-			retransition2[1]=transition2[2];
-			retransition2[2]=transition2[3];
-			retransition2[3]=transition2[0];
-			
-			for(int i=0;i<4;i++)
-			{
-				transition1[i]=retransition1[i];
-				transition2[i]=retransition2[i]-PI/2;
-			}
-			}			
-		}
 		
-		if(Chassis_angle.get_speedw==0&&(chassis.vx!=0||chassis.vy!=0))
-		{	
-			
+			for(int i=0;i<4;i++)
+			{
+				transition1[i]=-retransition1[i];
+				transition2[i]=retransition2[i];
+			}		
+		}
+
+		
+		 if(Chassis_angle.get_speedw==0&&(chassis.vx!=0||chassis.vy!=0))
+		{			
 			transition1[0]=1;
 			transition1[1]=1;
 			transition1[2]=1;
 			transition1[3]=1;
-			
+
 			transition2[0]=Chassis_angle.yaw_angle__pi_pi;
 			transition2[1]=Chassis_angle.yaw_angle__pi_pi;
 			transition2[2]=Chassis_angle.yaw_angle__pi_pi;
@@ -899,8 +913,11 @@ void steering_wheel_calc(double Length,double Weight)
 		
 		for(int i=0;i<4;i++)
 		{
-			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw;
-		  Chassis_angle.deviation_angle[i]  = transition2[i]*RAD_TO_ANGLE;
+			if(transition2[i]>=PI)
+			{transition2[i]-=(2*PI);}
+			
+			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.2;
+		  Chassis_angle.deviation_angle[i] = transition2[i]*RAD_TO_ANGLE;		
 		}
 }
 #endif
@@ -914,7 +931,7 @@ void steering_wheel_calc(double Length,double Weight)
 							6020功率的处理可能不完善（l）
 ************************************************************************************************************************
 **///舵轮
-#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
+#if CHASSIS_TYPE == 1
 void start_chassis_6020()
 {		
 	for(int i=0;i<4;i++)
@@ -965,16 +982,16 @@ void start_chassis_6020()
 
 	for(int i=0;i<4;i++)
 	{
-	if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90)
-	{	  
-		chassis.cha_pid_6020.angle_ref[i]-=180;
-		Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
-	}
-	else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-90)
-	{
-		chassis.cha_pid_6020.angle_ref[i]+=180;
-		Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
-	}
+		if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90)
+		{	  
+			chassis.cha_pid_6020.angle_ref[i]-=180;
+			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+		}
+		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-90)
+		{
+			chassis.cha_pid_6020.angle_ref[i]+=180;
+			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+		}
 	}
 	
 	for(int i=0;i<4;i++)
@@ -990,10 +1007,81 @@ void start_chassis_6020()
 	}	
 
 }//新舵轮
-//#elif CHASSIS_TYPE == 4
-//void start_chassis_6020()
-//{
-//}	
+#elif CHASSIS_TYPE == 4
+void start_chassis_6020()
+{		
+	for(int i=0;i<4;i++)
+	{
+		chassis.cha_pid_6020.angle_fdb[i]=-steering_wheel_chassis.Heading_Encoder[i].ecd_angle;
+	}
+		
+	if((Chassis_angle.Remote_speed>50)||
+			((Chassis_angle.get_speedw<-5)||
+			 (Chassis_angle.get_speedw> 5)))	
+	{
+		for(int m=0;m<4;m++)
+		{
+			if((steering_wheel_chassis.Heading_Encoder[m].ecd_angle-getnumb[m]*360)>360)
+			{getnumb[m]++;}
+			else if
+			((steering_wheel_chassis.Heading_Encoder[m].ecd_angle-getnumb[m]*360)<0)
+			{getnumb[m]--;}
+		}
+	}
+
+//	if(Chassis_angle.Remote_speed <= 50)//静止时
+//	{
+//		for(int n=0;n<4;n++)
+//		chassis.cha_pid_6020.angle_ref[n] = (getnumb[n])*360+;
+
+//		if(Chassis_angle.get_speedw < 0) //方向反向
+//		{
+//			for(int l=0;l<4;l++)
+//			chassis.cha_pid_6020.angle_ref[l] = chassis.cha_pid_6020.angle_ref[l] - 180;
+//		}	
+//	}
+//	else
+//  	{
+		for(int i=0;i<4;i++)
+		chassis.cha_pid_6020.angle_ref[i] =(Chassis_angle.deviation_angle[i]+getnumb[i]*360);
+//  	}	
+//	
+//	
+		for(int k=0;k<4;k++)
+		Ref_Fdb(chassis.cha_pid_6020.angle_ref[k],chassis.cha_pid_6020.angle_fdb[k]);//最多转劣弧
+
+			Chassis_angle.handle_speed_lim[0] = RIGHT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[0];
+		  Chassis_angle.handle_speed_lim[1] = LEFT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[1];
+			Chassis_angle.handle_speed_lim[2] = LEFT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[2];
+			Chassis_angle.handle_speed_lim[3] = RIGHT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[3];
+
+
+	for(int i=0;i<4;i++)
+	{
+		if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90)
+		{	  
+			chassis.cha_pid_6020.angle_ref[i]-=180;
+			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+		}
+		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-90)
+		{
+			chassis.cha_pid_6020.angle_ref[i]+=180;
+			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+		}
+ 	}
+	
+	for(int i=0;i<4;i++)
+	pid_calc(&pid_cha_6020_angle[i],chassis.cha_pid_6020.angle_fdb[i],chassis .cha_pid_6020.angle_ref[i]);
+
+	if(chassis .ctrl_mode==MANUAL_FOLLOW_GIMBAL||chassis.ctrl_mode==CHASSIS_ROTATE)
+	{
+		for(int j=0;j<4;j++)
+		chassis.cha_pid_6020.speed_fdb[j]=-steering_wheel_chassis.Heading_Encoder[j].filter_rate;
+		
+		for(int i=0;i<4;i++)
+		chassis.cha_pid_6020.speed_ref[i]=pid_cha_6020_angle[i].out;
+	}
+}
 #endif
 /**
 ************************************************************************************************************************
@@ -1049,15 +1137,10 @@ void set_3508current_6020voltage()
 		
 for (int i = 0; i < 4; i++)
     {   
-		if((chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL||chassis.ctrl_mode==CHASSIS_ROTATE)&&run_flag)//
-		{
-			chassis.voltage[i]=1.0f*(int16_t)pid_cha_6020_speed[i].out;
-//			CloseDoor;
-		}
-		else{
-//			OpenDoor;
-			chassis.voltage[i]=0;
-				}
+		if((chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL||chassis.ctrl_mode==CHASSIS_ROTATE))//
+		chassis.voltage[i]=STEERING_POLARITY*1.0f*(int16_t)pid_cha_6020_speed[i].out;	
+		else
+		chassis.voltage[i]=0;
 		}
 }
 //麦轮
@@ -1068,6 +1151,36 @@ void set_3508current_6020voltage()
  for(int i = 0; i < 4; i++)
 		{ 
 		chassis.cha_pid_3508.speed_fdb[i]=Mecanum_chassis.Driving_Encoder[i].filter_rate; 
+		
+		}
+for (int i = 0; i < 4; i++)
+    {   
+    if(chassis.ctrl_mode!=CHASSIS_RELAX)				
+#if POWER_LIMIT_HANDLE 
+		{
+		Chassis_angle.handle_speed_lim[i]=chassis.cha_pid_3508.speed_ref[i];//此处赋值用于功率限制系数运算
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
+		chassis.current[i] = 1.0f * power_limit_rate1*pid_cha_3508_speed[i].out;
+		}
+#else		
+		{
+		pid_calc(&pid_cha_3508_speed[i],chassis.cha_pid_3508.speed_fdb[i],chassis.cha_pid_3508.speed_ref[i]);
+		chassis.current[i] = 1.0f * pid_cha_3508_speed[i].out;	
+		}
+#endif		
+		else
+			{
+			chassis.current[i]=0;
+			}
+		}				
+}//全向轮
+#elif CHASSIS_TYPE == 3
+void set_3508current_6020voltage()
+{
+ 
+ for(int i = 0; i < 4; i++)
+		{ 
+		chassis.cha_pid_3508.speed_fdb[i]=Omni_chassis.Driving_Encoder[i].filter_rate; 
 		
 		}
 for (int i = 0; i < 4; i++)
@@ -1104,7 +1217,7 @@ for (int i = 0; i < 4; i++)
 * @Note     : 10.3 优化了算法更精确更高刷新率
 ************************************************************************************************************************
 **///舵轮
-#if CHASSIS_TYPE == 1
+#if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 4
 void get_remote_set()
 {	
 //逆时针增大！	
@@ -1123,23 +1236,31 @@ void get_remote_set()
 		}
 		else
 		{Chassis_angle.Remote_speed = 0;}
-}//麦轮
+}//麦轮（英雄底盘 单层板）
 #elif CHASSIS_TYPE == 2
 void get_remote_set()
 {	
-		Chassis_angle.yaw_encoder_ecd_angle=yaw_Encoder.ecd_angle;
-		Chassis_angle.yaw_angle_0_2pi=convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
+		Chassis_angle.yaw_encoder_ecd_angle = yaw_Encoder.ecd_angle;
+		Chassis_angle.yaw_angle_0_2pi			  = convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
+
+}//全向轮
+#elif CHASSIS_TYPE == 3
+void get_remote_set()
+{
+  	Chassis_angle.yaw_encoder_ecd_angle = can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
+  	Chassis_angle.yaw_angle_0_2pi       = convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 
 }//新舵轮
-#elif CHASSIS_TYPE == 4
-void get_remote_set()
-{	
-		Chassis_angle.yaw_encoder_ecd_angle=can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
-		Chassis_angle.yaw_angle_0_2pi      =convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
-	
-		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
-		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
-}
+//#elif CHASSIS_TYPE == 4
+//void get_remote_set()
+//{	
+//		Chassis_angle.yaw_encoder_ecd_angle=can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
+//		Chassis_angle.yaw_angle_0_2pi      =convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
+//	
+//	
+//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
+//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
+//}
 #endif
 
 /**
@@ -1154,7 +1275,7 @@ void get_remote_set()
 void chassis_mode_select(void)
 {
 
-#if  CHASSIS_TYPE == 1//上下板舵轮 	
+#if  CHASSIS_TYPE == 1||4//上下板舵轮 	
 	chassis.ctrl_mode=can_chassis_data.chassis_mode;
 	chassis.last_ctrl_mode=can_chassis_data.chassis_mode;
 #endif

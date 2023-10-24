@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 //底盘类型 1舵轮 2麦轮 3全向轮 4新舵轮
 #define CHASSIS_TYPE  4
-#define POWER_LIMIT_HANDLE    1//0不开 1为舵轮 2为英雄(麦轮)
+#define POWER_LIMIT_HANDLE    0//0不开 1为舵轮 2为英雄(麦轮)以及全向轮
 
 /*******************************CONFIG********************************/
 #define STANDARD              3  //参数选择  1英雄 2工程(None) 3456步兵 7烧饼
@@ -15,12 +15,13 @@
 
 
 
-#if     CHASSIS_TYPE == 1 || 4//舵轮
+#if     CHASSIS_TYPE == 1 //舵轮
 #define RIGHT_FRONT_REVERSE    1 
 #define LEFT_FRONT_REVERSE    -1
 #define LEFT_BEHIND_REVERSE    1
 #define RIGHT_BEHIND_REVERSE   1
 #define  WARNING_VOLTAGE       12.5
+#define STEERING_POLARITY      1 //6020电机的输出极性 解算已考虑到 故置1
 
 #elif		CHASSIS_TYPE == 2//麦轮
 #define MAX_WHEEL_RPM 				 7400
@@ -28,9 +29,16 @@
 
 
 #elif   CHASSIS_TYPE == 3//全向轮
+#define MAX_WHEEL_RPM 				 7400
+#define  WARNING_VOLTAGE       12.5
 
 #elif   CHASSIS_TYPE == 4//新舵轮
+#define RIGHT_FRONT_REVERSE   1 
+#define LEFT_FRONT_REVERSE    1
+#define LEFT_BEHIND_REVERSE   1
+#define RIGHT_BEHIND_REVERSE  1
 #define  WARNING_VOLTAGE       12.5
+#define STEERING_POLARITY      -1 //6020电机的输出极性 解算已考虑到 故置1
 #endif
 /*******************************CONFIG********************************/
 
@@ -266,7 +274,8 @@ void buffer_power(void);
 float get_max_power(float voltage);
 void steering_wheel_calc(double Length,double Weight); 
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
-
+void omni_calc1(float vx,float vy,float vw,int16_t *speed);
+void omni_calc2(float vx,float vy,float vw,int16_t *speed);
 
 
 

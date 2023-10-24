@@ -8,10 +8,10 @@
 #define  GMYawEncoder_Offset   6013
 //底盘航向轴电机初始位置
 //电机倒放，顺时针为正
-#define  GM1Encoder_Offset   1370-1024
-#define  GM2Encoder_Offset   1298+1024
-#define  GM3Encoder_Offset   1231-1024
-#define  GM4Encoder_Offset   3964+1024
+#define  GM1Encoder_Offset   3449////1370-1024//
+#define  GM2Encoder_Offset   3483////1298+1024//
+#define  GM3Encoder_Offset   7347////1231-1024//
+#define  GM4Encoder_Offset   5893////3964+1024//
 
 
 #ifndef STRUCT_MOTOR
@@ -84,6 +84,10 @@ typedef struct
 	volatile Encoder Driving_Encoder[4];
 }Mecanum_wheel_t;
 
+typedef struct
+{
+	volatile Encoder Driving_Encoder[4];
+}Omni_wheel_t;
 /***************************general friction encoder********************************************/
 typedef struct 
 {
@@ -119,6 +123,7 @@ extern general_gyro_t gimbal_gyro;
 extern general_gyro_t chassis_gyro;
 extern steering_wheel_t steering_wheel_chassis;
 extern Mecanum_wheel_t Mecanum_chassis;
+extern Omni_wheel_t    Omni_chassis;
 extern volatile Encoder Pitch_Encoder;
 extern volatile Encoder yaw_Encoder;
 extern hero_small_gimbal_t hero_small_gimbal;

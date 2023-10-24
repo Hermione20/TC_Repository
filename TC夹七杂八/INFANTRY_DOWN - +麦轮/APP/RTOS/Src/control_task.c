@@ -25,7 +25,7 @@ void control_task(void)
 		Set_GM6020_IQ1(CAN2,chassis.voltage[0],chassis.voltage[1],chassis.voltage[2],chassis.voltage[3]);
 	}
 	
-	if(time_tick%8==0)
+	if(time_tick%20==0)
 	{
 		Set_C620andC610_IQ1(CAN2,chassis.current[0],chassis.current[1],chassis.current[2],chassis.current[3]);
 	}
