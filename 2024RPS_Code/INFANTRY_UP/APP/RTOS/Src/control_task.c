@@ -8,8 +8,8 @@ void control_task(void)
 	time_tick++;
 
 	buff_karman_filter_calc(&buff_kalman_filter,yaw_angle_ref_aim,pit_angle_ref_aim,&new_location.buff_kf_flag);
-	
-	if(time_tick%10==0)
+
+	if(time_tick%2==1)
 	{
 		can_chassis_task(CAN2,chassis.follow_gimbal,
 							chassis.chassis_speed_mode ,
@@ -21,16 +21,12 @@ void control_task(void)
 							judge_rece_mesg.power_heat_data.chassis_power,
 							judge_rece_mesg.power_heat_data.chassis_power_buffer,
 							judge_rece_mesg.game_robot_state.chassis_power_limit);
-	}
-		
+	}	
 	if(time_tick%2 == 0)
 	{
 			gimbal_task();
 			can_bus_send_task();
 	}
-	
-	
-	
 }
 
 void control_task_Init(void)

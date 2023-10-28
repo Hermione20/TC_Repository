@@ -16,7 +16,7 @@
 
 
 #if     CHASSIS_TYPE == 1 //¶æÂÖ
-#define RIGHT_FRONT_REVERSE    1 
+#define RIGHT_FRONT_REVERSE   -1 
 #define LEFT_FRONT_REVERSE    -1
 #define LEFT_BEHIND_REVERSE    1
 #define RIGHT_BEHIND_REVERSE   1
@@ -33,7 +33,7 @@
 #define  WARNING_VOLTAGE       12.5
 
 #elif   CHASSIS_TYPE == 4//ĞÂ¶æÂÖ
-#define RIGHT_FRONT_REVERSE   1 
+#define RIGHT_FRONT_REVERSE   -1 
 #define LEFT_FRONT_REVERSE    1
 #define LEFT_BEHIND_REVERSE   1
 #define RIGHT_BEHIND_REVERSE  1
@@ -90,11 +90,11 @@ else if(val>=max)\
 {\
  if((fdb - ref) >= 180)\
 {\
-	ref = ref + 360;\
+	fdb = fdb - 360;\
 }\
  else if((fdb - ref) <= -180)\
 {\
-	ref = ref - 360;\
+	fdb = fdb + 360;\
 }\
 }\
 /**

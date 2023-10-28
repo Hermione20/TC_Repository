@@ -81,6 +81,7 @@ void can_chassis_task(CAN_TypeDef *CANx,
 										uint16_t chassis_power_buffer,
 										u8 chassis_power_limit)
 {
+//	static u8 can_chassis_send_cnt=1;
 	can_chassis_data.if_follow_gim = if_follow_gim;
 	can_chassis_data.speed_mode = speed_mode;
 	can_chassis_data.chassis_mode = chassis_mode;
@@ -93,9 +94,19 @@ void can_chassis_task(CAN_TypeDef *CANx,
 	can_chassis_data.chassis_power_buffer = chassis_power_buffer;
 	can_chassis_data.chassis_power_limit = chassis_power_limit;
 
-	can_chassis_send1(CANx);
-	can_chassis_send2(CANx);
-	can_chassis_send3(CANx);
+//	if(can_chassis_send_cnt==1)
+//	can_chassis_send1(CANx);
+//	else if(can_chassis_send_cnt==2)
+//	can_chassis_send2(CANx);
+//	else if(can_chassis_send_cnt==3)
+//	{
+//		can_chassis_send3(CANx);
+//		can_chassis_send_cnt=0;
+//	}
+//	can_chassis_send_cnt++;
+		can_chassis_send1(CANx);
+		can_chassis_send2(CANx);
+		can_chassis_send3(CANx);
 }
 
 

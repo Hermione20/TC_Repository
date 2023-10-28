@@ -15,7 +15,7 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
 
     
 }
-
+uint16_t cnt[4]=0;
 void Can2ReceiveMsgProcess(CanRxMsg * msg)
 {
 
@@ -40,19 +40,31 @@ void Can2ReceiveMsgProcess(CanRxMsg * msg)
 			break;
 		
 		case GM1Encoder_MOTOR:
+		{
+			cnt[0]++;
 			GM6020EncoderTask(&steering_wheel_chassis.Heading_Encoder[0],msg,GM1Encoder_Offset);
+		}
 			break;
 		
 		case GM2Encoder_MOTOR:
+		{
+			cnt[1]++;
 			GM6020EncoderTask(&steering_wheel_chassis.Heading_Encoder[1],msg,GM2Encoder_Offset);
+		}
 			break;
 		
 		case GM3Encoder_MOTOR:
+		{
+			cnt[2]++;
 			GM6020EncoderTask(&steering_wheel_chassis.Heading_Encoder[2],msg,GM3Encoder_Offset);
+		}
 			break;
 		
 		case GM4Encoder_MOTOR:
+		{
+			cnt[3]++;
 			GM6020EncoderTask(&steering_wheel_chassis.Heading_Encoder[3],msg,GM4Encoder_Offset);
+		}
 			break;
 		
     default:

@@ -440,21 +440,6 @@
               <FilePath>..\EMBEDDED\senior_struct\senior.c</FilePath>
             </File>
             <File>
-              <FileName>protobuf-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\protobuf-c.c</FilePath>
-            </File>
-            <File>
-              <FileName>Recieve.pb-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Recieve.pb-c.c</FilePath>
-            </File>
-            <File>
-              <FileName>Send.pb-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Send.pb-c.c</FilePath>
-            </File>
-            <File>
               <FileName>CanBus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EMBEDDED\CAN_BUS\CanBus.c</FilePath>
@@ -500,14 +485,29 @@
               <FilePath>..\EMBEDDED\senior\PM01\PM01.c</FilePath>
             </File>
             <File>
+              <FileName>can_chassis_transmit.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.c</FilePath>
+            </File>
+            <File>
               <FileName>REMOTE.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EMBEDDED\senior\REMOTE\REMOTE.c</FilePath>
             </File>
             <File>
-              <FileName>can_chassis_transmit.c</FileName>
+              <FileName>Send.pb-c.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.c</FilePath>
+              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Send.pb-c.c</FilePath>
+            </File>
+            <File>
+              <FileName>Recieve.pb-c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Recieve.pb-c.c</FilePath>
+            </File>
+            <File>
+              <FileName>protobuf-c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\protobuf-c.c</FilePath>
             </File>
           </Files>
         </Group>

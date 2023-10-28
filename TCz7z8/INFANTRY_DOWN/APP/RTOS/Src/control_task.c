@@ -7,10 +7,9 @@ void control_task(void)
 {
 	time_tick++;
 
-	if(time_tick%8 == 0)
+	if(time_tick%2 == 0)
 	{
 		chassis_task();
-
 	}	
 	else if(time_tick%10==9)
 	{
@@ -20,12 +19,12 @@ void control_task(void)
 		power_send_handle2(CAN1);
 	
 
-	if(time_tick%2 == 0)
+	if(time_tick%3 == 0)
 	{
 		Set_GM6020_IQ1(CAN2,chassis.voltage[0],chassis.voltage[1],chassis.voltage[2],chassis.voltage[3]);
 	}
 	
-	if(time_tick%20==0)
+	if(time_tick%4==0)
 	{
 		Set_C620andC610_IQ1(CAN2,chassis.current[0],chassis.current[1],chassis.current[2],chassis.current[3]);
 	}

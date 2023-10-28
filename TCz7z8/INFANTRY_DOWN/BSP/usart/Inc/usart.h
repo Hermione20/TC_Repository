@@ -46,6 +46,12 @@
 //	static uint8_t _USART6_DMA_RX_BUF[USART6_RX_BUF_LENGTH];
 //	static uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
 //	static uint8_t UART5_DMA_TX_BUF[UART5_TX_BUF_LENGTH];
+//  this_time_rx_len1 //usart1
+//	this_time_rx_len2 //usart2
+//  length //uart4
+//  this_time_rx_len5 //usart5
+//  this_time_rx_len6 //usart6
+
 #define UART4_RX_BUF_LENGTH       100
 
 #define BSP_USART1_DMA_RX_BUF_LEN 64u 

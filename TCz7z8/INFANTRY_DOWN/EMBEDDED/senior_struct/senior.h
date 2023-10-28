@@ -9,7 +9,7 @@
 //底盘航向轴电机初始位置
 //电机倒放，顺时针为正
 #define  GM1Encoder_Offset   3449////1370-1024//
-#define  GM2Encoder_Offset   3483////1298+1024//
+#define  GM2Encoder_Offset   3290////1298+1024//
 #define  GM3Encoder_Offset   7347////1231-1024//
 #define  GM4Encoder_Offset   5893////3964+1024//
 

@@ -18,10 +18,10 @@
 Chassis_angle_t 	 Chassis_angle;
 chassis_t 		 		 chassis;
 
+float R,theta;
 int   yaw_num_get,run_flag;
 double yaw_ecd_angle;
 int16_t vx,vy;
-u8 chassis_rotate_flag;
 int getnumb[4];
 
 float transition1[4];
@@ -66,9 +66,7 @@ void chassis_param_init()//底盘参数初始化
   chassis.last_ctrl_mode = CHASSIS_RELAX;
 	
   chassis.position_ref = 0;
-  chassis_rotate_flag = 0;
- 
-	  
+
 		PID_struct_init(&pid_cha_6020_angle[0], POSITION_PID, 8000, 10, 8,0.1f,5);//24, 0.2f,20);
   	PID_struct_init(&pid_cha_6020_speed[0], POSITION_PID, 15000, 500, 210,0.1f,10);//38,0.5f,20);
 	
@@ -93,7 +91,7 @@ void chassis_param_init()//底盘参数初始化
     {
       PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,15000, 15000,24,0.3, 10); //24 0.3 10    38.0f,3.0f, 40
     }
-  PID_struct_init(&pid_chassis_angle, POSITION_PID, 500, 0, 300,0,500);//xisanhao
+  PID_struct_init(&pid_chassis_angle, POSITION_PID, 500, 10, 110,0.05,50);//xisanhao
 #elif STANDARD == 4
   for (int k = 0; k < 4; k++)
     {
@@ -515,7 +513,8 @@ void follow_gimbal_handle(void)
 
 	 chassis.vy = can_chassis_data.y;
    chassis.vx = can_chassis_data.x;
-   Chassis_angle.get_speedw = -pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi,0); 
+   Chassis_angle.get_speedw = -pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi,0);
+
 }
 #endif
 
@@ -542,7 +541,11 @@ void separate_gimbal_handle(void)
 #if CHASSIS_TYPE == 1 || CHASSIS_TYPE == 3 || CHASSIS_TYPE == 4
 void rotate_follow_gimbal_handle(void)
 {
-
+		if(Chassis_angle.yaw_angle_0_2pi>=PI)
+		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi-(2*PI);}
+		else
+		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
+	
 		if(can_chassis_data.speed_mode==1)
 		{
 			gyro_speed=550;
@@ -554,7 +557,7 @@ void rotate_follow_gimbal_handle(void)
 
   chassis.vy = can_chassis_data.y;
   chassis.vx = can_chassis_data.x;
-
+		
 if(chassis.last_ctrl_mode!=CHASSIS_ROTATE)
 {
 	if(get_speedw_flag==0)
@@ -771,11 +774,12 @@ void omni_calc2(float vx,float vy,float vw,int16_t *speed)
 		
 }//新舵轮
 #elif CHASSIS_TYPE == 4
+double K_Helm=1.1;
 void start_angle_handle()
 {
-	steering_wheel_calc(10,10);
+	steering_wheel_calc(10*K_Helm,10*K_Helm);
 }
-float R,theta;
+
 float sL,lL,sW,lW;
 void steering_wheel_calc(double Length,double Weight)
 {
@@ -786,6 +790,7 @@ void steering_wheel_calc(double Length,double Weight)
 			R=0;
 
 	//short_Length,long_Length,short_Width,long_Width
+
 		sL= -Length/2+R*sinf(theta);
 		lL=  Length/2+R*sinf(theta);
 		sW=	-Weight/2+R*cosf(theta);
@@ -794,7 +799,11 @@ void steering_wheel_calc(double Length,double Weight)
 	//transition1是各轮同圆半径Ri，transition2是各轮偏航角Ai 
 	//0左前轮 1左后轮 2右后轮 3右前轮 日
 	//遥控角归于第一象限
+		if(chassis.ctrl_mode==CHASSIS_ROTATE)
+			theta = Chassis_angle.Remote_angle-Chassis_angle.yaw_angle_0_2pi-PI/8;//2*PI/17;
+		else
 			theta = Chassis_angle.Remote_angle-Chassis_angle.yaw_angle_0_2pi;
+		
 			if(Chassis_angle.Remote_angle>=(PI/2)&&Chassis_angle.Remote_angle<PI)
 			theta-=PI/2;
 			else if(Chassis_angle.Remote_angle>=PI&&Chassis_angle.Remote_angle<(3*PI/2))
@@ -802,8 +811,7 @@ void steering_wheel_calc(double Length,double Weight)
 			else if(Chassis_angle.Remote_angle>=(3*PI/2)&&Chassis_angle.Remote_angle<(2*PI))
 			theta-=3*PI/2;//边界条件记得处理
 			
-//		if(Chassis_angle.get_speedw>=0) //舵轮底盘顺正
-//		{	
+			//舵轮底盘顺正
 			//角在第一象限
 		
 			transition1[1]=sqrt(lW*lW+lL*lL);
@@ -812,16 +820,12 @@ void steering_wheel_calc(double Length,double Weight)
 			transition1[0]=sqrt(lW*lW+sL*sL);
 		
 			transition2[1]=atan2(lL,lW);
-			transition2[2]=atan2(lL,sW);
+			transition2[2]=atan2(lL,sW);		
 			transition2[3]=atan2(sL,sW);
 			transition2[0]=atan2(sL,lW);
-			
-//			if(sW<0)transition2[1]+=PI;
-//			if(sW<0)transition2[2]+=PI;
-      
+
 			if(Chassis_angle.Remote_angle>=(PI/2)&&Chassis_angle.Remote_angle<PI)
-			{		
-				
+			{					
 				retransition1[0]=transition1[3];
 				retransition1[1]=transition1[0];
 				retransition1[2]=transition1[1];
@@ -876,9 +880,8 @@ void steering_wheel_calc(double Length,double Weight)
 					transition2[i]=retransition2[i]+3*PI/2;
 				}						
 			}
-//		}
-		
-		 if(Chassis_angle.get_speedw<0)
+					
+		 if(Chassis_angle.get_speedw<0)//反向情况
 		{
 			retransition1[0]=transition1[2];
 			retransition1[1]=transition1[3];
@@ -913,10 +916,7 @@ void steering_wheel_calc(double Length,double Weight)
 		
 		for(int i=0;i<4;i++)
 		{
-			if(transition2[i]>=PI)
-			{transition2[i]-=(2*PI);}
-			
-			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.2;
+			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.22;
 		  Chassis_angle.deviation_angle[i] = transition2[i]*RAD_TO_ANGLE;		
 		}
 }
@@ -958,7 +958,7 @@ void start_chassis_6020()
 		for(int n=0;n<4;n++)
 		chassis.cha_pid_6020.angle_ref[n] = (getnumb[n])*360;
 
-		if(Chassis_angle.get_speedw < 0) //方向反向
+		if(Chassis_angle.get_speedw < 0)//方向反向
 		{
 			for(int l=0;l<4;l++)
 			chassis.cha_pid_6020.angle_ref[l] = chassis.cha_pid_6020.angle_ref[l] - 180;
@@ -970,7 +970,6 @@ void start_chassis_6020()
 		chassis.cha_pid_6020.angle_ref[i] = Chassis_angle.deviation_angle[i] * RAD_TO_ANGLE + (getnumb[i])*360;
 	}	
 	
-	
 		for(int k=0;k<4;k++)
 		Ref_Fdb(chassis.cha_pid_6020.angle_ref[k],chassis.cha_pid_6020.angle_fdb[k]);//最多转劣弧
 
@@ -978,7 +977,6 @@ void start_chassis_6020()
 		  Chassis_angle.handle_speed_lim[1] = LEFT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[1];
 			Chassis_angle.handle_speed_lim[2] = LEFT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[2];
 			Chassis_angle.handle_speed_lim[3] = RIGHT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[3];
-
 
 	for(int i=0;i<4;i++)
 	{
@@ -1010,63 +1008,40 @@ void start_chassis_6020()
 #elif CHASSIS_TYPE == 4
 void start_chassis_6020()
 {		
-	for(int i=0;i<4;i++)
-	{
-		chassis.cha_pid_6020.angle_fdb[i]=-steering_wheel_chassis.Heading_Encoder[i].ecd_angle;
-	}
-		
-	if((Chassis_angle.Remote_speed>50)||
-			((Chassis_angle.get_speedw<-5)||
-			 (Chassis_angle.get_speedw> 5)))	
-	{
-		for(int m=0;m<4;m++)
-		{
-			if((steering_wheel_chassis.Heading_Encoder[m].ecd_angle-getnumb[m]*360)>360)
-			{getnumb[m]++;}
-			else if
-			((steering_wheel_chassis.Heading_Encoder[m].ecd_angle-getnumb[m]*360)<0)
-			{getnumb[m]--;}
-		}
-	}
-
-//	if(Chassis_angle.Remote_speed <= 50)//静止时
-//	{
-//		for(int n=0;n<4;n++)
-//		chassis.cha_pid_6020.angle_ref[n] = (getnumb[n])*360+;
-
-//		if(Chassis_angle.get_speedw < 0) //方向反向
-//		{
-//			for(int l=0;l<4;l++)
-//			chassis.cha_pid_6020.angle_ref[l] = chassis.cha_pid_6020.angle_ref[l] - 180;
-//		}	
-//	}
-//	else
-//  	{
+		int static K_A[4]={0};
+		int static K_S[4]={1,1,1,1};
 		for(int i=0;i<4;i++)
-		chassis.cha_pid_6020.angle_ref[i] =(Chassis_angle.deviation_angle[i]+getnumb[i]*360);
-//  	}	
-//	
-//	
-		for(int k=0;k<4;k++)
-		Ref_Fdb(chassis.cha_pid_6020.angle_ref[k],chassis.cha_pid_6020.angle_fdb[k]);//最多转劣弧
-
-			Chassis_angle.handle_speed_lim[0] = RIGHT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[0];
-		  Chassis_angle.handle_speed_lim[1] = LEFT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[1];
-			Chassis_angle.handle_speed_lim[2] = LEFT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[2];
-			Chassis_angle.handle_speed_lim[3] = RIGHT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[3];
-
+	{
+		chassis.cha_pid_6020.angle_fdb[i] =-steering_wheel_chassis.Heading_Encoder[i].ecd_angle;
+	
+		chassis.cha_pid_6020.angle_ref[i] =Chassis_angle.deviation_angle[i]+K_A[i]*180;
+		
+		Chassis_angle.handle_speed_lim[i] =K_S[i]*Chassis_angle.handle_speed_lim[i];
+	}
+		Chassis_angle.handle_speed_lim[0] = RIGHT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[0];
+		Chassis_angle.handle_speed_lim[1] = LEFT_FRONT_REVERSE*Chassis_angle.handle_speed_lim[1];
+		Chassis_angle.handle_speed_lim[2] = LEFT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[2];
+		Chassis_angle.handle_speed_lim[3] = RIGHT_BEHIND_REVERSE*Chassis_angle.handle_speed_lim[3];
 
 	for(int i=0;i<4;i++)
 	{
-		if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90)
+		if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>90&&(chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<270)
 		{	  
-			chassis.cha_pid_6020.angle_ref[i]-=180;
-			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+			K_A[i]-=1;
+			K_S[i]=-K_S[i];
 		}
-		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-90)
+		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>270)
 		{
-			chassis.cha_pid_6020.angle_ref[i]+=180;
-			Chassis_angle.handle_speed_lim[i] = -Chassis_angle.handle_speed_lim[i];
+			K_A[i]-=2;
+		}
+		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-90&&(chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])>-270)
+		{
+			K_A[i]+=1;
+			K_S[i]=-K_S[i];
+		}
+		else if((chassis.cha_pid_6020.angle_ref[i]-chassis.cha_pid_6020.angle_fdb[i])<-270)
+		{
+			K_A[i]+=2;
 		}
  	}
 	
