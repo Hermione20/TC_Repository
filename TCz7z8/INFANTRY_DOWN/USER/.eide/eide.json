@@ -1,0 +1,415 @@
+{
+  "name": "Template",
+  "type": "ARM",
+  "dependenceList": [],
+  "srcDirs": [
+    ".eide/deps"
+  ],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": [
+      {
+        "name": "::CMSIS",
+        "files": [],
+        "folders": []
+      },
+      {
+        "name": "::Compiler",
+        "files": [],
+        "folders": []
+      },
+      {
+        "name": "BAL",
+        "files": [
+          {
+            "path": "../APP/BAL/Src/oldpid.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "BSP",
+        "files": [
+          {
+            "path": "../BSP/can/Src/can.c"
+          },
+          {
+            "path": "../BSP/delay/Src/delay.c"
+          },
+          {
+            "path": "../BSP/sys/Sor/sys.c"
+          },
+          {
+            "path": "../BSP/LED/led.c"
+          },
+          {
+            "path": "../BSP/usart/Src/usart.c"
+          },
+          {
+            "path": "../BSP/timer/Src/timer.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "CORE",
+        "files": [
+          {
+            "path": "../CORE/startup_stm32f40_41xxx.s"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "EMBEDDED",
+        "files": [
+          {
+            "path": "../EMBEDDED/senior_struct/senior.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/Auto_Shoot/proto/protobuf-c.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/Auto_Shoot/proto/Recieve.pb-c.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/Auto_Shoot/proto/Send.pb-c.c"
+          },
+          {
+            "path": "../EMBEDDED/CAN_BUS/CanBus.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/CH100/CH100.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/DJI_MOTOR/DJI_MOTOR.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/HI220/HI220.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/HT430/HT430.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/JUDGE/JUDGE.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/Auto_Shoot/Auto_shoot.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/LK_TECH/LK_TECH.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/PM01/PM01.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/REMOTE/REMOTE.c"
+          },
+          {
+            "path": "../EMBEDDED/senior/CAN_CHASSIS_TRANSMIT/can_chassis_transmit.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "HEADFILE",
+        "files": [
+          {
+            "path": "../HEADFILE/main.h"
+          },
+          {
+            "path": "../HEADFILE/public.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "README",
+        "files": [
+          {
+            "path": "../README/fifo.h"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "RTOS",
+        "files": [
+          {
+            "path": "../APP/RTOS/Src/control_task.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "STLIB",
+        "files": [
+          {
+            "path": "../STLIB/src/misc.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_adc.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_can.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_crc.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_dac.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_dma.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_exti.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_flash.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_gpio.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_i2c.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_iwdg.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_rcc.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_rng.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_spi.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_syscfg.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_tim.c"
+          },
+          {
+            "path": "../STLIB/src/stm32f4xx_usart.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "TASK",
+        "files": [
+          {
+            "path": "../APP/TASK/CHASSIS_TASK/Src/CHASSIS_TASK.c"
+          }
+        ],
+        "folders": []
+      },
+      {
+        "name": "USER",
+        "files": [
+          {
+            "path": "main.c"
+          },
+          {
+            "path": "stm32f4xx_it.c"
+          },
+          {
+            "path": "system_stm32f4xx.c"
+          },
+          {
+            "path": "BSP.c"
+          }
+        ],
+        "folders": []
+      }
+    ]
+  },
+  "outDir": "build",
+  "deviceName": null,
+  "packDir": null,
+  "miscInfo": {
+    "uid": "e6c30c51132c4804dc67ce5b20e9256f"
+  },
+  "targets": {
+    "Template": {
+      "excludeList": [],
+      "toolchain": "AC5",
+      "compileConfig": {
+        "cpuType": "Cortex-M4",
+        "floatingPointHardware": "single",
+        "scatterFilePath": "",
+        "useCustomScatterFile": false,
+        "storageLayout": {
+          "RAM": [
+            {
+              "tag": "RAM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "noInit": false
+            },
+            {
+              "tag": "RAM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "noInit": false
+            },
+            {
+              "tag": "RAM",
+              "id": 3,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "noInit": false
+            },
+            {
+              "tag": "IRAM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x20000000",
+                "size": "0x20000"
+              },
+              "isChecked": true,
+              "noInit": false
+            },
+            {
+              "tag": "IRAM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x10000000",
+                "size": "0x10000"
+              },
+              "isChecked": false,
+              "noInit": false
+            }
+          ],
+          "ROM": [
+            {
+              "tag": "ROM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "isStartup": false
+            },
+            {
+              "tag": "ROM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "isStartup": false
+            },
+            {
+              "tag": "ROM",
+              "id": 3,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "isStartup": false
+            },
+            {
+              "tag": "IROM",
+              "id": 1,
+              "mem": {
+                "startAddr": "0x8000000",
+                "size": "0x100000"
+              },
+              "isChecked": true,
+              "isStartup": true
+            },
+            {
+              "tag": "IROM",
+              "id": 2,
+              "mem": {
+                "startAddr": "0x0",
+                "size": "0x0"
+              },
+              "isChecked": false,
+              "isStartup": false
+            }
+          ]
+        },
+        "options": "null"
+      },
+      "uploader": "JLink",
+      "uploadConfig": {
+        "bin": "",
+        "baseAddr": "",
+        "cpuInfo": {
+          "vendor": "ST",
+          "cpuName": "STM32F405RG"
+        },
+        "proType": 1,
+        "speed": 8000,
+        "otherCmds": ""
+      },
+      "uploadConfigMap": {},
+      "custom_dep": {
+        "name": "default",
+        "incList": [
+          "../CORE",
+          ".",
+          "../README",
+          "../HEADFILE",
+          "../STLIB/inc",
+          "../STLIB/src",
+          "../APP/BAL/Ins",
+          "../APP/RTOS/Ins",
+          "../APP/TASK/CHASSIS_TASK/Inc",
+          "../APP/TASK/GIMBAL_TASK/Ins",
+          "../APP/TASK/SHOOT_TASK/Ins",
+          "../BSP/can/Inc",
+          "../BSP/delay/Inc",
+          "../BSP/usart/Inc",
+          "../BSP/sys/Inc",
+          "../BSP/LED",
+          "../EMBEDDED/CAN_BUS",
+          "../EMBEDDED/senior/Auto_Shoot",
+          "../EMBEDDED/senior/Auto_Shoot/proto",
+          "../EMBEDDED/senior/Auto_Shoot/Protocol",
+          "../EMBEDDED/senior/CH100",
+          "../EMBEDDED/senior/DJI_MOTOR",
+          "../EMBEDDED/senior/HI220",
+          "../EMBEDDED/senior/HT430",
+          "../EMBEDDED/senior/JUDGE",
+          "../EMBEDDED/senior/LK_TECH",
+          "../EMBEDDED/senior/PM01",
+          "../EMBEDDED/senior_struct",
+          "../EMBEDDED/senior/REMOTE",
+          "../BSP/timer/Inc",
+          "../EMBEDDED/senior/CAN_CHASSIS_TRANSMIT",
+          ".cmsis/include",
+          "RTE/_Template",
+          ".eide/deps"
+        ],
+        "libList": [],
+        "sourceDirList": [],
+        "defineList": [
+          "STM32F40_41xxx",
+          "USE_STDPERIPH_DRIVER"
+        ]
+      }
+    }
+  },
+  "version": "3.3"
+}

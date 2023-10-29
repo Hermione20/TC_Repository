@@ -1012,7 +1012,7 @@ void start_chassis_6020()
 		int static K_S[4]={1,1,1,1};
 		for(int i=0;i<4;i++)
 	{
-		chassis.cha_pid_6020.angle_fdb[i] =steering_wheel_chassis.Heading_Encoder[i].ecd_angle*STEERING_POLARITY;
+		chassis.cha_pid_6020.angle_fdb[i] =-steering_wheel_chassis.Heading_Encoder[i].ecd_angle;
 	
 		chassis.cha_pid_6020.angle_ref[i] =Chassis_angle.deviation_angle[i]+K_A[i]*180;
 		
@@ -1092,6 +1092,7 @@ void set_3508current_6020voltage()
 				chassis.current[i] = 1.0f * pid_cha_3508_speed[i].out;		
 		else
 			{
+//			OpenDoor;
 			chassis.current[i]=0;
 			}
 		}			
@@ -1111,12 +1112,13 @@ void set_3508current_6020voltage()
 		
 for (int i = 0; i < 4; i++)
     {   
-		if((chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL||chassis.ctrl_mode==CHASSIS_ROTATE))
-		chassis.voltage[i]=1.0f*(int16_t)pid_cha_6020_speed[i].out*STEERING_POLARITY;	
+		if((chassis.ctrl_mode==MANUAL_FOLLOW_GIMBAL||chassis.ctrl_mode==CHASSIS_ROTATE))//
+		chassis.voltage[i]=STEERING_POLARITY*1.0f*(int16_t)pid_cha_6020_speed[i].out;	
 		else
 		chassis.voltage[i]=0;
 		}
-}//ÂóÂÖ
+}
+//ÂóÂÖ
 #elif CHASSIS_TYPE == 2
 void set_3508current_6020voltage()
  {
@@ -1222,7 +1224,18 @@ void get_remote_set()
 {
   	Chassis_angle.yaw_encoder_ecd_angle = can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
   	Chassis_angle.yaw_angle_0_2pi       = convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
-}
+
+}//ÐÂ¶æÂÖ
+//#elif CHASSIS_TYPE == 4
+//void get_remote_set()
+//{	
+//		Chassis_angle.yaw_encoder_ecd_angle=can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
+//		Chassis_angle.yaw_angle_0_2pi      =convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
+//	
+//	
+//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
+//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
+//}
 #endif
 
 /**

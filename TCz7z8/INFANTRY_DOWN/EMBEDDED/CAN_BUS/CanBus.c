@@ -15,7 +15,7 @@ void Can1ReceiveMsgProcess(CanRxMsg * msg)
 
     
 }
-uint32_t cnt[4]=0;
+uint16_t cnt[4]=0;
 void Can2ReceiveMsgProcess(CanRxMsg * msg)
 {
 
