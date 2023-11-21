@@ -3,33 +3,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "public.h"
-/*----------------------------------------------------------------------------*/
-//µ×ÅÌÀàĞÍ 1¶æÂÖ 2ÂóÂÖ 3È«ÏòÂÖ 4ĞÂ¶æÂÖ
-#define CHASSIS_TYPE  2
-#define POWER_LIMIT_HANDLE    2//0²»¿ª 1Îª¶æÂÖ 2ÎªÓ¢ĞÛ(ÂóÂÖ)
 
-/*******************************CONFIG********************************/
-#define STANDARD              1
-#define YAW_POLARITY 					1 //ÄæÕı   ¶æÂÖÒªË³Õı£¬¸Ä-1£»ÂóÂÖ1
-
-
-
-
-
-#if     CHASSIS_TYPE == 1//¶æÂÖ
-#define RIGHT_FRONT_REVERSE    1
-#define LEFT_FRONT_REVERSE    -1
-#define LEFT_BEHIND_REVERSE    1
-#define RIGHT_BEHIND_REVERSE   1
-
-
-#elif		CHASSIS_TYPE == 2//ÂóÂÖ
-#define MAX_WHEEL_RPM 					  7400
-
-
-
-#elif   CHASSIS_TYPE == 3//È«ÏòÂÖ
-#endif
 /*******************************CONFIG********************************/
 
 
@@ -42,7 +16,7 @@
 #define FACTOR_0  0.458f
 //#define TOTATE_PARA    PI/180.0f
 
-#define  WARNING_VOLTAGE       13//²½±ø12.5
+
 
 #define  TARGET_VOLTAGE        12
 
@@ -80,11 +54,11 @@ else if(val>=max)\
 {\
  if((fdb - ref) >= 180)\
 {\
-	ref = ref + 360;\
+	fdb = fdb - 360;\
 }\
  else if((fdb - ref) <= -180)\
 {\
-	ref = ref - 360;\
+	fdb = fdb + 360;\
 }\
 }\
 /**
@@ -241,7 +215,7 @@ void Motion_resolution(void);
 void Chassis_PID_handle(void);
 void mecanum_calc(float vx, float vy, float vw, int16_t *speed);
 void chassis_param_init(void);
-void  chassis_task(void);
+void chassis_task(void);
 float limit_angle_to_0_2pi(float angle);
 void chassis_stop_handle(void);
 void get_remote_set(void);
@@ -252,7 +226,6 @@ void power_limit_handle(void);
 void set_3508current_6020voltage(void);
 float get_max_power2(float voltage);
 float get_max_power1(float voltage);
-float get_max_power(float voltage);
 static float get_the_limite_rate(float max_power);
 void cap_limit_mode_switch(void);
 void chassis_mode_select(void);
@@ -261,19 +234,23 @@ void follow_gimbal_handle(void);
 void separate_gimbal_handle(void);
 void rotate_follow_gimbal_handle(void);
 void reverse_follow_gimbal_handle(void);
- 
- 
- 
+void buffer_power(void);
+float get_max_power(float voltage);
+void steering_wheel_calc(double Length,double Weight); 
 double convert_ecd_angle_to_0_2pi(double ecd_angle,float _0_2pi_angle);
-
+void omni_calc1(float vx,float vy,float vw,int16_t *speed);
+void omni_calc2(float vx,float vy,float vw,int16_t *speed);
 
 
 
 extern Chassis_angle_t 	 Chassis_angle;
 extern chassis_t 		 		 chassis;
-
-
-
+extern u16 Max_Power;
+extern pid_t pid_cha_6020_angle[4];
+extern pid_t pid_cha_3508_angle[4];
+extern pid_t pid_cha_6020_speed[4];
+extern pid_t pid_cha_3508_speed[4];
+extern pid_t pid_chassis_angle;
 
 #endif
 

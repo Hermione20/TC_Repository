@@ -4,16 +4,12 @@
 
 
 
-#define FRICTION_SPEED_10 2000
-#define FRICTION_SPEED_12 2100
-#define FRICTION_SPEED_14 2575
-#define FRICTION_SPEED_16 3200
 
-#define POKE_SPEED -200			//英雄下拨盘转速
-#define POKE_MAX_OUT 6000		//英雄下拨盘力度限制
-#define ONE_POKE_ANGLE_42 90.0f	//42mm单个弹丸角度
-#define ONE_POKE_ANGLE_17 -30.0f	//17mm单个弹丸角度
-
+ /**
+  ******************************************************************************
+																摩擦轮状态枚举		
+	 =============================================================================
+ **/
 typedef enum
 {
     Stop = 0,
@@ -23,6 +19,12 @@ typedef enum
     LOCK = 4
 } friction_state_t; // 1正常 2堵转
 
+
+ /**
+  ******************************************************************************
+																发射输入输出结构体		
+	 =============================================================================
+ **/
 typedef struct 
 {
    float up_poke_angle_ref;
@@ -45,12 +47,16 @@ typedef struct
    int16_t right_friction_motor_input;
 }shoot_ref_and_fdb_t;
 
-
+ /**
+  ******************************************************************************
+																发射结构体		
+	 =============================================================================
+ **/
 typedef struct
 {
     shoot_ref_and_fdb_t shoot_ref_and_fdb;
     friction_state_t friction_state;
-    u8 shoot_flag;
+    u8 shoot_flag; //开火标志位
 
     pid_t pid_uppoke_angle;
     pid_t pid_uppoke_speed;
