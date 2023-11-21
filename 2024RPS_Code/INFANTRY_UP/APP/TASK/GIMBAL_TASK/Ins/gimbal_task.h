@@ -4,17 +4,6 @@
 
 
 
-#define INFANTRY_PITCH_MAX 35.0f
-#define INFANTRY_PITCH_MIN -25.0f
-
-#define FIGHTER_PITCH_MAX 10.0f
-#define FIGHTER_PITCH_MIN -30.0f
-
-#define SECURITY_PITCH_MAX 35.0f
-#define SECURITY_PITCH_MIN -25.0f
-
-#define HERO_PITCH_MAX 8548
-#define HERO_PITCH_MIN -1963
 /************************buff*****************************/
 //摄像头和枪管中心的距离
 #define HEIGHT_BETWEEN_GUN_CAMERA 	4.89f
@@ -27,27 +16,36 @@
 
 
 
-
+ /**
+  ******************************************************************************
+																云台模式枚举
+	 =============================================================================
+ **/
 typedef enum
 {
-  GIMBAL_RELAX         = 0,
-  GIMBAL_INIT          = 1,
-  GIMBAL_NO_ARTI_INPUT = 2,
-  GIMBAL_FOLLOW_ZGYRO  = 3,
-  GIMBAL_TRACK_ARMOR   = 4,
-  GIMBAL_PATROL_MODE   = 5,
-  GIMBAL_SHOOT_BUFF    = 6,
-  GIMBAL_POSITION_MODE = 7,
-  GIMBAL_AUTO_AIM	   = 8,
-  GIMBAL_AUTO_SUP      = 9,
-  GIMBAL_REVERSE       = 10,
-  GIMBAL_AUTO_SMALL_BUFF   = 11,
-  GIMBAL_AUTO_BIG_BUFF     = 12,
-  GIMBAL_AUTO_ANGLE    = 13,
-  GIMBAL_FOLLOW_CHASSIS=14,
-	GIMBAL_CHANGE_DIRCTION  =15,
+  GIMBAL_RELAX         = 0,			//关控
+  GIMBAL_INIT          = 1,			//初始化
+  GIMBAL_NO_ARTI_INPUT = 2,			//未实际意义
+  GIMBAL_FOLLOW_ZGYRO  = 3,			//跟随陀螺仪
+  GIMBAL_TRACK_ARMOR   = 4,			//未实际意义
+  GIMBAL_PATROL_MODE   = 5,			//未实际意义
+  GIMBAL_SHOOT_BUFF    = 6,			//未实际意义
+  GIMBAL_POSITION_MODE = 7,			//未实际意义
+  GIMBAL_AUTO_AIM	   = 8,				//哨兵自动云台
+  GIMBAL_AUTO_SUP      = 9,			//未实际意义
+  GIMBAL_REVERSE       = 10,		//未实际意义
+  GIMBAL_AUTO_SMALL_BUFF   = 11,//小buff
+  GIMBAL_AUTO_BIG_BUFF     = 12,//大buff
+  GIMBAL_AUTO_ANGLE    = 13,		//英雄吊射
+  GIMBAL_FOLLOW_CHASSIS=14,			//未实际意义
+	GIMBAL_CHANGE_DIRCTION  =15,	//未实际意义
 } gimbal_mode_e;
 
+ /**
+  ******************************************************************************
+										云台输入与反馈结构体（输入，反馈，电机输出）
+	 =============================================================================
+ **/
 typedef struct
 {
   /* position loop */
@@ -65,13 +63,23 @@ typedef struct
   int16_t pitch_motor_input;
 } gim_ref_and_fdb_t;
 
-
+ /**
+  ******************************************************************************
+													云台外部控制信号输入结构体
+	 =============================================================================
+ **/
 typedef struct 
 {
   float pitch_angle_dynamic_ref;
   float yaw_angle_dynamic_ref;
 }gim_dynamic_ref_t;
 
+
+ /**
+  ******************************************************************************
+													云台结构体
+	 =============================================================================
+ **/
 typedef struct
 {
   /* ctrl mode */

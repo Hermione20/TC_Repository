@@ -66,9 +66,9 @@ else if(val>=max)\
 #include "PM01.h"
 #include "can_chassis_transmit.h"
 
-
-
 #include "senior.h"
+
+
 /****************BSP**********************/
 #include "BSP.h"
 #include "can.h"
