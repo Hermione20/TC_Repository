@@ -7,7 +7,6 @@ void control_task(void)
 {
 	time_tick++;
 
-	buff_karman_filter_calc(&buff_kalman_filter,yaw_angle_ref_aim,pit_angle_ref_aim,&new_location.buff_kf_flag);
 
 	if(time_tick%2==1)
 	{
