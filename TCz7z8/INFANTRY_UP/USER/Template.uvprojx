@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F40_41xxx,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\STLIB\inc;..\STLIB\src;..\APP\BAL\Ins;..\APP\RTOS\Ins;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Ins;..\APP\TASK\SHOOT_TASK\Ins;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\BSP\sys\Inc;..\BSP\LED;..\EMBEDDED\CAN_BUS;..\EMBEDDED\senior\Auto_Shoot;..\EMBEDDED\senior\Auto_Shoot\proto;..\EMBEDDED\senior\Auto_Shoot\Protocol;..\EMBEDDED\senior\CH100;..\EMBEDDED\senior\DJI_MOTOR;..\EMBEDDED\senior\HI220;..\EMBEDDED\senior\HT430;..\EMBEDDED\senior\JUDGE;..\EMBEDDED\senior\LK_TECH;..\EMBEDDED\senior\PM01;..\EMBEDDED\senior_struct;..\EMBEDDED\senior\REMOTE;..\APP\TASK\MODE_SWITCH_TASK\Inc;..\BSP\timer\Inc;..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT;..\APP\TASK\SHOOT_TASK\Inc</IncludePath>
+              <IncludePath>..\CORE;..\USER;..\README;..\HEADFILE;..\STLIB\inc;..\STLIB\src;..\APP\BAL\Ins;..\APP\RTOS\Ins;..\APP\TASK\CHASSIS_TASK\Inc;..\APP\TASK\GIMBAL_TASK\Ins;..\APP\TASK\SHOOT_TASK\Ins;..\BSP\can\Inc;..\BSP\delay\Inc;..\BSP\usart\Inc;..\BSP\sys\Inc;..\BSP\LED;..\EMBEDDED\CAN_BUS;..\EMBEDDED\senior\Auto_Shoot;..\EMBEDDED\senior\Auto_Shoot\proto;..\EMBEDDED\senior\Auto_Shoot\Protocol;..\EMBEDDED\senior\CH100;..\EMBEDDED\senior\DJI_MOTOR;..\EMBEDDED\senior\HI220;..\EMBEDDED\senior\HT430;..\EMBEDDED\senior\JUDGE;..\EMBEDDED\senior\LK_TECH;..\EMBEDDED\senior\PM01;..\EMBEDDED\senior_struct;..\EMBEDDED\senior\REMOTE;..\APP\TASK\MODE_SWITCH_TASK\Inc;..\BSP\timer\Inc;..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT;..\APP\TASK\SHOOT_TASK\Inc;..\APP\BAL\Ins</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -415,11 +415,6 @@
           <GroupName>TASK</GroupName>
           <Files>
             <File>
-              <FileName>buff_karman_filter.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\TASK\GIMBAL_TASK\Src\buff_karman_filter.c</FilePath>
-            </File>
-            <File>
               <FileName>gimbal_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\TASK\GIMBAL_TASK\Src\gimbal_task.c</FilePath>
@@ -434,6 +429,16 @@
               <FileType>1</FileType>
               <FilePath>..\APP\TASK\SHOOT_TASK\Src\17mm_shoot_task.c</FilePath>
             </File>
+            <File>
+              <FileName>buff_karman_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\GIMBAL_TASK\Src\buff_karman_filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>yaw_kalman_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\GIMBAL_TASK\Src\yaw_kalman_filter.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -443,6 +448,21 @@
               <FileName>oldpid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\BAL\Src\oldpid.c</FilePath>
+            </File>
+            <File>
+              <FileName>FeedForward_pid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\BAL\Src\FeedForward_pid.c</FilePath>
+            </File>
+            <File>
+              <FileName>fuzzypid.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\BAL\Src\fuzzypid.c</FilePath>
+            </File>
+            <File>
+              <FileName>PSO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\BAL\Src\PSO.c</FilePath>
             </File>
           </Files>
         </Group>

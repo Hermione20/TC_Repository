@@ -101,7 +101,7 @@
         <sRunDeb>0</sRunDeb>
         <sLrtime>1</sLrtime>
         <bEvRecOn>1</bEvRecOn>
-        <nTsel>3</nTsel>
+        <nTsel>2</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -112,13 +112,13 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>Segger\JL2CM3.dll</pMon>
+        <pMon>BIN\CMSIS_AGDI.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>X鬥</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -143,7 +143,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U20090929 -O78 -S1 -ZTIFSpeedSel10000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO19 -TC8000000 -TP21 -TDS1F -TDT0 -TDC1F -TIEFFFFFFFF -TIPE -TB1 -TFE0 -FO15 -FD20000000 -FC800 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F405RGTx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
+          <Name>-U20090928 -O78 -S1 -ZTIFSpeedSel10000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(2BA01477) -L00(0) -TO19 -TC8000000 -TP21 -TDS1F -TDT0 -TDC1F -TIEFFFFFFFF -TIPE -TB1 -TFE0 -FO15 -FD20000000 -FC800 -FN1 -FF0STM32F4xx_1024.FLM -FS08000000 -FL0100000 -FP0($$Device:STM32F405RGTx$CMSIS\Flash\STM32F4xx_1024.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -172,6 +172,11 @@
           <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>\\Template\../APP/TASK/CHASSIS_TASK/Src/CHASSIS_TASK.c\Chassis_angle.deviation_angle,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>capacitance_message,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -202,7 +207,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -301,7 +306,7 @@
 
   <Group>
     <GroupName>RTOS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -361,7 +366,7 @@
 
   <Group>
     <GroupName>EMBEDDED</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

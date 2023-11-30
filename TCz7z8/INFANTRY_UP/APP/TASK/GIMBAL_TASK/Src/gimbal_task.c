@@ -4,6 +4,8 @@
 #define STANDARD 3
 
 gimbal_t gimbal_data;
+Feedforward_pid_t FF_yaw;
+
 float pitch_min = 0;
 float pitch_max = 0;
 
@@ -200,6 +202,8 @@ void gimbal_parameter_Init(void)
 
     /*******************************pid_Init*********************************/
 #if STANDARD == 1
+	
+		Feedforward_pid_init(&FF_yaw,10,20,2000);
     // 初始化下的参数
     PID_struct_init(&gimbal_data.pid_init_pit_Angle, POSITION_PID, 1000, 10, 
                     -20,-0.1,-10);		//MF5015+滚珠丝杆
@@ -251,7 +255,7 @@ void gimbal_parameter_Init(void)
                     170, 0.001, 60); //170, 0.001f, 60
     //------------------------------------------------
     PID_struct_init(&gimbal_data.pid_init_yaw_Angle, POSITION_PID, 500, 4,
-                    7, 0.15f, 8); 
+                    15, 0.15f, 8); 
     PID_struct_init(&gimbal_data.pid_init_yaw_speed, POSITION_PID, 29000, 10000,
                     150, 0.8f, 40); 
 
@@ -295,6 +299,8 @@ void gimbal_parameter_Init(void)
                     20.0f, 0.2f, 2); 
     PID_struct_init(&gimbal_data.pid_yaw_speed_big_buff, POSITION_PID, 25000, 5000,
                     200.0f, 0.8f, 200);
+						
+		
 #elif STANDARD == 4
 #elif STANDARD == 5
 #elif STANDARD == 6
@@ -369,6 +375,7 @@ void gimbal_parameter_Init(void)
 
 void gimbal_task(void)
 {
+		Get_gimbal_yaw_feedforward();
     switch (gimbal_data.ctrl_mode)
     {
     case GIMBAL_RELAX:
@@ -526,8 +533,11 @@ void gimbal_follow_gyro_handle(void)
                                                                       0 )*PITCH_MOTOR_POLARITY;
     }else
     {
+				
         gimbal_data.gim_ref_and_fdb.pit_angle_ref = gimbal_data.gim_dynamic_ref.pitch_angle_dynamic_ref;
         gimbal_data.gim_ref_and_fdb.yaw_angle_ref = gimbal_data.gim_dynamic_ref.yaw_angle_dynamic_ref;
+				FF_yaw.set=gimbal_data.gim_ref_and_fdb.yaw_angle_ref;
+				
     gimbal_data.gim_ref_and_fdb.yaw_motor_input = pid_double_loop_cal(&gimbal_data.pid_yaw_Angle,
                                                                       &gimbal_data.pid_yaw_speed,
                                                                       gimbal_data.gim_ref_and_fdb.yaw_angle_ref,                     
@@ -841,4 +851,95 @@ void gimbal_auto_angle_handle(void)
 }
 
 #endif
+float gimbal_yaw_feedforward=0;
+float last_gimbal_yaw_feedforward=0;
+int repeating_cnt=0;
+int conflict_cnt=0;
+void Get_gimbal_yaw_feedforward()
+{		
 
+	
+	switch (gimbal_data.ctrl_mode)
+  {
+    case GIMBAL_RELAX:
+    {
+		if(yaw_Encoder.filter_rate>1||(abs(yaw_Encoder.filter_rate<=1)&&gimbal_data.gim_ref_and_fdb.yaw_motor_input>0))
+			gimbal_yaw_feedforward=GIM_YAW_FF;
+		else if(yaw_Encoder.filter_rate<1||(abs(yaw_Encoder.filter_rate<=1)&&gimbal_data.gim_ref_and_fdb.yaw_motor_input<0))
+			gimbal_yaw_feedforward=-GIM_YAW_FF;
+		else 
+			gimbal_yaw_feedforward=0;
+		
+		if(last_gimbal_yaw_feedforward!=gimbal_yaw_feedforward)
+			repeating_cnt++;
+		if(repeating_cnt>5)
+		{
+			gimbal_yaw_feedforward=0;
+			repeating_cnt=0;
+		}
+		last_gimbal_yaw_feedforward=gimbal_yaw_feedforward;
+    }
+      break;
+    case GIMBAL_INIT:
+    {
+        gimbal_yaw_feedforward=0;
+    }
+        break;
+    case GIMBAL_FOLLOW_ZGYRO:
+   {
+		if(RC_CtrlData.rc.ch2==1024)	
+			gimbal_yaw_feedforward=0;
+		else
+		{
+    if(abs(gimbal_data.gim_ref_and_fdb.yaw_motor_input)>5000)
+		{
+//			if(gimbal_data.gim_ref_and_fdb.yaw_motor_input>1&&yaw_Encoder.filter_rate>10&&RC_CtrlData.rc.ch2<1024)
+			if(RC_CtrlData.rc.ch2<1024)
+				gimbal_yaw_feedforward=GIM_YAW_FF;
+//			else if(gimbal_data.gim_ref_and_fdb.yaw_motor_input<-1&&yaw_Encoder.filter_rate<-10&&RC_CtrlData.rc.ch2>1024)
+			if(RC_CtrlData.rc.ch2>1024)
+				gimbal_yaw_feedforward=-GIM_YAW_FF;
+			else 
+				gimbal_yaw_feedforward=0;
+			
+			
+			if(last_gimbal_yaw_feedforward==-gimbal_yaw_feedforward)
+				repeating_cnt++;
+			if(repeating_cnt>5)
+			{
+				gimbal_yaw_feedforward=0;
+				repeating_cnt=0;
+				conflict_cnt++;
+			}
+			last_gimbal_yaw_feedforward=gimbal_yaw_feedforward;
+		}
+		}
+
+    
+        break;
+	}
+	}
+//#if STANDARD == 1
+//    case GIMBAL_AUTO_ANGLE:
+//    {
+//        gimbal_auto_angle_handle();
+//    }
+//        break;
+//#elif (STANDARD == 3)||(STANDARD == 4)||(STANDARD == 5)
+//    case GIMBAL_AUTO_SMALL_BUFF:
+//    {
+//        auto_small_buff_handle();
+//    }
+//        break;
+//    case GIMBAL_AUTO_BIG_BUFF:
+//    {
+//        auto_big_buff_handle();
+//    }
+//        break;
+//#elif STANDARD == 7
+//    case GIMBAL_AUTO_AIM:
+//    {
+//        security_gimbal_handle();
+//    }
+//        break;
+}

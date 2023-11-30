@@ -2,7 +2,7 @@
 #define __17MM_SHOOT_TASK
 #include "public.h"
 
-#define SHOOT_TYPE 7 //3步兵 6无人机  7哨兵
+#define SHOOT_TYPE 3 //3步兵 6无人机  7哨兵
 
 #define SHOOT_MOTOR_SPEED 550.0f //哨兵拨盘
 #define FRICTION_SPEED    950// 950

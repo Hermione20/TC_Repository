@@ -8,6 +8,7 @@ void control_task(void)
 	time_tick++;
 
 	buff_karman_filter_calc(&buff_kalman_filter,yaw_angle_ref_aim,pit_angle_ref_aim,&new_location.buff_kf_flag);
+	yaw_kalman_filter_calc(&yaw_kalman_filter,gimbal_gyro.yaw_Angle,gimbal_gyro.pitch_Angle,gimbal_gyro.yaw_Gyro,gimbal_gyro.pitch_Gyro,-yaw_Encoder.ecd_angle,Pitch_Encoder.ecd_angle+123.0f,-yaw_Encoder.filter_rate*360/60,Pitch_Encoder.filter_rate*360/60);
 	
 	if(time_tick%10==0)
 	{

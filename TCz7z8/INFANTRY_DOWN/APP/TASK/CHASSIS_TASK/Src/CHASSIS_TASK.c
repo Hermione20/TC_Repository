@@ -17,6 +17,11 @@
 /* Variables_definination-----------------------------------------------------------------------------------------------*/
 Chassis_angle_t 	 Chassis_angle;
 chassis_t 		 		 chassis;
+pid_t pid_chassis_power_buffer={0};
+pid_t pid_cha_6020_angle[4]={0};
+pid_t pid_cha_3508_angle[4]={0};
+pid_t pid_cha_6020_speed[4]={0};
+pid_t pid_cha_3508_speed[4]={0};
 
 float R,theta;
 int   yaw_num_get,run_flag;
@@ -67,6 +72,8 @@ void chassis_param_init()//底盘参数初始化
 	
   chassis.position_ref = 0;
 
+//		PID_struct_init(&pid_chassis_power_buffer, POSITION_PID, 100, 0, 2,0,0);
+	
 		PID_struct_init(&pid_cha_6020_angle[0], POSITION_PID, 8000, 10, 8,0.1f,5);//24, 0.2f,20);
   	PID_struct_init(&pid_cha_6020_speed[0], POSITION_PID, 15000, 500, 210,0.1f,10);//38,0.5f,20);
 	
@@ -123,7 +130,7 @@ void chassis_param_init()//底盘参数初始化
 * @Note     : 
 ************************************************************************************************************************
 **///舵轮
-#if POWER_LIMIT_HANDLE == 1
+#if POWER_LIMIT_HANDLE == 1 || POWER_LIMIT_HANDLE ==4
 void power_limit_handle()
 {
 		volatilAo=capacitance_message.out_v;
@@ -160,6 +167,7 @@ void power_limit_handle()
 	  }
     else if(cap_flag==0)
     {		
+			
 			if(run_flag ==0)
 				{
 					power_limit_start_time=judge_rece_mesg.game_robot_state.chassis_power_limit*0.8;
@@ -245,20 +253,20 @@ void cap_limit_mode_switch()
 float get_max_power1(float voltage)
 {
 		int max_power=0;
-	  if(cap_flag==3)
-		{
-			if(voltage>WARNING_VOLTAGE+4)
-				max_power=450;
-			else
-				max_power=(voltage-WARNING_VOLTAGE)/4.0f*450;
-		}
-	  else
-		{
-			if(voltage>WARNING_VOLTAGE+4)
+//	  if(cap_flag==3)
+//		{
+//			if(voltage>WARNING_VOLTAGE+4)
+//				max_power=450;
+//			else
+//				max_power=(voltage-WARNING_VOLTAGE)/4.0f*450;
+//		}
+//	  else
+//		{
+			if(voltage>WARNING_VOLTAGE+5)
 				max_power=250;
 			else
-				max_power=(voltage-WARNING_VOLTAGE)/4.0f*250;			
-		}
+				max_power=(voltage-WARNING_VOLTAGE)/5.0f*250;			
+//		}
 			VAL_LIMIT(max_power,0,500);
 			power_limit_rate2=1;
 //		 return 70;
@@ -277,13 +285,13 @@ float get_max_power2(float voltage)
 }
 //英雄功率限制
 #elif POWER_LIMIT_HANDLE == 2
-float get_max_power(float voltage)//限制电压防止电压过低导致电机复位
+float get_max_power(float voltage)
 { 
 	int max_power=0;
-  if(voltage>WARNING_VOLTAGE+3)
+  if(voltage>WARNING_VOLTAGE+3)//电机输出功率限幅
     max_power=150;
   else
-    max_power=(voltage-WARNING_VOLTAGE)/3.0f*200;
+    max_power=(voltage-WARNING_VOLTAGE)/3.0f*200;//限制电压防止电压过低导致电机复位
   VAL_LIMIT(max_power,0,150);
   return max_power;
 //  return 80;
@@ -297,13 +305,16 @@ float get_max_power(float voltage)//限制电压防止电压过低导致电机复位
 * @Note     : 在此处处理缓冲功率
 ************************************************************************************************************************
 **///步兵功率限制
-#if POWER_LIMIT_HANDLE == 1 || 3
+#if POWER_LIMIT_HANDLE == 1 || POWER_LIMIT_HANDLE ==3
 void buffer_power(void)
 {
  {Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+
 (judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2;
+	 
+// Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit-
+//	 pid_calc(&pid_chassis_power_buffer,judge_rece_mesg.power_heat_data.chassis_power_buffer,30);
 } 
- if(capacitance_message.cap_voltage_filte>=23.0)
+ if(capacitance_message.cap_voltage_filte>=23.0&&capacitance_message.cap_voltage_filte<23.7)
  {Max_Power=(23.7-capacitance_message.cap_voltage_filte)*150;
 	VAL_LIMIT(Max_Power,0,judge_rece_mesg.game_robot_state.chassis_power_limit+
 (judge_rece_mesg.power_heat_data.chassis_power_buffer-5)*2); 
@@ -319,7 +330,7 @@ VAL_LIMIT(Max_Power,0,150);
 void buffer_power(void)
 {
 	if(capacitance_message.cap_voltage_filte<22.5)
-		Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+(judge_rece_mesg.power_heat_data.chassis_power_buffer-10)*2; //5
+		Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+(judge_rece_mesg.power_heat_data.chassis_power_buffer-10)*2;
 	else
 		Max_Power=0;
 	VAL_LIMIT(Max_Power,0,150);
@@ -363,12 +374,11 @@ static float get_the_limite_rate(float max_power)
           I_TIMES_V_TO_WATT*(b[0]*(float)chassis.cha_pid_3508.speed_fdb[0] + \
                              b[1]*(float)chassis.cha_pid_3508.speed_fdb[1] + \
                              b[2]*(float)chassis.cha_pid_3508.speed_fdb[2] + \
-                             b[3]*(float)chassis.cha_pid_3508.speed_fdb[3]) + \
+                             b[3]*(float)chassis.cha_pid_3508.speed_fdb[3])+ \
           4*FACTOR_0 - \
           max_power;
   return (-n+(float)sqrt((double)(n*n-4*m*l)+1.0f))/(2*m);
 }
-
 /**
 ************************************************************************************************************************
 * @Name     : get_6020power
@@ -418,6 +428,88 @@ if(all_power>max_chassis_power)
 for (int i = 0; i < 4; i++)
 		VAL_LIMIT(kall6020[i],0,1);
 }
+#endif
+
+#if NEW_POWER_LIMIT_HANDLE
+//发送给C620电调的控制量-16384~16384对应电调的输出力矩电流-20A~20A
+//由此得到力矩电流（A）和电调力矩控制量的转化关系 torque_current=20/16384*chassis_current
+//力矩电流为电机用于输出力矩的电流，并非电机相电流，不能使用力矩电流乘电压得到电机的输入功率
+//但是力矩电流可以求力矩torque=KT*torque_current,KT 为力矩电流常数，与电机的特征参数，
+//我们可以在 M3508 电机使用手册中找到。但是手册中的转矩常数描述的为电机减速箱输出轴的力矩，
+//由于电机反馈的转子转速，为了方便计算，这里需要通过减速比计算得到电机转子的转矩常数。
+//KT = 0.3×（1/减速比）= 0.01562N·m/A 
+//所以转矩torque就可以简单转化为电流控制值chassis_current
+//机械功率 Pm=filter_rate*torque/9.55f
+//选用电机功率模型in_power=Pm+k1*filter_rate*filter_rate+k2*torque*torque+k3
+float initial_total_power;
+float scaled_give_power[4];
+float initial_give_power[4];
+#if CHASSIS_TYPE == 4//步兵
+void new_power_limit_handle()
+{	
+	buffer_power();//得到发送给功率控制板硬限的最大功率值
+
+
+#endif
+#if CHASSIS_TYPE == 2//英雄
+float chassis_current_to_torque = 1.99688994e-6f;
+float  k_t = 1.23e-07;
+float  k_w = 1.453e-07;
+float  offset = 4.081f;
+
+void new_power_limit_handle()
+{	
+	buffer_power();//得到发送给功率控制板硬限的最大功率值
+	u16 chassis_max_power=Max_Power;
+	for(uint8_t i = 0; i < 4; i++) //用单个电机功率模型估计各个电机的输出功率
+	{
+		initial_give_power[i] = pid_cha_3508_speed[i].out * chassis_current_to_torque * Mecanum_chassis.Driving_Encoder[i].filter_rate +
+								k_w * Mecanum_chassis.Driving_Encoder[i].filter_rate * Mecanum_chassis.Driving_Encoder[i].filter_rate +
+								k_t * pid_cha_3508_speed[i].out * pid_cha_3508_speed[i].out + offset;
+
+		if (initial_give_power < 0)
+			continue;
+		initial_total_power += initial_give_power[i];//估计3508们的总输出功率
+	}
+
+	if (initial_total_power > chassis_max_power)//大于底盘能量的时候就将总输出功率根据最大功率进行缩放
+	{
+		float power_scale = chassis_max_power / initial_total_power;
+		for (uint8_t i = 0; i < 4; i++)
+		{
+			scaled_give_power[i] = initial_give_power[i] * power_scale; //每个电机都等比例缩放相应的功率！
+			if (scaled_give_power[i] < 0)
+			{
+				continue;
+			}
+			float a = k_t;
+			float b = chassis_current_to_torque * Mecanum_chassis.Driving_Encoder[i].filter_rate;
+			float c = k_w * Mecanum_chassis.Driving_Encoder[i].filter_rate * Mecanum_chassis.Driving_Encoder[i].filter_rate - scaled_give_power[i] + offset;
+
+			if (pid_cha_3508_speed[i].out > 0) 
+			{
+				float temp = (-b + sqrt(b * b - 4 * a * c)) / (2 * a);
+				if (temp > 16100)
+				{
+					pid_cha_3508_speed[i].out = 16100;
+				}
+				else
+					pid_cha_3508_speed[i].out = temp;
+			}
+			else
+			{
+				float temp = (-b - sqrt(b * b - 4 * a * c)) / (2 * a);
+				if (temp < -16100)
+				{
+					pid_cha_3508_speed[i].out = -16100;
+				}
+				else
+					pid_cha_3508_speed[i].out = temp;
+			}
+		}
+	}
+}
+#endif
 #endif
 /**
 ************************************************************************************************************************
@@ -511,8 +603,9 @@ void follow_gimbal_handle(void)
 		else
 		{Chassis_angle.yaw_angle__pi_pi=Chassis_angle.yaw_angle_0_2pi;}
 
-	 chassis.vy = can_chassis_data.y;
-   chassis.vx = can_chassis_data.x;
+		
+	 chassis.vy = can_chassis_data.y*1.2;
+   chassis.vx = can_chassis_data.x*1.2;
    Chassis_angle.get_speedw = -pid_calc(&pid_chassis_angle,Chassis_angle.yaw_angle__pi_pi,0);
 
 }
@@ -548,11 +641,11 @@ void rotate_follow_gimbal_handle(void)
 	
 		if(can_chassis_data.speed_mode==1)
 		{
-			gyro_speed=550;
+			gyro_speed=400;
 		}
 		else
 		{
-			gyro_speed=400;
+			gyro_speed=300;
 		}
 
   chassis.vy = can_chassis_data.y;
@@ -916,7 +1009,7 @@ void steering_wheel_calc(double Length,double Weight)
 		
 		for(int i=0;i<4;i++)
 		{
-			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.22;
+			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.32;
 		  Chassis_angle.deviation_angle[i] = transition2[i]*RAD_TO_ANGLE;		
 		}
 }
@@ -1201,8 +1294,8 @@ void get_remote_set()
 	Chassis_angle.yaw_angle_0_2pi      =convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 	
 	float temp_angle=0;
-		vx = can_chassis_data.x;//vx，x是横轴
-		vy = can_chassis_data.y;//vy，y是纵轴
+		vx = can_chassis_data.x*1.3;//vx，x是横轴
+		vy = can_chassis_data.y*1.3;//vy，y是纵轴
 		Chassis_angle.Remote_speed = sqrt((vx*vx)+(vy*vy));
 		if(Chassis_angle.Remote_speed >= 50)
 		{	
@@ -1225,17 +1318,7 @@ void get_remote_set()
   	Chassis_angle.yaw_encoder_ecd_angle = can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
   	Chassis_angle.yaw_angle_0_2pi       = convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
 
-}//新舵轮
-//#elif CHASSIS_TYPE == 4
-//void get_remote_set()
-//{	
-//		Chassis_angle.yaw_encoder_ecd_angle=can_chassis_data.yaw_Encoder_ecd_angle/10000.0f;
-//		Chassis_angle.yaw_angle_0_2pi      =convert_ecd_angle_to_0_2pi(Chassis_angle.yaw_encoder_ecd_angle,Chassis_angle.yaw_angle_0_2pi);
-//	
-//	
-//		chassis.vx=chassis.ChassisSpeed_Ref.forward_back_ref;
-//		chassis.vy=chassis.ChassisSpeed_Ref.left_right_ref;
-//}
+}
 #endif
 
 /**
@@ -1299,6 +1382,9 @@ void Chassis_PID_handle(void)
 			power_limit_handle();	
 	#endif
 			set_3508current_6020voltage();
+	#if NEW_POWER_LIMIT_HANDLE
+			new_power_limit_handle();
+	#endif
 }
 
 void Motion_resolution(void)

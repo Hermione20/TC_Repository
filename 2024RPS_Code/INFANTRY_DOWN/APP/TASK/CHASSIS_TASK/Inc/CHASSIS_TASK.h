@@ -5,8 +5,8 @@
 #include "public.h"
 /*----------------------------------------------------------------------------*/
 //底盘类型 1舵轮 2麦轮 3全向轮 4新舵轮
-#define CHASSIS_TYPE  1
-#define POWER_LIMIT_HANDLE    1//0不开 1为舵轮 2为英雄(麦轮)以及全向轮
+#define CHASSIS_TYPE  4
+#define POWER_LIMIT_HANDLE   1//0不开 1为舵轮 2为英雄(麦轮)以及全向轮
 
 /*******************************CONFIG********************************/
 #define STANDARD              3  //参数选择  1英雄 2工程(None) 3456步兵 7烧饼

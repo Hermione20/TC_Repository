@@ -5,12 +5,12 @@
 #include "public.h"
 /*----------------------------------------------------------------------------*/
 //底盘类型 1舵轮 2麦轮 3全向轮 4新舵轮
-#define CHASSIS_TYPE  4
-#define POWER_LIMIT_HANDLE    0//0不开 1为舵轮 2为英雄(麦轮)以及全向轮
-
+#define CHASSIS_TYPE  				 4
+#define POWER_LIMIT_HANDLE     1//0不开 1为舵轮 2为英雄(麦轮)以及全向轮
+#define NEW_POWER_LIMIT_HANDLE 0
 /*******************************CONFIG********************************/
-#define STANDARD              3  //参数选择  1英雄 2工程(None) 3456步兵 7烧饼
-#define YAW_POLARITY 					-1 //逆正      舵轮要顺正，改-1；麦轮1
+#define STANDARD               3  //参数选择  1英雄 2工程(None) 3456步兵 7烧饼
+#define YAW_POLARITY 					-1//-1 //逆正      舵轮要顺正，改-1；麦轮1
 
 
 
@@ -37,7 +37,7 @@
 #define LEFT_FRONT_REVERSE    1
 #define LEFT_BEHIND_REVERSE   1
 #define RIGHT_BEHIND_REVERSE  1
-#define  WARNING_VOLTAGE       12.5
+#define  WARNING_VOLTAGE       12.8
 #define STEERING_POLARITY      -1 //6020电机的输出极性 解算已考虑到 故置1
 #endif
 /*******************************CONFIG********************************/
@@ -282,8 +282,11 @@ void omni_calc2(float vx,float vy,float vw,int16_t *speed);
 extern Chassis_angle_t 	 Chassis_angle;
 extern chassis_t 		 		 chassis;
 extern u16 Max_Power;
-
-
+extern pid_t pid_chassis_power_buffer;
+extern pid_t pid_cha_6020_angle[4];
+extern pid_t pid_cha_3508_angle[4];
+extern pid_t pid_cha_6020_speed[4];
+extern pid_t pid_cha_3508_speed[4];
 
 #endif
 

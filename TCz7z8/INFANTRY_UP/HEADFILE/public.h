@@ -41,15 +41,20 @@ else if(val>=max)\
 }\
 
 /**************TOOL HEAD*******************/
+//#include <stdio.h>
+//#include <stdlib.h>
+#include <math.h>
+//#include "time.h"
 #include <delay.h>
 #include <string.h>
 #include <stdarg.h>
 
 
 /*************Algorithm********************/
+//#include "PSO.h"
 #include "oldpid.h"
-
-
+#include "FeedForward_pid.h"
+#include "fuzzypid.h"
 
 
 
@@ -82,6 +87,8 @@ else if(val>=max)\
 #include "gimbal_task.h"
 
 #include "buff_karman_filter.h"
+
+#include "yaw_kalman_filter.h"
 
 #include "CHASSIS_TASK.H"
 

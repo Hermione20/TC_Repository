@@ -815,7 +815,7 @@ void USART6_IRQHandler(void)
 		(void)USART6->SR;
 		(void)USART6->DR;
 		DMA_Cmd(DMA2_Stream1, DISABLE); 
-		DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);  //************************************
+		DMA_ClearFlag(DMA2_Stream1, DMA_FLAG_TCIF1 | DMA_FLAG_HTIF1);
 		this_time_rx_len6 = BSP_USART6_RX_BUF_LENGTH - DMA_GetCurrDataCounter(DMA2_Stream1);
 
 		USART6_Data_Receive_Process

@@ -15,6 +15,8 @@
 
 #define HERO_PITCH_MAX 8548
 #define HERO_PITCH_MIN -1963
+
+#define GIM_YAW_FF 9600 //4800
 /************************buff*****************************/
 //摄像头和枪管中心的距离
 #define HEIGHT_BETWEEN_GUN_CAMERA 	4.89f
@@ -132,11 +134,11 @@ void auto_big_buff_handle(void);
 void security_gimbal_handle(void);
 void gimbal_auto_angle_handle(void);
 float raw_data_to_pitch_angle(float ecd_angle_pit);
-
 extern gimbal_t gimbal_data;
 extern float yaw_angle_ref_aim,pit_angle_ref_aim;
 extern float pitch_max,pitch_min;
-
+void Get_gimbal_yaw_feedforward(void);
+extern float gimbal_yaw_feedforward;
 
 
 

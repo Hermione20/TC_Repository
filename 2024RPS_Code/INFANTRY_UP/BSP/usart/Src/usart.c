@@ -17,7 +17,7 @@ uint8_t _UART5_DMA_RX_BUF[100];
 //static uint8_t USART1_DMA_TX_BUF[USART1_TX_BUF_LENGTH];//未配置发送
 //static uint8_t USART2_DMA_TX_BUF[USART2_TX_BUF_LENGTH];
 //static uint8_t USART3_DMA_TX_BUF[USART3_TX_BUF_LENGTH];
-	static uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
+	 uint8_t UART4_DMA_TX_BUF[UART4_TX_BUF_LENGTH];
 	static uint8_t UART5_DMA_TX_BUF[UART5_TX_BUF_LENGTH];
 //static uint8_t USART6_DMA_TX_BUF[USART6_TX_BUF_LENGTH];
 /*********************************************************************************************************/
@@ -467,10 +467,10 @@ void USART_CH100_IRQHandler(void)
   USART_Cmd(UART4,ENABLE);
 
 }
+  uint8_t length=0;
 
 void UART4_IRQHandler(void)
 {
-  uint8_t length=0;
   if(USART_GetITStatus(UART4, USART_IT_IDLE) != RESET)    //接收中断
     {
       (void)UART4->SR;

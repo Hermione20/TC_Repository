@@ -74,7 +74,7 @@ void chassis_param_init()//底盘参数初始化
   	PID_struct_init(&pid_cha_6020_speed[1], POSITION_PID, 15000, 500, 180,0.1f,4);//39,0.5f,20);
 	
 	  PID_struct_init(&pid_cha_6020_angle[2], POSITION_PID, 8000, 10, 8,0.1f,4);//20, 0.2f,20);
-  	PID_struct_init(&pid_cha_6020_speed[2], POSITION_PID, 15000, 500, 200,0.5,8);//40,0.5f,20);
+  	PID_struct_init(&pid_cha_6020_speed[2], POSITION_PID, 15000, 500, 200,0.1f,8);//40,0.5f,20);
 		
     PID_struct_init(&pid_cha_6020_angle[3], POSITION_PID, 8000, 10, 9,0.4f,4);//23, 0.2f,15);
   	PID_struct_init(&pid_cha_6020_speed[3], POSITION_PID, 15000, 500, 200,0.1f,20);//42,0.5f,20);
@@ -89,7 +89,7 @@ void chassis_param_init()//底盘参数初始化
 #if STANDARD == 3
   for (int k = 0; k < 4; k++)
     {
-      PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,15000, 15000,24,0.3, 10); //24 0.3 10    38.0f,3.0f, 40
+      PID_struct_init(&pid_cha_3508_speed[k], POSITION_PID,15000, 15000,24,0, 10); //24 0.3 10    38.0f,3.0f, 40
     }
   PID_struct_init(&pid_chassis_angle, POSITION_PID, 500, 10, 110,0.05,50);//xisanhao
 #elif STANDARD == 4
@@ -297,7 +297,7 @@ float get_max_power(float voltage)//限制电压防止电压过低导致电机复位
 * @Note     : 在此处处理缓冲功率
 ************************************************************************************************************************
 **///步兵功率限制
-#if POWER_LIMIT_HANDLE == 1 || 3
+#if POWER_LIMIT_HANDLE == 1 || POWER_LIMIT_HANDLE == 3
 void buffer_power(void)
 {
  {Max_Power = judge_rece_mesg.game_robot_state.chassis_power_limit+
@@ -916,6 +916,9 @@ void steering_wheel_calc(double Length,double Weight)
 		
 		for(int i=0;i<4;i++)
 		{
+			if(vx==0&&vy==0&&fabs(Chassis_angle.get_speedw)<5)
+				Chassis_angle.handle_speed_lim[i] =0;
+			else 
 			Chassis_angle.handle_speed_lim[i] = transition1[i]*Chassis_angle.get_speedw*0.22;
 		  Chassis_angle.deviation_angle[i] = transition2[i]*RAD_TO_ANGLE;		
 		}
