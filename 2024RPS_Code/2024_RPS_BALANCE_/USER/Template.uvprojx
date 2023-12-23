@@ -415,19 +415,24 @@
           <GroupName>TASK</GroupName>
           <Files>
             <File>
-              <FileName>buff_karman_filter.c</FileName>
+              <FileName>balance_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\TASK\GIMBAL_TASK\Src\buff_karman_filter.c</FilePath>
+              <FilePath>..\APP\TASK\CHASSIS_TASK\Src\balance_task.c</FilePath>
             </File>
             <File>
-              <FileName>gimbal_task.c</FileName>
+              <FileName>leg_task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\TASK\GIMBAL_TASK\Src\gimbal_task.c</FilePath>
+              <FilePath>..\APP\TASK\CHASSIS_TASK\Src\leg_task.c</FilePath>
             </File>
             <File>
-              <FileName>infantry_mode_switch_task.c</FileName>
+              <FileName>Mileage.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\APP\TASK\MODE_SWITCH_TASK\Sor\infantry_mode_switch_task.c</FilePath>
+              <FilePath>..\APP\TASK\CHASSIS_TASK\Src\Mileage.c</FilePath>
+            </File>
+            <File>
+              <FileName>balance_mode_switch_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\TASK\MODE_SWITCH_TASK\Sor\balance_mode_switch_task.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -438,6 +443,16 @@
               <FileName>oldpid.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\BAL\Src\oldpid.c</FilePath>
+            </File>
+            <File>
+              <FileName>high_pass_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\BAL\Src\high_pass_filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>low_pass_filter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\APP\BAL\Src\low_pass_filter.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -450,29 +465,9 @@
               <FilePath>..\EMBEDDED\senior_struct\senior.c</FilePath>
             </File>
             <File>
-              <FileName>protobuf-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\protobuf-c.c</FilePath>
-            </File>
-            <File>
-              <FileName>Recieve.pb-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Recieve.pb-c.c</FilePath>
-            </File>
-            <File>
-              <FileName>Send.pb-c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\proto\Send.pb-c.c</FilePath>
-            </File>
-            <File>
               <FileName>CanBus.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EMBEDDED\CAN_BUS\CanBus.c</FilePath>
-            </File>
-            <File>
-              <FileName>CH100.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\CH100\CH100.c</FilePath>
             </File>
             <File>
               <FileName>DJI_MOTOR.c</FileName>
@@ -480,34 +475,9 @@
               <FilePath>..\EMBEDDED\senior\DJI_MOTOR\DJI_MOTOR.c</FilePath>
             </File>
             <File>
-              <FileName>HI220.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\HI220\HI220.c</FilePath>
-            </File>
-            <File>
-              <FileName>HT430.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\HT430\HT430.c</FilePath>
-            </File>
-            <File>
-              <FileName>JUDGE.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\JUDGE\JUDGE.c</FilePath>
-            </File>
-            <File>
-              <FileName>Auto_shoot.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\Auto_Shoot\Auto_shoot.c</FilePath>
-            </File>
-            <File>
               <FileName>LK_TECH.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\EMBEDDED\senior\LK_TECH\LK_TECH.c</FilePath>
-            </File>
-            <File>
-              <FileName>PM01.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\PM01\PM01.c</FilePath>
             </File>
             <File>
               <FileName>REMOTE.c</FileName>
@@ -515,9 +485,9 @@
               <FilePath>..\EMBEDDED\senior\REMOTE\REMOTE.c</FilePath>
             </File>
             <File>
-              <FileName>can_chassis_transmit.c</FileName>
+              <FileName>CH100.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\EMBEDDED\senior\CAN_CHASSIS_TRANSMIT\can_chassis_transmit.c</FilePath>
+              <FilePath>..\EMBEDDED\senior\CH100\CH100.c</FilePath>
             </File>
           </Files>
         </Group>
