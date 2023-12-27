@@ -248,6 +248,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>b_chassis.balance_loop.k[0][3] * b_chassis.balance_loop.state_err[3]</ItemText>
         </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>Init_cnt,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

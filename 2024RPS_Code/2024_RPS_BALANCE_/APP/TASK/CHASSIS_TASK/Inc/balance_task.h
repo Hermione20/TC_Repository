@@ -36,7 +36,7 @@ typedef enum
   CHASSIS_STOP           = 1,
   CHASSIS_INIT 			 = 2,
   MANUAL_FOLLOW_GIMBAL   = 3,
-  DODGE_MODE             = 4,
+  CHASSIS_STAND_MODE             = 4,
   AUTO_SEPARATE_GIMBAL   = 5,
   AUTO_FOLLOW_GIMBAL     = 6,
   CHASSIS_ROTATE         = 7,
@@ -136,6 +136,8 @@ typedef struct
 	pid_t leg_harmonize_pid;
 	pid_t vw_pid;
 	pid_t roll_pid;
+	
+	pid_t Init_Tp_pid;
 
 	//tqouce
 	double joint_T[4];
@@ -143,6 +145,7 @@ typedef struct
 }Balance_chassis_t;
 
 void chassis_Init_handle(void);
+void chasis_standup_handle(void);
 void chassis_seperate_handle(void);
 void balance_chassis_task(void);
 void balance_task(void);
